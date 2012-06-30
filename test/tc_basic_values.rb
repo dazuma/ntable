@@ -101,6 +101,28 @@ module NTable
       end
 
 
+      def test_load_no_axes
+        t1_ = Table.new(Structure.new, :load => [1])
+        assert_equal(1, t1_.get)
+      end
+
+
+      def test_empty_equality
+        assert_equal(Table.new(Structure.new), Table.new(Structure.new))
+      end
+
+
+      def test_basic_equality
+        t1_ = Table.new(@structure, :fill => 0)
+        t2_ = Table.new(@structure, :fill => 0)
+        assert_equal(t1_, t2_)
+        t1_[:row => 0, :column => :red] = 1
+        assert_not_equal(t1_, t2_)
+        t2_[:row => 0, :column => :red] = 1
+        assert_equal(t1_, t2_)
+      end
+
+
     end
 
   end

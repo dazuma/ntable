@@ -75,6 +75,12 @@ module NTable
       end
 
 
+      def test_labeled_axis_empty
+        axis_ = LabeledAxis.new([])
+        assert_equal(0, axis_.size)
+      end
+
+
       def test_indexed_axis_size
         axis_ = IndexedAxis.new(2)
         assert_equal(2, axis_.size)
@@ -103,6 +109,12 @@ module NTable
         axis3_ = IndexedAxis.new(2, 3)
         assert_equal(axis1_, axis2_)
         assert_not_equal(axis1_, axis3_)
+      end
+
+
+      def test_indexed_axis_empty
+        axis_ = IndexedAxis.new(0)
+        assert_equal(0, axis_.size)
       end
 
 

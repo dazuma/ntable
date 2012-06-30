@@ -42,36 +42,81 @@ module NTable
   class Structure
 
 
+    class AxisInfo
+
+      def initialize(structure_, axis_, index_, name_)
+        @structure = structure_
+        @axis = axis_
+        @index = index_
+        @name = name_
+        @step = nil
+      end
+
+      attr_reader :structure
+      attr_reader :axis
+      attr_reader :index
+      attr_reader :name
+      attr_reader :step
+
+
+      def eql?(obj_)
+        obj_.is_a?(AxisInfo) && obj_.axis.eql?(@axis) && obj_.name.eql?(@name)
+      end
+      alias_method :==, :eql?
+
+
+      def _set_axis(axis_)  # :nodoc:
+        @axis = axis_
+      end
+
+      def _set_step(step_)  # :nodoc:
+        @step = step_
+      end
+
+      def _dec_index  # :nodoc:
+        @index -= 1
+      end
+
+    end
+
+
     def initialize
       @indexes = []
       @names = {}
       @size = nil
-      @steps = nil
     end
 
 
     def initialize_copy(other_)
       initialize
-      other_.instance_variable_get(:@indexes).each{ |ai_| add(ai_.first, ai_.last) }
-      if other_.locked?
-        @size = other_.size
-        @steps = other_.instance_variable_get(:@steps)
+      other_.instance_variable_get(:@indexes).each do |ai_|
+        ai_ = ai_.dup
+        @indexes << ai_
+        if (name_ = ai_.name)
+          @names[name_] = ai_
+        end
       end
+      @size = other_.size
     end
 
 
     def unlocked_copy
       copy_ = Structure.new
-      @indexes.each{ |ai_| copy_.add(ai_.first, ai_.last) }
+      @indexes.each{ |ai_| copy_.add(ai_.axis, ai_.name) }
       copy_
     end
+
+
+    def eql?(obj_)
+      obj_.is_a?(Structure) && obj_.instance_variable_get(:@indexes).eql?(@indexes)
+    end
+    alias_method :==, :eql?
 
 
     def add(axis_, name_=nil)
       raise "Structure locked" if @size
       name_ = name_ ? name_.to_s : nil
-      index_ = @indexes.size
-      ainfo_ = [axis_, index_, name_]
+      ainfo_ = AxisInfo.new(self, axis_, @indexes.size, name_)
       @indexes << ainfo_
       @names[name_] = ainfo_ if name_
       self
@@ -80,11 +125,11 @@ module NTable
 
     def remove(axis_)
       raise "Structure locked" if @size
-      if (ainfo_ = _axis_info(axis_))
-        index_ = ainfo_[1]
-        @names.delete(ainfo_[2])
+      if (ainfo_ = axis_info(axis_))
+        index_ = ainfo_.index
+        @names.delete(ainfo_.name)
         @indexes.delete_at(index_)
-        @indexes[index_..-1].each{ |ai_| ai_[1] -= 1 }
+        @indexes[index_..-1].each{ |ai_| ai_._dec_index }
       end
       self
     end
@@ -92,9 +137,9 @@ module NTable
 
     def replace(axis_, naxis_=nil)
       raise "Structure locked" if @size
-      if (ainfo_ = _axis_info(axis_))
-        naxis_ ||= yield(ainfo_[0], ainfo_[1], ainfo_[2])
-        ainfo_[0] = naxis_
+      if (ainfo_ = axis_info(axis_))
+        naxis_ ||= yield(ainfo_)
+        ainfo_._set_axis = naxis_
       end
       self
     end
@@ -105,36 +150,53 @@ module NTable
     end
 
 
-    def get_axis(spec_)
-      ainfo_ = _axis_info(spec_)
-      ainfo_ ? ainfo_.first : nil
+    def degenerate?
+      @indexes.size == 0
     end
 
 
-    def get_name(spec_)
-      ainfo_ = _axis_info(spec_)
-      ainfo_ ? ainfo_[2] : nil
+    def all_axis_info
+      @indexes.dup
     end
 
 
-    def get_index(spec_)
-      ainfo_ = _axis_info(spec_)
-      ainfo_ ? ainfo_[1] : nil
+    def axis_info(axis_)
+      case axis_
+      when ::Integer
+        @indexes[axis_]
+      else
+        @names[axis_.to_s]
+      end
+    end
+
+
+    def get_axis(axis_)
+      ainfo_ = axis_info(axis_)
+      ainfo_ ? ainfo_.axis : nil
+    end
+
+
+    def get_index(axis_)
+      ainfo_ = axis_info(axis_)
+      ainfo_ ? ainfo_.index : nil
+    end
+
+
+    def get_name(axis_)
+      ainfo_ = axis_info(axis_)
+      ainfo_ ? ainfo_.name : nil
     end
 
 
     def lock!
       unless @size
-        if @indexes.size > 0
-          @size = @indexes.inject(1){ |size_, ainfo_| size_ * ainfo_.first.size }
-        else
-          @size = 0
-        end
-        if @size == 0
-          @steps = nil
-        else
+        @size = @indexes.inject(1){ |size_, ainfo_| size_ * ainfo_.axis.size }
+        if @size > 0
           s_ = @size
-          @steps = @indexes.map{ |ainfo_| s_ /= ainfo_.first.size }
+          @indexes.each do |ainfo_|
+            s_ /= ainfo_.axis.size
+            ainfo_._set_step(s_)
+          end
         end
       end
       self
@@ -154,20 +216,20 @@ module NTable
 
     def empty?
       raise "Structure not locked" unless @size
-      @steps.nil?
+      @size == 0
     end
 
 
     def offset(args_)
-      return nil unless @steps
+      return nil unless @size.to_i > 0
       case args_
       when ::Hash
         offset_ = 0
         args_.each do |k_, v_|
-          if (ainfo_ = _axis_info(k_))
-            index_ = ainfo_.first.label_to_index(v_)
+          if (ainfo_ = axis_info(k_))
+            index_ = ainfo_.axis.label_to_index(v_)
             return nil unless index_
-            offset_ += @steps[ainfo_[1]] * index_
+            offset_ += ainfo_.step * index_
           else
             return nil
           end
@@ -177,9 +239,9 @@ module NTable
         offset_ = 0
         args_.each_with_index do |v_, i_|
           if (ainfo_ = @indexes[i_])
-            index_ = ainfo_.first.label_to_index(v_)
+            index_ = ainfo_.axis.label_to_index(v_)
             return nil unless index_
-            offset_ += @steps[ainfo_[1]] * index_
+            offset_ += ainfo_.step * index_
           else
             return nil
           end
@@ -187,16 +249,6 @@ module NTable
         offset_
       else
         nil
-      end
-    end
-
-
-    def _axis_info(axis_)
-      case axis_
-      when ::Integer
-        @indexes[axis_]
-      else
-        @names[axis_.to_s]
       end
     end
 

@@ -91,7 +91,7 @@ module NTable
     alias_method :==, :eql?
 
     def hash
-      @size + @start
+      @size.hash + @start.hash
     end
 
 

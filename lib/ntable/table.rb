@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# NTable axis object
+# NTable table value object
 #
 # -----------------------------------------------------------------------------
 # Copyright 2012 Daniel Azuma
@@ -68,7 +68,34 @@ module NTable
     end
 
 
+    def eql?(obj_)
+      obj_.is_a?(Table) && obj_.structure.eql?(@structure) &&
+        obj_.instance_variable_get(:@vals).eql?(@vals)
+    end
+    alias_method :==, :eql?
+
+
     attr_reader :structure
+
+
+    def size
+      @vals.size
+    end
+
+
+    def dim
+      @structure.dim
+    end
+
+
+    def empty?
+      @structure.empty?
+    end
+
+
+    def degenerate?
+      @structure.degenerate?
+    end
 
 
     def get(*args_)
@@ -114,6 +141,49 @@ module NTable
 
     def fill!(value_)
       @vals.fill(value_)
+    end
+
+
+    def slice(hash_)
+      offset_ = 0
+      select_set_ = {}
+      hash_.each do |k_, v_|
+        if (ainfo_ = @structure.axis_info(k_))
+          aindex_ = ainfo_.index
+          unless select_set_.include?(aindex_)
+            lindex_ = ainfo_.axis.label_to_index(v_)
+            if lindex_
+              offset_ += ainfo_.step * lindex_
+              select_set_[aindex_] = true
+            end
+          end
+        end
+      end
+
+      outer_ainfo_ = (0...@structure.dim).find_all{ |i_| !select_set_.include?(i_) }.
+        map{ |i_| @structure.axis_info(i_) }
+      slice_struct_ = Structure.new
+      outer_ainfo_.each{ |ainfo_| slice_struct_.add(ainfo_.axis, ainfo_.name) }
+
+      if @structure.empty?
+        Table.new(slice_struct_)
+      else
+        outer_vector_ = ::Array.new(outer_ainfo_.size, 0)
+        outer_index_ = 0
+        result_vals_ = ::Array.new(outer_ainfo_.inject(1){ |p_, ai_| p_ * ai_.axis.size }) do
+          val_ = @vals[outer_index_ + offset_]
+          (outer_vector_.size - 1).downto(0) do |i_|
+            step_ = outer_ainfo_[i_].step
+            outer_index_ += step_
+            v_ = outer_vector_[i_] += 1
+            break if v_ < outer_ainfo_[i_].axis.size
+            outer_index_ -= v_ * step_
+            outer_vector_[i_] = 0
+          end
+          val_
+        end
+        Table.new(slice_struct_, :load => result_vals_)
+      end
     end
 
 

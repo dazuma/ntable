@@ -49,6 +49,7 @@ module NTable
         @labeled2 = LabeledAxis.new([:red, :white, :blue])
         @indexed1 = IndexedAxis.new(10)
         @indexed2 = IndexedAxis.new(15, 1)
+        @indexed3 = IndexedAxis.new(0)
       end
 
 
@@ -126,6 +127,18 @@ module NTable
       end
 
 
+      def test_size_no_axes
+        s_ = Structure.new.lock!
+        assert_equal(1, s_.size)
+      end
+
+
+      def test_size_with_empty_axis
+        s_ = Structure.new.add(@labeled1).add(@indexed1).add(@indexed3).lock!
+        assert_equal(0, s_.size)
+      end
+
+
       def test_offset_labeled1_array
         s_ = Structure.new.add(@labeled1).lock!
         assert_equal(0, s_.offset([:one]))
@@ -159,6 +172,27 @@ module NTable
         assert_equal(5, s_.offset(:second_axis => 5))
         assert_nil(s_.offset(:first_axis => :three))
         assert_nil(s_.offset(:third_axis => :three))
+      end
+
+
+      def test_offset_no_axes
+        s_ = Structure.new.lock!
+        assert_equal(0, s_.offset([]))
+        assert_equal(0, s_.offset({}))
+      end
+
+
+      def test_empty_structure_equality
+        assert_equal(Structure.new, Structure.new)
+      end
+
+
+      def test_structure_equality
+        s1_ = Structure.new.add(@labeled1).add(@indexed1)
+        s2_ = Structure.new.add(@labeled1).add(@indexed1)
+        s3_ = Structure.new.add(@indexed1).add(@labeled1)
+        assert_equal(s1_, s2_)
+        assert_not_equal(s1_, s3_)
       end
 
 
