@@ -48,6 +48,7 @@ module NTable
       size_ = @structure.size
       load_ = data_[:load]
       fill_ = data_[:fill]
+      @missing_value = data_[:missing_value]
       if load_
         load_size_ = load_.size
         if load_size_ > size_
@@ -104,7 +105,7 @@ module NTable
         args_ = first_ if first_.is_a?(::Hash) || first_.is_a?(::Array)
       end
       offset_ = @structure.offset(args_)
-      offset_ ? @vals[offset_] : nil
+      offset_ ? @vals[offset_] : @missing_value
     end
     alias_method :[], :get
 
@@ -117,10 +118,12 @@ module NTable
       end
       offset_ = @structure.offset(args_)
       if offset_
-        value_ = block_.call(@vals[offset_]) if block_
+        if block_
+          value_ = block_.call(@vals[offset_], Structure::Position.new(@structure, offset_))
+        end
         @vals[offset_] = value_
       else
-        nil
+        @missing_value
       end
     end
     alias_method :[]=, :set!
@@ -141,6 +144,18 @@ module NTable
 
     def fill!(value_)
       @vals.fill(value_)
+    end
+
+
+    def map_with_position!
+      @vals.each_with_index do |v_, i_|
+        @vals[i_] = yield(v_, Structure::Position.new(@structure, i_))
+      end
+    end
+
+
+    def map_with_position(&block_)
+      self.dup.map!(&block_)
     end
 
 
@@ -185,6 +200,87 @@ module NTable
         Table.new(slice_struct_, :load => result_vals_)
       end
     end
+
+
+    def concat(rhs_, axis_=nil)
+      rhs_structure_ = rhs_.structure
+      my_ainfo_ = @structure.all_axis_info
+      rhs_ainfo_ = rhs_.structure.all_axis_info
+      unless my_ainfo_.size == rhs_ainfo_.size
+        raise StructureMismatchError, "Tables have different dimensions"
+      end
+
+      concat_index_ = concat_axis_ = concat_ainfo_ = nil
+      if axis_
+        concat_ainfo_ = @structure.axis_info(axis_)
+        unless concat_ainfo_
+          raise StructureMismatchError, "Unable to find specified concatenation axis: #{axis_}"
+        end
+        concat_index_ = concat_ainfo_.index
+        concat_axis_ = concat_ainfo_.axis.concat(rhs_ainfo_[concat_index_].axis)
+        unless concat_axis_
+          raise StructureMismatchError, "Axes cannot be concatenated"
+        end
+      else
+        my_ainfo_.each_with_index do |my_ai_, i_|
+          rhs_ai_ = rhs_ainfo_[i_]
+          unless my_ai_.axis.eql?(rhs_ai_.axis)
+            concat_ainfo_ = my_ai_
+            concat_index_ = i_
+            concat_axis_ = my_ai_.axis.concat(rhs_ai_.axis)
+            unless concat_axis_
+              raise StructureMismatchError, "Axes cannot be concatenated"
+            end
+            break
+          end
+        end
+        unless concat_axis_
+          my_ainfo_.each_with_index do |my_ai_, i_|
+            rhs_ai_ = rhs_ainfo_[i_]
+            concat_axis_ = my_ai_.axis.concat(rhs_ai_.axis)
+            if concat_axis_
+              concat_ainfo_ = my_ai_
+              concat_index_ = i_
+              break
+            end
+          end
+        end
+        unless concat_axis_
+          raise StructureMismatchError, "Unable to find an axis that can be concatenated"
+        end
+      end
+
+      sum_structure_ = Structure.new
+      my_ainfo_.each_with_index do |my_ai_, i_|
+        rhs_ai_ = rhs_ainfo_[i_]
+        unless my_ai_.name == rhs_ai_.name
+          raise StructureMismatchError, "Axis #{i_} names do not match"
+        end
+        if concat_index_ == i_
+          sum_structure_.add(concat_axis_, my_ai_.name)
+        else
+          unless my_ai_.axis.eql?(rhs_ai_.axis)
+            raise StructureMismatchError, "Non-concatenating axes #{i_} are not equal"
+          end
+          sum_structure_.add(my_ai_.axis, my_ai_.name)
+        end
+      end
+
+      rhs_vals_ = rhs_.instance_variable_get(:@vals)
+      inner_step_ = concat_ainfo_.step
+      lhs_step_ = concat_ainfo_.axis.size * inner_step_
+      rhs_step_ = rhs_ainfo_[concat_index_].axis.size * inner_step_
+      outer_size_ = @structure.size / lhs_step_
+      sum_structure_.lock!
+      sum_vals_ = ::Array.new(sum_structure_.size)
+      sum_step_ = lhs_step_ + rhs_step_
+      outer_size_.times do |i_|
+        sum_vals_[i_*sum_step_,lhs_step_] = @vals[i_*lhs_step_,lhs_step_]
+        sum_vals_[i_*sum_step_+lhs_step_,rhs_step_] = rhs_vals_[i_*rhs_step_,rhs_step_]
+      end
+      Table.new(sum_structure_, :load => sum_vals_)
+    end
+    alias_method :+, :concat
 
 
   end

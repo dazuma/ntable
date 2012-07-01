@@ -40,6 +40,7 @@ module NTable
 end
 
 
+require 'ntable/errors'
 require 'ntable/axis'
 require 'ntable/structure'
 require 'ntable/table'

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# NTable axis objects
+# NTable error objects
 #
 # -----------------------------------------------------------------------------
 # Copyright 2012 Daniel Azuma
@@ -37,96 +37,20 @@
 module NTable
 
 
-  # Labeled axis
-
-  class LabeledAxis
-
-
-    def initialize(labels_)
-      @a = labels_.dup
-      @h = {}
-      labels_.each_with_index{ |n_, i_| @h[n_] = i_ }
-      @size = labels_.size
-    end
-
-
-    def eql?(obj_)
-      obj_.is_a?(LabeledAxis) && obj_.instance_variable_get(:@a).eql?(@a)
-    end
-    alias_method :==, :eql?
-
-    def hash
-      @a.hash
-    end
-
-
-    attr_reader :size
-
-    def label_to_index(label_)
-      @h[label_]
-    end
-
-    def index_to_label(index_)
-      @a[index_]
-    end
-
-
-    def concat(rhs_)
-      if rhs_.is_a?(LabeledAxis) && !@a.find{ |label_| rhs_.label_to_index(label_) }
-        LabeledAxis.new(@a + rhs_.instance_variable_get(:@a))
-      else
-        nil
-      end
-    end
-    alias_method :+, :concat
-
-
+  # Base class
+  class NTableError < ::StandardError
   end
 
 
-  # Indexed axis
-
-  class IndexedAxis
-
-
-    def initialize(size_, start_=0)
-      @size = size_
-      @start = start_
-    end
+  class StructureStateError < NTableError
+  end
 
 
-    def eql?(obj_)
-      obj_.is_a?(IndexedAxis) && obj_.size.eql?(@size) && obj_.start.eql?(@start)
-    end
-    alias_method :==, :eql?
-
-    def hash
-      @size.hash + @start.hash
-    end
+  class StructureMismatchError < NTableError
+  end
 
 
-    attr_reader :size
-    attr_reader :start
-
-    def label_to_index(label_)
-      label_ >= @start && label_ < @size + @start ? label_ - @start : nil
-    end
-
-    def index_to_label(index_)
-      index_ >= 0 && index_ < @size ? index_ + @start : nil
-    end
-
-
-    def concat(rhs_)
-      if rhs_.is_a?(IndexedAxis)
-        IndexedAxis.new(@size + rhs_.size, @start)
-      else
-        nil
-      end
-    end
-    alias_method :+, :concat
-
-
+  class UnknownAxisError < NTableError
   end
 
 

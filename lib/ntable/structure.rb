@@ -80,6 +80,48 @@ module NTable
     end
 
 
+    class Position
+
+      def initialize(structure_, offset_)
+        @structure = structure_
+        @offset = offset_
+        @coords = offset_ < 0 || offset_ >= structure_.size ? false : nil
+      end
+
+
+      def eql?(obj_)
+        obj_.is_a?(Position) && obj_.structure.eql?(@structure) && obj_.offset.eql?(@offset)
+      end
+      alias_method :==, :eql?
+
+
+      attr_reader :structure
+      attr_reader :offset
+
+      def valid?
+        @coords != false
+      end
+
+      def coord(axis_)
+        @coords = @structure._compute_position_coords(@offset) if @coords.nil?
+        ainfo_ = @structure.axis_info(axis_)
+        ainfo_ ? @coords[ainfo_.index] : nil
+      end
+      alias_method :[], :coord
+
+      def next
+        pos_ = Position.new(@structure, @offset + 1)
+        pos_.valid? ? pos_ : nil
+      end
+
+      def prev
+        pos_ = Position.new(@structure, @offset - 1)
+        pos_.valid? ? pos_ : nil
+      end
+
+    end
+
+
     def initialize
       @indexes = []
       @names = {}
@@ -114,7 +156,7 @@ module NTable
 
 
     def add(axis_, name_=nil)
-      raise "Structure locked" if @size
+      raise StructureStateError, "Structure locked" if @size
       name_ = name_ ? name_.to_s : nil
       ainfo_ = AxisInfo.new(self, axis_, @indexes.size, name_)
       @indexes << ainfo_
@@ -124,7 +166,7 @@ module NTable
 
 
     def remove(axis_)
-      raise "Structure locked" if @size
+      raise StructureStateError, "Structure locked" if @size
       if (ainfo_ = axis_info(axis_))
         index_ = ainfo_.index
         @names.delete(ainfo_.name)
@@ -136,7 +178,7 @@ module NTable
 
 
     def replace(axis_, naxis_=nil)
-      raise "Structure locked" if @size
+      raise StructureStateError, "Structure locked" if @size
       if (ainfo_ = axis_info(axis_))
         naxis_ ||= yield(ainfo_)
         ainfo_._set_axis = naxis_
@@ -209,23 +251,23 @@ module NTable
 
 
     def size
-      raise "Structure not locked" unless @size
+      raise StructureStateError, "Structure not locked" unless @size
       @size
     end
 
 
     def empty?
-      raise "Structure not locked" unless @size
+      raise StructureStateError, "Structure not locked" unless @size
       @size == 0
     end
 
 
-    def offset(args_)
+    def offset(arg_)
       return nil unless @size.to_i > 0
-      case args_
+      case arg_
       when ::Hash
         offset_ = 0
-        args_.each do |k_, v_|
+        arg_.each do |k_, v_|
           if (ainfo_ = axis_info(k_))
             index_ = ainfo_.axis.label_to_index(v_)
             return nil unless index_
@@ -237,7 +279,7 @@ module NTable
         offset_
       when ::Array
         offset_ = 0
-        args_.each_with_index do |v_, i_|
+        arg_.each_with_index do |v_, i_|
           if (ainfo_ = @indexes[i_])
             index_ = ainfo_.axis.label_to_index(v_)
             return nil unless index_
@@ -250,6 +292,27 @@ module NTable
       else
         nil
       end
+    end
+
+
+    def position(arg_)
+      offset_ = offset(arg_)
+      offset_ ? Position.new(self, offset_) : nil
+    end
+
+
+    def _compute_position_coords(offset_)  # :nodoc:
+      raise "Structure not locked" unless @size
+      @indexes.map do |ainfo_|
+        i_ = offset_ / ainfo_.step
+        offset_ -= ainfo_.step * i_
+        ainfo_.axis.index_to_label(i_)
+      end
+    end
+
+
+    def self.add(axis_, name_=nil)
+      self.new.add(axis_, name_)
     end
 
 
