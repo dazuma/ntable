@@ -125,7 +125,8 @@ module NTable
     def initialize
       @indexes = []
       @names = {}
-      @size = nil
+      @size = 1
+      @locked = false
     end
 
 
@@ -156,32 +157,45 @@ module NTable
 
 
     def add(axis_, name_=nil)
-      raise StructureStateError, "Structure locked" if @size
+      raise StructureStateError, "Structure locked" if @locked
       name_ = name_ ? name_.to_s : nil
       ainfo_ = AxisInfo.new(self, axis_, @indexes.size, name_)
       @indexes << ainfo_
       @names[name_] = ainfo_ if name_
+      @size *= axis_.size
       self
     end
 
 
     def remove(axis_)
-      raise StructureStateError, "Structure locked" if @size
+      raise StructureStateError, "Structure locked" if @locked
       if (ainfo_ = axis_info(axis_))
         index_ = ainfo_.index
         @names.delete(ainfo_.name)
         @indexes.delete_at(index_)
         @indexes[index_..-1].each{ |ai_| ai_._dec_index }
+        size_ = ainfo_.axis.size
+        if size_ == 0
+          @size = @indexes.inject(1){ |s_, ai_| s_ * ai_.axis.size }
+        else
+          @size /= size_
+        end
       end
       self
     end
 
 
     def replace(axis_, naxis_=nil)
-      raise StructureStateError, "Structure locked" if @size
+      raise StructureStateError, "Structure locked" if @locked
       if (ainfo_ = axis_info(axis_))
+        osize_ = ainfo_.axis.size
         naxis_ ||= yield(ainfo_)
         ainfo_._set_axis = naxis_
+        if osize_ == 0
+          @size = @indexes.inject(1){ |size_, ai_| size_ * ai_.axis.size }
+        else
+          @size = @size / osize_ * naxis_.size
+        end
       end
       self
     end
@@ -231,8 +245,8 @@ module NTable
 
 
     def lock!
-      unless @size
-        @size = @indexes.inject(1){ |size_, ainfo_| size_ * ainfo_.axis.size }
+      unless @locked
+        @locked = true
         if @size > 0
           s_ = @size
           @indexes.each do |ainfo_|
@@ -246,24 +260,23 @@ module NTable
 
 
     def locked?
-      @size ? true : false
+      @locked
     end
 
 
     def size
-      raise StructureStateError, "Structure not locked" unless @size
       @size
     end
 
 
     def empty?
-      raise StructureStateError, "Structure not locked" unless @size
       @size == 0
     end
 
 
     def offset(arg_)
-      return nil unless @size.to_i > 0
+      raise StructureStateError, "Structure not locked" unless @locked
+      return nil unless @size > 0
       case arg_
       when ::Hash
         offset_ = 0
@@ -301,8 +314,45 @@ module NTable
     end
 
 
+    def to_json_array
+      @indexes.map do |ai_|
+        name_ = ai_.name
+        axis_ = ai_.axis
+        type_ = axis_.class.name
+        if type_ =~ /^NTable::(\w+)Axis$/
+          type_ = $1
+          type_ = type_[0..0].downcase + type_[1..-1]
+        end
+        obj_ = {'type' => type_}
+        obj_['name'] = name_ if name_
+        axis_.to_json_object(obj_)
+        obj_
+      end
+    end
+
+
+    def from_json_array(array_)
+      array_.each do |obj_|
+        name_ = obj_['name']
+        type_ = obj_['type'] || 'Empty'
+        if type_ =~ /^([a-z])(.*)$/
+          mod_ = ::NTable.const_get("#{$1.upcase}#{$2}Axis")
+        else
+          mod_ = ::Kernel
+          type_.split('::').each do |t_|
+            mod_ = mod_.const_get(t_)
+          end
+        end
+        axis_ = mod_.allocate
+        axis_.from_json_object(obj_)
+        add(axis_, name_)
+      end
+      self
+    end
+
+
     def _compute_position_coords(offset_)  # :nodoc:
-      raise "Structure not locked" unless @size
+      raise StructureStateError, "Structure not locked" unless @locked
       @indexes.map do |ainfo_|
         i_ = offset_ / ainfo_.step
         offset_ -= ainfo_.step * i_
@@ -313,6 +363,11 @@ module NTable
 
     def self.add(axis_, name_=nil)
       self.new.add(axis_, name_)
+    end
+
+
+    def self.from_json_array(array_)
+      self.new.from_json_array(array_)
     end
 
 

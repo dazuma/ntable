@@ -60,8 +60,8 @@ module NTable
 
       def test_labeled_axis_index_to_label
         axis_ = LabeledAxis.new([:one, :two])
-        assert_equal(:one, axis_.index_to_label(0))
-        assert_equal(:two, axis_.index_to_label(1))
+        assert_equal('one', axis_.index_to_label(0))
+        assert_equal('two', axis_.index_to_label(1))
         assert_nil(axis_.index_to_label(2))
       end
 

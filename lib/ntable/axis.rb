@@ -37,15 +37,49 @@
 module NTable
 
 
+  class EmptyAxis
+
+
+    def size
+      0
+    end
+
+
+    def label_to_index(label_)
+      nil
+    end
+
+
+    def index_to_label(index_)
+      nil
+    end
+
+
+    def concat(rhs_)
+      rhs_
+    end
+
+
+    def to_json_object(json_obj_)
+    end
+
+
+    def from_json_object(json_obj_)
+    end
+
+
+  end
+
+
   # Labeled axis
 
   class LabeledAxis
 
 
     def initialize(labels_)
-      @a = labels_.dup
+      @a = labels_.map{ |label_| label_.to_s }
       @h = {}
-      labels_.each_with_index{ |n_, i_| @h[n_] = i_ }
+      @a.each_with_index{ |n_, i_| @h[n_] = i_ }
       @size = labels_.size
     end
 
@@ -59,11 +93,16 @@ module NTable
       @a.hash
     end
 
+    def inspect
+      "#<#{self.class}:0x#{object_id.to_s(16)} #{@a.inspect}>"
+    end
+    alias_method :to_s, :inspect
+
 
     attr_reader :size
 
     def label_to_index(label_)
-      @h[label_]
+      @h[label_.to_s]
     end
 
     def index_to_label(index_)
@@ -78,7 +117,16 @@ module NTable
         nil
       end
     end
-    alias_method :+, :concat
+
+
+    def to_json_object(json_obj_)
+      json_obj_['labels'] = @a
+    end
+
+
+    def from_json_object(json_obj_)
+      initialize(json_obj_['labels'] || [])
+    end
 
 
   end
@@ -104,6 +152,11 @@ module NTable
       @size.hash + @start.hash
     end
 
+    def inspect
+      "#<#{self.class}:0x#{object_id.to_s(16)} size=#{@size} start=#{@start}>"
+    end
+    alias_method :to_s, :inspect
+
 
     attr_reader :size
     attr_reader :start
@@ -124,7 +177,17 @@ module NTable
         nil
       end
     end
-    alias_method :+, :concat
+
+
+    def to_json_object(json_obj_)
+      json_obj_['size'] = @size
+      json_obj_['start'] = @start unless @start == 0
+    end
+
+
+    def from_json_object(json_obj_)
+      initialize(json_obj_['size'], json_obj_['start'].to_i)
+    end
 
 
   end

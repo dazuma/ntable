@@ -48,7 +48,7 @@ module NTable
         @labeled_axis_2 = LabeledAxis.new([:one, :two])
         @labeled_axis_3 = LabeledAxis.new([:red, :white, :blue])
         @indexed_axis_2 = IndexedAxis.new(2)
-        @indexed_axis_10 = IndexedAxis.new(10)
+        @indexed_axis_10 = IndexedAxis.new(10,1)
         @indexed_axis_0 = IndexedAxis.new(0)
       end
 
@@ -76,7 +76,7 @@ module NTable
 
       def test_slice_1_to_0_indexed
         t1_ = Table.new(Structure.new.add(@indexed_axis_10, :row), :load => (2..11).to_a)
-        t1s_ = t1_.slice(:row => 2)
+        t1s_ = t1_.slice(:row => 3)
         assert_equal(4, t1s_.get)
       end
 
@@ -91,7 +91,7 @@ module NTable
       def test_slice_2_to_0
         s1_ = Structure.new.add(@indexed_axis_10, :row).add(@labeled_axis_3, :col)
         t1_ = Table.new(s1_, :load => (2..31).to_a)
-        t1s_ = t1_.slice(:row => 1, :col => :white)
+        t1s_ = t1_.slice(:row => 2, :col => :white)
         assert_equal(6, t1s_.get)
       end
 
@@ -99,7 +99,7 @@ module NTable
       def test_slice_2_to_1_major
         s1_ = Structure.new.add(@indexed_axis_10, :row).add(@labeled_axis_3, :col)
         t1_ = Table.new(s1_, :load => (2..31).to_a)
-        t1s_ = t1_.slice(:row => 1)
+        t1s_ = t1_.slice(:row => 2)
         t2_ = Table.new(Structure.new.add(@labeled_axis_3, :col), :load => [5,6,7])
         assert_equal(t2_, t1s_)
       end

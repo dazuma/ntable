@@ -34,6 +34,9 @@
 ;
 
 
+require 'json'
+
+
 module NTable
 
 
@@ -48,7 +51,6 @@ module NTable
       size_ = @structure.size
       load_ = data_[:load]
       fill_ = data_[:fill]
-      @missing_value = data_[:missing_value]
       if load_
         load_size_ = load_.size
         if load_size_ > size_
@@ -105,7 +107,7 @@ module NTable
         args_ = first_ if first_.is_a?(::Hash) || first_.is_a?(::Array)
       end
       offset_ = @structure.offset(args_)
-      offset_ ? @vals[offset_] : @missing_value
+      offset_ ? @vals[offset_] : nil
     end
     alias_method :[], :get
 
@@ -203,7 +205,6 @@ module NTable
 
 
     def concat(rhs_, axis_=nil)
-      rhs_structure_ = rhs_.structure
       my_ainfo_ = @structure.all_axis_info
       rhs_ainfo_ = rhs_.structure.all_axis_info
       unless my_ainfo_.size == rhs_ainfo_.size
@@ -281,6 +282,26 @@ module NTable
       Table.new(sum_structure_, :load => sum_vals_)
     end
     alias_method :+, :concat
+
+
+    def to_json_object
+      {'axes' => @structure.to_json_array, 'values' => @vals}
+    end
+
+
+    def to_json
+      to_json_object.to_json
+    end
+
+
+    def self.from_json_object(json_)
+      new(Structure.from_json_array(json_['axes'] || []), :load => json_['values'] || [])
+    end
+
+
+    def self.parse_json(json_)
+      from_json_object(::JSON.parse(json_))
+    end
 
 
   end
