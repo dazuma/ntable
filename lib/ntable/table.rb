@@ -86,6 +86,11 @@ module NTable
     end
 
 
+    def raw_values
+      @vals
+    end
+
+
     def dim
       @structure.dim
     end

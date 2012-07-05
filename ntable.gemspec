@@ -38,7 +38,7 @@
   s_.name = 'ntable'
   s_.summary = 'NTable is an N-dimensional table data structure for Ruby.'
   s_.description = "NTable is an N-dimensional table data structure for Ruby."
-  s_.version = "#{::File.read('Version').strip}.build#{::Time.now.utc.strftime('%Y%m%d%H%M%S')}"
+  s_.version = "#{::File.read('Version').strip}.nonrelease"
   s_.author = 'Daniel Azuma'
   s_.email = 'dazuma@gmail.com'
   s_.homepage = 'http://github.com/dazuma/ntable'
