@@ -54,4 +54,8 @@ module NTable
   end
 
 
+  class TableLockedError < NTableError
+  end
+
+
 end

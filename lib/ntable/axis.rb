@@ -37,32 +37,76 @@
 module NTable
 
 
+  # This is a "null" axis that has no elements.
+  # Not terribly useful by itself, but may be a reasonable base class.
+  # Accordingly, we will use this class to document the methods
+  # required for an axis object.
+  #
+  # In general, an axis describes a particular dimension in the table:
+  # how large the table is in that dimension, and how the ordered
+  # "rows" along that dimension are named.
+
   class EmptyAxis
 
+
+    def eql?(obj_)
+      obj_.is_a?(EmptyAxis)
+    end
+    alias_method :==, :eql?
+
+    def hash
+      self.class.hash
+    end
+
+    def inspect
+      "#<#{self.class}:0x#{object_id.to_s(16)}>"
+    end
+    alias_method :to_s, :inspect
+
+
+    # Return the number of rows along this axis.
+    # An empty axis will return 0.
 
     def size
       0
     end
 
 
+    # Given a label object, return the corresponding 0-based integer index.
+    # Returns nil if the label is not recognized.
+
     def label_to_index(label_)
       nil
     end
 
+
+    # Given a 0-based integer index, return the corresponding label object.
+    # Returns nil if the index is out of bounds (i.e. is less than 0 or
+    # greater than or equal to size.)
 
     def index_to_label(index_)
       nil
     end
 
 
+    # Attempt to return a new axis that is the concatenation of this axis
+    # and the given axis. Returns nil if it doesn't make sense (e.g. if
+    # the given axis is not compatible with this one.)
+
     def concat(rhs_)
       rhs_
     end
 
 
+    # Populate the given hash with the configuration of this axis.
+    # The hash will eventually be serialized via JSON.
+
     def to_json_object(json_obj_)
     end
 
+
+    # Configure this axis given a hash configuration that came from
+    # a JSON serialization.
 
     def from_json_object(json_obj_)
     end
@@ -71,10 +115,12 @@ module NTable
   end
 
 
-  # Labeled axis
+  # An axis in which the rows are explicitly named with label strings.
 
   class LabeledAxis
 
+
+    # Create a LabeledAxis given an array of the label strings.
 
     def initialize(labels_)
       @a = labels_.map{ |label_| label_.to_s }
@@ -132,11 +178,13 @@ module NTable
   end
 
 
-  # Indexed axis
+  # An axis in which the rows are numerically identified.
 
   class IndexedAxis
 
 
+    # Create an IndexedAxis with the given number of rows. The optional
+    # start parameter indicates the number of the first row (default 0).
     def initialize(size_, start_=0)
       @size = size_
       @start = start_

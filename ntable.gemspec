@@ -43,7 +43,7 @@
   s_.email = 'dazuma@gmail.com'
   s_.homepage = 'http://github.com/dazuma/ntable'
   s_.rubyforge_project = 'virtuoso'
-  s_.required_ruby_version = '>= 1.8.7'
+  s_.required_ruby_version = '>= 1.9.2'
   s_.files = ::Dir.glob("lib/**/*.rb") +
     ::Dir.glob("test/**/*.rb") +
     ::Dir.glob("*.rdoc") +

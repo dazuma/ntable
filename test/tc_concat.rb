@@ -34,14 +34,14 @@
 ;
 
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'ntable'
 
 
 module NTable
   module Tests  # :nodoc:
 
-    class TestConcat < ::Test::Unit::TestCase  # :nodoc:
+    class TestConcat < ::MiniTest::Unit::TestCase  # :nodoc:
 
 
       def setup

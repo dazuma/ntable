@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# Basic table values tests
+# Test serialization as JSON
 #
 # -----------------------------------------------------------------------------
 # Copyright 2012 Daniel Azuma
@@ -34,14 +34,14 @@
 ;
 
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'ntable'
 
 
 module NTable
   module Tests  # :nodoc:
 
-    class TestJSON < ::Test::Unit::TestCase  # :nodoc:
+    class TestJSON < ::MiniTest::Unit::TestCase  # :nodoc:
 
 
       def setup
@@ -120,6 +120,7 @@ module NTable
           :load => (0..29).to_a)
         json_ = table_.to_json_object
         expected_json_ = {
+          'type' => 'ntable',
           'axes' => [{'type' => 'indexed', 'name' => 'row', 'size' => 10, 'start' => 1},
             {'type' => 'labeled', 'name' => 'col', 'labels' => ['red', 'white', 'blue']}],
           'values' => (0..29).to_a

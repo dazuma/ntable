@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# Axis object tests
+# Table structure tests
 #
 # -----------------------------------------------------------------------------
 # Copyright 2012 Daniel Azuma
@@ -34,14 +34,14 @@
 ;
 
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'ntable'
 
 
 module NTable
   module Tests  # :nodoc:
 
-    class TestStructure < ::Test::Unit::TestCase  # :nodoc:
+    class TestStructure < ::MiniTest::Unit::TestCase  # :nodoc:
 
 
       def setup
@@ -141,44 +141,44 @@ module NTable
 
       def test_offset_labeled1_array
         s_ = Structure.new.add(@labeled1).lock!
-        assert_equal(0, s_.offset([:one]))
-        assert_equal(1, s_.offset([:two]))
-        assert_nil(s_.offset([:three]))
+        assert_equal(0, s_._offset([:one]))
+        assert_equal(1, s_._offset([:two]))
+        assert_nil(s_._offset([:three]))
       end
 
 
       def test_offset_labeled1_hash
         s_ = Structure.new.add(@labeled1, :first_label).lock!
-        assert_equal(0, s_.offset(:first_label => :one))
-        assert_equal(1, s_.offset(:first_label => :two))
-        assert_nil(s_.offset(:first_label => :three))
-        assert_nil(s_.offset(:second_label => :one))
+        assert_equal(0, s_._offset(:first_label => :one))
+        assert_equal(1, s_._offset(:first_label => :two))
+        assert_nil(s_._offset(:first_label => :three))
+        assert_nil(s_._offset(:second_label => :one))
       end
 
 
       def test_offset_labeled1_indexed1_array
         s_ = Structure.new.add(@labeled1).add(@indexed1).lock!
-        assert_equal(2, s_.offset([:one, 2]))
-        assert_equal(13, s_.offset([:two, 3]))
-        assert_equal(10, s_.offset([:two]))
-        assert_nil(s_.offset([:three, 0]))
+        assert_equal(2, s_._offset([:one, 2]))
+        assert_equal(13, s_._offset([:two, 3]))
+        assert_equal(10, s_._offset([:two]))
+        assert_nil(s_._offset([:three, 0]))
       end
 
 
       def test_offset_labeled1_indexed1_hash
         s_ = Structure.new.add(@labeled1, :first_axis).add(@indexed1, :second_axis).lock!
-        assert_equal(2, s_.offset(:first_axis => :one, :second_axis => 2))
-        assert_equal(13, s_.offset(:first_axis => :two, :second_axis => 3))
-        assert_equal(5, s_.offset(:second_axis => 5))
-        assert_nil(s_.offset(:first_axis => :three))
-        assert_nil(s_.offset(:third_axis => :three))
+        assert_equal(2, s_._offset(:first_axis => :one, :second_axis => 2))
+        assert_equal(13, s_._offset(:first_axis => :two, :second_axis => 3))
+        assert_equal(5, s_._offset(:second_axis => 5))
+        assert_nil(s_._offset(:first_axis => :three))
+        assert_nil(s_._offset(:third_axis => :three))
       end
 
 
       def test_offset_no_axes
         s_ = Structure.new.lock!
-        assert_equal(0, s_.offset([]))
-        assert_equal(0, s_.offset({}))
+        assert_equal(0, s_._offset([]))
+        assert_equal(0, s_._offset({}))
       end
 
 
@@ -192,7 +192,7 @@ module NTable
         s2_ = Structure.new.add(@labeled1).add(@indexed1)
         s3_ = Structure.new.add(@indexed1).add(@labeled1)
         assert_equal(s1_, s2_)
-        assert_not_equal(s1_, s3_)
+        refute_equal(s1_, s3_)
       end
 
 

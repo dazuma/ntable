@@ -34,14 +34,14 @@
 ;
 
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'ntable'
 
 
 module NTable
   module Tests  # :nodoc:
 
-    class TestSlice < ::Test::Unit::TestCase  # :nodoc:
+    class TestSlice < ::MiniTest::Unit::TestCase  # :nodoc:
 
 
       def setup
@@ -111,6 +111,16 @@ module NTable
         t1s_ = t1_.slice(:col => :white)
         t2_ = Table.new(Structure.new.add(@indexed_axis_10, :row), :load => [3,6,9,12,15,18,21,24,27,30])
         assert_equal(t2_, t1s_)
+      end
+
+
+      def test_shared_slice_1_to_0_indexed
+        t1_ = Table.new(Structure.new.add(@indexed_axis_10, :row), :load => (2..11).to_a)
+        t1s_ = t1_.shared_slice(:row => 3)
+        assert_equal(4, t1s_.get)
+        assert_equal(Table.new(Structure.new, :load => [4]), t1s_)
+        t1_.set!(3, :foo)
+        assert_equal(:foo, t1s_.get)
       end
 
 

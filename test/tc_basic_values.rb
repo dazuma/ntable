@@ -34,14 +34,14 @@
 ;
 
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'ntable'
 
 
 module NTable
   module Tests  # :nodoc:
 
-    class TestBasicValues < ::Test::Unit::TestCase  # :nodoc:
+    class TestBasicValues < ::MiniTest::Unit::TestCase  # :nodoc:
 
 
       def setup
@@ -117,7 +117,7 @@ module NTable
         t2_ = Table.new(@structure, :fill => 0)
         assert_equal(t1_, t2_)
         t1_[:row => 0, :column => :red] = 1
-        assert_not_equal(t1_, t2_)
+        refute_equal(t1_, t2_)
         t2_[:row => 0, :column => :red] = 1
         assert_equal(t1_, t2_)
       end

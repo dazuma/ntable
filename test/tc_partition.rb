@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# Axis object tests
+# Table partition tests
 #
 # -----------------------------------------------------------------------------
 # Copyright 2012 Daniel Azuma
@@ -41,80 +41,60 @@ require 'ntable'
 module NTable
   module Tests  # :nodoc:
 
-    class TestAxes < ::MiniTest::Unit::TestCase  # :nodoc:
+    class TestPartition < ::MiniTest::Unit::TestCase  # :nodoc:
 
 
-      def test_labeled_axis_size
-        axis_ = LabeledAxis.new([:one, :two])
-        assert_equal(2, axis_.size)
+      def setup
+        @labeled_axis_2 = LabeledAxis.new([:one, :two])
+        @indexed_axis_10 = IndexedAxis.new(10,1)
+        @indexed_axis_0 = IndexedAxis.new(0)
+        @scalar_structure = Structure.new
+        @structure_row = Structure.add(@labeled_axis_2)
+        @structure_1d = Structure.add(@indexed_axis_10)
+        @structure_2d = Structure.add(@indexed_axis_10).add(@labeled_axis_2)
+        @empty_structure = Structure.add(@indexed_axis_0)
       end
 
 
-      def test_labeled_axis_label_to_index
-        axis_ = LabeledAxis.new([:one, :two])
-        assert_equal(0, axis_.label_to_index(:one))
-        assert_equal(1, axis_.label_to_index(:two))
-        assert_nil(axis_.label_to_index(:three))
+      def test_scalar_partition
+        t1_ = Table.new(@scalar_structure, :load => [:foo])
+        t2_ = t1_.partition([])
+        assert_equal(0, t2_.dim)
+        assert_equal(1, t2_.size)
+        assert_equal(t1_, t2_.get)
       end
 
 
-      def test_labeled_axis_index_to_label
-        axis_ = LabeledAxis.new([:one, :two])
-        assert_equal('one', axis_.index_to_label(0))
-        assert_equal('two', axis_.index_to_label(1))
-        assert_nil(axis_.index_to_label(2))
+      def test_1d_partition_inner
+        t1_ = Table.new(@structure_1d, :load => (2..11).to_a)
+        t2_ = t1_.partition([0])
+        assert_equal(0, t2_.dim)
+        assert_equal(1, t2_.size)
+        assert_equal(t1_, t2_.get)
       end
 
 
-      def test_labeled_axis_equality
-        axis1_ = LabeledAxis.new([:one, :two])
-        axis2_ = LabeledAxis.new([:one, :two])
-        axis3_ = LabeledAxis.new([:one, :three])
-        assert_equal(axis1_, axis2_)
-        refute_equal(axis1_, axis3_)
+      def test_1d_partition_outer
+        t1_ = Table.new(@structure_1d, :load => (2..11).to_a)
+        t2_ = t1_.partition([])
+        assert_equal(Table.new(@scalar_structure, :load => [2]), t2_.get(1))
+        assert_equal(Table.new(@scalar_structure, :load => [3]), t2_.get(2))
       end
 
 
-      def test_labeled_axis_empty
-        axis_ = LabeledAxis.new([])
-        assert_equal(0, axis_.size)
+      def test_2d_partition
+        t1_ = Table.new(@structure_2d, :load => (2..21).to_a)
+        t2_ = t1_.partition([1])
+        assert_equal(Table.new(@structure_row, :load => [2, 3]), t2_.get(1))
+        assert_equal(Table.new(@structure_row, :load => [4, 5]), t2_.get(2))
       end
 
 
-      def test_indexed_axis_size
-        axis_ = IndexedAxis.new(2)
-        assert_equal(2, axis_.size)
-      end
-
-
-      def test_indexed_axis_label_to_index
-        axis_ = IndexedAxis.new(2, 4)
-        assert_equal(0, axis_.label_to_index(4))
-        assert_equal(1, axis_.label_to_index(5))
-        assert_nil(axis_.label_to_index(3))
-      end
-
-
-      def test_indexed_axis_index_to_label
-        axis_ = IndexedAxis.new(2, 4)
-        assert_equal(4, axis_.index_to_label(0))
-        assert_equal(5, axis_.index_to_label(1))
-        assert_nil(axis_.index_to_label(2))
-      end
-
-
-      def test_indexed_axis_equality
-        axis1_ = IndexedAxis.new(2, 4)
-        axis2_ = IndexedAxis.new(2, 4)
-        axis3_ = IndexedAxis.new(2, 3)
-        assert_equal(axis1_, axis2_)
-        refute_equal(axis1_, axis3_)
-      end
-
-
-      def test_indexed_axis_empty
-        axis_ = IndexedAxis.new(0)
-        assert_equal(0, axis_.size)
+      def test_2d_partition_reduce
+        t1_ = Table.new(@structure_2d, :load => (2..21).to_a)
+        t2_ = t1_.partition_reduce([1], :*)
+        assert_equal(6, t2_.get(1))
+        assert_equal(20, t2_.get(2))
       end
 
 
