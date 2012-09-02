@@ -361,6 +361,24 @@ module NTable
 
 
     # Performs a reduce on the entire table and returns the result.
+    # You may use one of the following call sequences:
+    #
+    # [reduce{ |accumulator, value| <i>block</i> }]
+    #   Reduces using the given block as the reduction function. The
+    #   first element in the table is used as the initial accumulator.
+    # [reduce(initial){ |accumulator, value| <i>block</i> }]
+    #   Reduces using the given block as the reduction function, with
+    #   the given initial value for the accumulator.
+    # [reduce(:<i>method-name</i>)
+    #   Reduces using the given binary operator or method name as the
+    #   reduction function. If it is a method, the method must take a
+    #   single argument for the right-hand-side of the operation. The
+    #   first element in the table is used as the initial accumulator.
+    # [reduce(<i>initial</i>, :<i>method-name</i>)
+    #   Reduces using the given binary operator or method name as the
+    #   reduction function. If it is a method, the method must take a
+    #   single argument for the right-hand-side of the operation. The
+    #   given initial accumulator value is used.
 
     def reduce(*args_)
       nothing_ = ::Object.new
@@ -404,6 +422,14 @@ module NTable
 
 
     # Performs a reduce on the entire table and returns the result.
+    # You may use one of the following call sequences:
+    #
+    # [reduce{ |accumulator, value, position| <i>block</i> }]
+    #   Reduces using the given block as the reduction function. The
+    #   first element in the table is used as the initial accumulator.
+    # [reduce(initial){ |accumulator, value, position| <i>block</i> }]
+    #   Reduces using the given block as the reduction function, with
+    #   the given initial value for the accumulator.
 
     def reduce_with_position(*args_)
       nothing_ = ::Object.new
@@ -429,10 +455,10 @@ module NTable
 
     # Decomposes this table, breaking it into a set of lower-dimensional
     # tables, all arranged in a table. For example, you could decompose
-    # a two-dimensional table into a one-dimensional table OF one-dimensional
-    # tables. The axes of the lower-dimensional tables are called the
-    # "inner" axes. You must specify the inner axes as an array of
-    # axis specifications (indexes or names).
+    # a two-dimensional table into a one-dimensional table of one-dimensional
+    # tables. You must provide an array of axis specifications (indexes or
+    # names) identifying which axes should be part of the lower-dimensional
+    # tables.
 
     def decompose(*axes_)
       axes_ = axes_.flatten
@@ -458,15 +484,31 @@ module NTable
     end
 
 
+    # Decompose this table using the given axes, and then reduce each
+    # inner table, returning a table of the reduction values.
+
     def decompose_reduce(decompose_axes_, *reduce_args_, &block_)
       decompose(decompose_axes_).map{ |sub_| sub_.reduce(*reduce_args_, &block_) }
     end
 
 
+    # Decompose this table using the given axes, and then reduce each
+    # inner table with position, returning a table of the reduction values.
+
     def decompose_reduce_with_position(decompose_axes_, *reduce_args_, &block_)
       decompose(decompose_axes_).map{ |sub_| sub_.reduce_with_position(*reduce_args_, &block_) }
     end
 
+
+    # Returns a table containing a "slice" of this table. The given hash
+    # should be keyed by axis indexes or axis names, and should provide
+    # specific values for zero or more dimensions, which provides the
+    # constraints for the slice.
+    #
+    # Returns a slice table whose parent is this table. Because the slice
+    # table has a parent, it is not mutable because it shares data with
+    # this table. If this table has values modified, the slice data will
+    # reflect those changes.
 
     def shared_slice(hash_)
       offset_ = @offset
@@ -488,20 +530,36 @@ module NTable
     end
 
 
+    # Returns a table containing a "slice" of this table. The given hash
+    # should be keyed by axis indexes or axis names, and should provide
+    # specific values for zero or more dimensions, which provides the
+    # constraints for the slice.
+    #
+    # Returns a new table independent of this table. The new table can
+    # have cell values modified independently of this table.
+
     def slice(hash_)
       shared_slice(hash_).dup
     end
 
+
+    # Returns a JSON serialization of this table, as an object. If you
+    # need to output a JSON string, you must unparse separately.
 
     def to_json_object
       {'type' => 'ntable', 'axes' => @structure.to_json_array, 'values' => @parent ? _compacted_vals : @vals}
     end
 
 
+    # Returns a JSON serialization of this table, as an unparsed string.
+
     def to_json
       to_json_object.to_json
     end
 
+
+    # Returns a nested-object (nested arrays and hashes) serialization
+    # of this table.
 
     def to_nested_object(opts_={})
       if @structure.degenerate?
@@ -548,15 +606,21 @@ module NTable
     class << self
 
 
+      # Construct a table given a JSON object representation.
+
       def from_json_object(json_)
         new(Structure.from_json_array(json_['axes'] || []), :load => json_['values'] || [])
       end
 
 
+      # Construct a table given a JSON unparsed string representation.
+
       def parse_json(json_)
         from_json_object(::JSON.parse(json_))
       end
 
+
+      # Construct a table given nested hashes and arrays.
 
       def from_nested_object(obj_, field_opts_=[], opts_={})
         axis_data_ = []

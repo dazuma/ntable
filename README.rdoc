@@ -4,14 +4,15 @@ NTable is an N-dimensional table data structure for Ruby.
 
 === Summary
 
+NTable provides a convenient data structure for storing n-dimensional tabular data. It works with zero-dimensional scalar values, arrays, tables, and any arbitrary-dimensional hypertables. Each dimension is described by an axis object. The "rows" in that dimension might be identified by numbers or names. You can perform slice operations across any dimension, as well as reductions and dimensional decomposition. Finally, serialization is provided via a custom JSON schema, as well as a simple "hash of hashes" or "array of arrays" approach.
 
 === Dependencies
 
 NTable is known to work with the following Ruby implementations:
 
 * Standard "MRI" Ruby 1.9.2 or later.
-* Rubinius 2.0 or later.
-* JRuby 1.6 or later.
+* Rubinius 2.0 or later, in 1.9 mode.
+* JRuby 1.6 or later, in 1.9 mode.
 
 === Installation
 
