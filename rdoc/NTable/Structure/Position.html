@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class NTable::Structure::Position - NTable 0.1.0 Documentation</title>
+
+<link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../../index.html">Home</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/ntable/structure.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-3D-3D">#==</a>
+    
+    <li><a href="#method-i-5B-5D">#[]</a>
+    
+    <li><a href="#method-i-coord">#coord</a>
+    
+    <li><a href="#method-i-coord_array">#coord_array</a>
+    
+    <li><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li><a href="#method-i-next">#next</a>
+    
+    <li><a href="#method-i-prev">#prev</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../../History_rdoc.html">History</a>
+  
+    <li class="file"><a href="../../README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../NTable.html">NTable</a>
+  
+    <li><a href="../../NTable/EmptyAxis.html">NTable::EmptyAxis</a>
+  
+    <li><a href="../../NTable/IndexedAxis.html">NTable::IndexedAxis</a>
+  
+    <li><a href="../../NTable/LabeledAxis.html">NTable::LabeledAxis</a>
+  
+    <li><a href="../../NTable/NTableError.html">NTable::NTableError</a>
+  
+    <li><a href="../../NTable/Structure.html">NTable::Structure</a>
+  
+    <li><a href="../../NTable/Structure/Position.html">NTable::Structure::Position</a>
+  
+    <li><a href="../../NTable/StructureMismatchError.html">NTable::StructureMismatchError</a>
+  
+    <li><a href="../../NTable/StructureStateError.html">NTable::StructureStateError</a>
+  
+    <li><a href="../../NTable/Table.html">NTable::Table</a>
+  
+    <li><a href="../../NTable/TableLockedError.html">NTable::TableLockedError</a>
+  
+    <li><a href="../../NTable/UnknownAxisError.html">NTable::UnknownAxisError</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class NTable::Structure::Position</h1>
+
+  <div id="description" class="description">
+    
+<p>A coordinate into a table. This object is often provided during iteration
+to indicate where you are in the iteration. You should not need to create a
+<a href="Position.html">Position</a> object yourself.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-3D-3D" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(obj_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Position.html#method-i-eql-3F">eql?</a>
+        </div>
+        
+      </div><!-- 3D-3D-method -->
+
+    
+      <div id="method-i-5B-5D" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">[]</span><span
+            class="method-args">(axis_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Position.html#method-i-coord">coord</a>
+        </div>
+        
+      </div><!-- 5B-5D-method -->
+
+    
+      <div id="method-i-coord" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">coord</span><span
+            class="method-args">(axis_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the label of the coordinate along the given axis. The axis may be
+provided by name or index.</p>
+          
+
+          
+          <div class="method-source-code" id="coord-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">coord</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">axis_info</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-identifier">ainfo_</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">_coords</span>[<span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">index</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- coord-source -->
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="Position.html#method-i-5B-5D">[]</a>
+        </div>
+        
+
+        
+      </div><!-- coord-method -->
+
+    
+      <div id="method-i-coord_array" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">coord_array</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns an array of all coordinate labels along the axes in order.</p>
+          
+
+          
+          <div class="method-source-code" id="coord_array-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 144</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">coord_array</span>
+  <span class="ruby-identifier">_coords</span>.<span class="ruby-identifier">dup</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- coord_array-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- coord_array-method -->
+
+    
+      <div id="method-i-eql-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">eql?</span><span
+            class="method-args">(obj_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="eql-3F-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 123</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>)
+  <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Position</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">structure</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-ivar">@structure</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">_offset</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">_offset</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- eql-3F-source -->
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="Position.html#method-i-3D-3D">==</a>
+        </div>
+        
+
+        
+      </div><!-- eql-3F-method -->
+
+    
+      <div id="method-i-next" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">next</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the <a href="Position.html">Position</a> of the “next” cell in the
+table, or nil if this is the last cell.</p>
+          
+
+          
+          <div class="method-source-code" id="next-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 152</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">next</span>
+  <span class="ruby-identifier">v_</span> = <span class="ruby-ivar">@vector</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">_inc_vector</span>(<span class="ruby-identifier">v_</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Position</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>, <span class="ruby-identifier">v_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- next-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- next-method -->
+
+    
+      <div id="method-i-prev" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">prev</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the <a href="Position.html">Position</a> of the “previous” cell in
+the table, or nil if this is the first cell.</p>
+          
+
+          
+          <div class="method-source-code" id="prev-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 161</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">prev</span>
+  <span class="ruby-identifier">v_</span> = <span class="ruby-ivar">@vector</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">_dec_vector</span>(<span class="ruby-identifier">v_</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Position</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>, <span class="ruby-identifier">v_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- prev-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- prev-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

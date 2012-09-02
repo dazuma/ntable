@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class NTable::Structure - NTable 0.1.0 Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/ntable/structure.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-add">::add</a>
+    
+    <li><a href="#method-c-from_json_array">::from_json_array</a>
+    
+    <li><a href="#method-c-new">::new</a>
+    
+    <li><a href="#method-i-3D-3D">#==</a>
+    
+    <li><a href="#method-i-add">#add</a>
+    
+    <li><a href="#method-i-all_axis_info">#all_axis_info</a>
+    
+    <li><a href="#method-i-axis_info">#axis_info</a>
+    
+    <li><a href="#method-i-degenerate-3F">#degenerate?</a>
+    
+    <li><a href="#method-i-dim">#dim</a>
+    
+    <li><a href="#method-i-empty-3F">#empty?</a>
+    
+    <li><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li><a href="#method-i-from_json_array">#from_json_array</a>
+    
+    <li><a href="#method-i-lock-21">#lock!</a>
+    
+    <li><a href="#method-i-locked-3F">#locked?</a>
+    
+    <li><a href="#method-i-parent">#parent</a>
+    
+    <li><a href="#method-i-position">#position</a>
+    
+    <li><a href="#method-i-remove">#remove</a>
+    
+    <li><a href="#method-i-replace">#replace</a>
+    
+    <li><a href="#method-i-size">#size</a>
+    
+    <li><a href="#method-i-substructure_including">#substructure_including</a>
+    
+    <li><a href="#method-i-substructure_omitting">#substructure_omitting</a>
+    
+    <li><a href="#method-i-to_json_array">#to_json_array</a>
+    
+    <li><a href="#method-i-unlocked_copy">#unlocked_copy</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../History_rdoc.html">History</a>
+  
+    <li class="file"><a href="../README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../NTable.html">NTable</a>
+  
+    <li><a href="../NTable/EmptyAxis.html">NTable::EmptyAxis</a>
+  
+    <li><a href="../NTable/IndexedAxis.html">NTable::IndexedAxis</a>
+  
+    <li><a href="../NTable/LabeledAxis.html">NTable::LabeledAxis</a>
+  
+    <li><a href="../NTable/NTableError.html">NTable::NTableError</a>
+  
+    <li><a href="../NTable/Structure.html">NTable::Structure</a>
+  
+    <li><a href="../NTable/Structure/Position.html">NTable::Structure::Position</a>
+  
+    <li><a href="../NTable/StructureMismatchError.html">NTable::StructureMismatchError</a>
+  
+    <li><a href="../NTable/StructureStateError.html">NTable::StructureStateError</a>
+  
+    <li><a href="../NTable/Table.html">NTable::Table</a>
+  
+    <li><a href="../NTable/TableLockedError.html">NTable::TableLockedError</a>
+  
+    <li><a href="../NTable/UnknownAxisError.html">NTable::UnknownAxisError</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class NTable::Structure</h1>
+
+  <div id="description" class="description">
+    
+<p>A <a href="Structure.html">Structure</a> describes how a table is laid out:
+how many dimensions it has, how large the table is in each of those
+dimensions, what the axes are called, and how the coordinates are
+labeled/named. It is essentially an ordered list of named axes, along with
+some meta-information. A <a href="Structure.html">Structure</a> is capable
+of performing computations such as determining how to look up data at a
+particular coordinate.</p>
+
+<p>Generally, you create a new empty structure, and then use the <a
+href="Structure.html#method-i-add">add</a> method to define the axes.
+Provide the axis by creating an axis object (for example, an instance of <a
+href="IndexedAxis.html">IndexedAxis</a> or <a
+href="LabeledAxis.html">LabeledAxis</a>.) You can also optionally provide a
+name for the axis.</p>
+
+<p>Once a <a href="Structure.html">Structure</a> is used by a table, it is
+locked and cannot be modified further. However, a <a
+href="Structure.html">Structure</a> can be shared by multiple tables.</p>
+
+<p>Many table operations (such as slice) automatically compute the structure
+of the result.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-add" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add</span><span
+            class="method-args">(axis_, name_=nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 612</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add-method -->
+
+    
+      <div id="method-c-from_json_array" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">from_json_array</span><span
+            class="method-args">(array_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="from_json_array-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 617</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- from_json_array-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- from_json_array-method -->
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create an empty <a href="Structure.html">Structure</a>. An empty structure
+corresponds to a table with no axes and a single value (i.e. a scalar).
+Generally, you should add axes using the <a
+href="Structure.html#method-i-add">#add</a> method before using the
+structure.</p>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 183</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-ivar">@indexes</span> = []
+  <span class="ruby-ivar">@names</span> = {}
+  <span class="ruby-ivar">@size</span> = <span class="ruby-value">1</span>
+  <span class="ruby-ivar">@locked</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@parent</span> = <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-3D-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if the two structures are equivalent in the axes but not
+necessarily in the offsets. The structure of a shared slice is equivalent,
+in this sense, to the “same” structure created from scratch, even though
+one is a subview and the other is not.</p>
+          
+
+          
+          <div class="method-source-code" id="3D-3D-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 234</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">equal?</span>(<span class="ruby-keyword">self</span>)
+    <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Structure</span>)
+    <span class="ruby-identifier">rhs_indexes_</span> = <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@indexes</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">rhs_indexes_</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span>
+      <span class="ruby-identifier">rhs_indexes_</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rhs_ai_</span>, <span class="ruby-identifier">i_</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">lhs_ai_</span> = <span class="ruby-ivar">@indexes</span>[<span class="ruby-identifier">i_</span>]
+        <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">lhs_ai_</span>.<span class="ruby-identifier">axis</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">rhs_ai_</span>.<span class="ruby-identifier">axis</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">lhs_ai_</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">rhs_ai_</span>.<span class="ruby-identifier">name</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- 3D-3D-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- 3D-3D-method -->
+
+    
+      <div id="method-i-add" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add</span><span
+            class="method-args">(axis_, name_=nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Append an axis to the configuration of this structure. You must provide the
+axis, as an object that duck-types <a href="EmptyAxis.html">EmptyAxis</a>.
+You may also provide an optional name string.</p>
+          
+
+          
+          <div class="method-source-code" id="add-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 257</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;Structure locked&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@locked</span>
+  <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">name_</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">name_</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-constant">AxisInfo</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span>, <span class="ruby-identifier">name_</span>)
+  <span class="ruby-ivar">@indexes</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ainfo_</span>
+  <span class="ruby-ivar">@names</span>[<span class="ruby-identifier">name_</span>] = <span class="ruby-identifier">ainfo_</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name_</span>
+  <span class="ruby-ivar">@size</span> <span class="ruby-operator">*=</span> <span class="ruby-identifier">axis_</span>.<span class="ruby-identifier">size</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add-method -->
+
+    
+      <div id="method-i-all_axis_info" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">all_axis_info</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns an array of AxisInfo objects representing all the axes of this
+structure.</p>
+          
+
+          
+          <div class="method-source-code" id="all_axis_info-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 344</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_axis_info</span>
+  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">dup</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- all_axis_info-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- all_axis_info-method -->
+
+    
+      <div id="method-i-axis_info" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">axis_info</span><span
+            class="method-args">(axis_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the AxisInfo object representing the given axis. The axis must be
+specified by 0-based index or by name string. Returns nil if there is no
+such axis.</p>
+          
+
+          
+          <div class="method-source-code" id="axis_info-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 353</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">axis_info</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">axis_</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-operator">::</span><span class="ruby-constant">Integer</span>
+    <span class="ruby-ivar">@indexes</span>[<span class="ruby-identifier">axis_</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@names</span>[<span class="ruby-identifier">axis_</span>.<span class="ruby-identifier">to_s</span>]
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- axis_info-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- axis_info-method -->
+
+    
+      <div id="method-i-degenerate-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">degenerate?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this is a degenerate/scalar structure. That is, if the
+dimension is 0.</p>
+          
+
+          
+          <div class="method-source-code" id="degenerate-3F-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 336</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">degenerate?</span>
+  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- degenerate-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- degenerate-3F-method -->
+
+    
+      <div id="method-i-dim" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">dim</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the number of axes/dimensions currently in this structure.</p>
+          
+
+          
+          <div class="method-source-code" id="dim-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 328</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">dim</span>
+  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- dim-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- dim-method -->
+
+    
+      <div id="method-i-empty-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">empty?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this structure implies an “empty” table, one with no cells.
+This happens only if at least one of the axes has a zero size.</p>
+          
+
+          
+          <div class="method-source-code" id="empty-3F-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 400</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
+  <span class="ruby-ivar">@size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- empty-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- empty-3F-method -->
+
+    
+      <div id="method-i-eql-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">eql?</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if the two structures are equivalent, both in the axes and in
+the parentage. The structure of a shared slice is not equivalent, in this
+sense, to the “same” structure created from scratch, because the former is
+a subview of a larger structure whereas the latter is not.</p>
+          
+
+          
+          <div class="method-source-code" id="eql-3F-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 221</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">equal?</span>(<span class="ruby-keyword">self</span>) <span class="ruby-operator">||</span>
+    <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Structure</span>) <span class="ruby-operator">&amp;&amp;</span>
+    <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@parent</span>)) <span class="ruby-operator">&amp;&amp;</span>
+    <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@indexes</span>))
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- eql-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- eql-3F-method -->
+
+    
+      <div id="method-i-from_json_array" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">from_json_array</span><span
+            class="method-args">(array_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Use the given array to reconstitute a structure previously serialized using
+<a href="Structure.html#method-i-to_json_array">#to_json_array</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="from_json_array-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 449</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;There are already axes in this structure&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">array_</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">obj_</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">obj_</span>[<span class="ruby-string">'name'</span>]
+    <span class="ruby-identifier">type_</span> = <span class="ruby-identifier">obj_</span>[<span class="ruby-string">'type'</span>] <span class="ruby-operator">||</span> <span class="ruby-string">'Empty'</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">type_</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r^([a-z])(.*)$/</span>
+      <span class="ruby-identifier">mod_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">NTable</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-node">&quot;#{$1.upcase}#{$2}Axis&quot;</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">mod_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Kernel</span>
+      <span class="ruby-identifier">type_</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">'::'</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t_</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">mod_</span> = <span class="ruby-identifier">mod_</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">t_</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">axis_</span> = <span class="ruby-identifier">mod_</span>.<span class="ruby-identifier">allocate</span>
+    <span class="ruby-identifier">axis_</span>.<span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">obj_</span>)
+    <span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- from_json_array-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- from_json_array-method -->
+
+    
+      <div id="method-i-lock-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">lock!</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Lock this structure, preventing further modification. Generally, this is
+done automatically when a structure is used by a table, and you do not need
+to call it yourself.</p>
+          
+
+          
+          <div class="method-source-code" id="lock-21-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 367</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">lock!</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@locked</span>
+    <span class="ruby-ivar">@locked</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">s_</span> = <span class="ruby-ivar">@size</span>
+      <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ainfo_</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">s_</span> <span class="ruby-operator">/=</span> <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span>
+        <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">_set_step</span>(<span class="ruby-identifier">s_</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- lock-21-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- lock-21-method -->
+
+    
+      <div id="method-i-locked-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">locked?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this structure has been locked.</p>
+          
+
+          
+          <div class="method-source-code" id="locked-3F-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 384</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">locked?</span>
+  <span class="ruby-ivar">@locked</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- locked-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- locked-3F-method -->
+
+    
+      <div id="method-i-parent" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parent</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the parent structure if this is a sub-view into a larger structure,
+or nil if not.</p>
+          
+
+          
+          <div class="method-source-code" id="parent-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 321</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parent</span>
+  <span class="ruby-ivar">@parent</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- parent-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- parent-method -->
+
+    
+      <div id="method-i-position" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">position</span><span
+            class="method-args">(arg_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a <a href="Structure/Position.html">Position</a> object for the
+given argument. The argument may be a hash of row labels by axis name, or
+it may be an array of row labels for the axes in order.</p>
+          
+
+          
+          <div class="method-source-code" id="position-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 409</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">position</span>(<span class="ruby-identifier">arg_</span>)
+  <span class="ruby-identifier">vector_</span> = <span class="ruby-identifier">_vector</span>(<span class="ruby-identifier">arg_</span>)
+  <span class="ruby-identifier">vector_</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Position</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">vector_</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- position-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- position-method -->
+
+    
+      <div id="method-i-remove" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove</span><span
+            class="method-args">(axis_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Remove the given axis from the configuration. You may specify the axis by
+0-based index, or by name string. Raises <a
+href="UnknownAxisError.html">UnknownAxisError</a> if there is no such axis.</p>
+          
+
+          
+          <div class="method-source-code" id="remove-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 272</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;Structure locked&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@locked</span>
+  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-identifier">axis_info</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ainfo_</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownAxisError</span>, <span class="ruby-node">&quot;Unknown axis: #{axis_.inspect}&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">index_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">index</span>
+  <span class="ruby-ivar">@names</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">name</span>)
+  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">delete_at</span>(<span class="ruby-identifier">index_</span>)
+  <span class="ruby-ivar">@indexes</span>[<span class="ruby-identifier">index_</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">each</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">_dec_index</span> }
+  <span class="ruby-identifier">size_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">size_</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-value">1</span>){ <span class="ruby-operator">|</span><span class="ruby-identifier">s_</span>, <span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s_</span> * <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span> }
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@size</span> <span class="ruby-operator">/=</span> <span class="ruby-identifier">size_</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- remove-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- remove-method -->
+
+    
+      <div id="method-i-replace" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">replace</span><span
+            class="method-args">(axis_, naxis_=nil) { |ainfo_| ... }</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Replace the given axis already in the configuration, with the given new
+axis. The old axis must be specified by 0-based index or by name string.
+The new axis must be provided as an axis object that duck-types <a
+href="EmptyAxis.html">EmptyAxis</a>.</p>
+
+<p>Raises <a href="UnknownAxisError.html">UnknownAxisError</a> if the given
+old axis specification does not match an actual axis.</p>
+          
+
+          
+          <div class="method-source-code" id="replace-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 300</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">replace</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">naxis_</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;Structure locked&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@locked</span>
+  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-identifier">axis_info</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ainfo_</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownAxisError</span>, <span class="ruby-node">&quot;Unknown axis: #{axis_.inspect}&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">osize_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span>
+  <span class="ruby-identifier">naxis_</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">ainfo_</span>)
+  <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">_set_axis</span>(<span class="ruby-identifier">naxis_</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">osize_</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-value">1</span>){ <span class="ruby-operator">|</span><span class="ruby-identifier">size_</span>, <span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">size_</span> * <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span> }
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@size</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">osize_</span> * <span class="ruby-identifier">naxis_</span>.<span class="ruby-identifier">size</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- replace-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- replace-method -->
+
+    
+      <div id="method-i-size" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">size</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the number of cells in a table with this structure.</p>
+          
+
+          
+          <div class="method-source-code" id="size-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 391</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">size</span>
+  <span class="ruby-ivar">@size</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- size-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- size-method -->
+
+    
+      <div id="method-i-substructure_including" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">substructure_including</span><span
+            class="method-args">(*axes_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="substructure_including-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 415</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">substructure_including</span>(*<span class="ruby-identifier">axes_</span>)
+  <span class="ruby-identifier">_substructure</span>(<span class="ruby-identifier">axes_</span>.<span class="ruby-identifier">flatten</span>, <span class="ruby-keyword">true</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- substructure_including-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- substructure_including-method -->
+
+    
+      <div id="method-i-substructure_omitting" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">substructure_omitting</span><span
+            class="method-args">(*axes_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="substructure_omitting-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 420</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">substructure_omitting</span>(*<span class="ruby-identifier">axes_</span>)
+  <span class="ruby-identifier">_substructure</span>(<span class="ruby-identifier">axes_</span>.<span class="ruby-identifier">flatten</span>, <span class="ruby-keyword">false</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- substructure_omitting-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- substructure_omitting-method -->
+
+    
+      <div id="method-i-to_json_array" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">to_json_array</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns an array of objects representing the configuration of this
+structure. Such an array can be serialized as JSON, and used to replicate
+this structure using from_json_array.</p>
+          
+
+          
+          <div class="method-source-code" id="to_json_array-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 429</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json_array</span>
+  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">name</span>
+    <span class="ruby-identifier">axis_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>
+    <span class="ruby-identifier">type_</span> = <span class="ruby-identifier">axis_</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">type_</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r^NTable::(\w+)Axis$/</span>
+      <span class="ruby-identifier">type_</span> = <span class="ruby-node">$1</span>
+      <span class="ruby-identifier">type_</span> = <span class="ruby-identifier">type_</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">0</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">type_</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">obj_</span> = {<span class="ruby-string">'type'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">type_</span>}
+    <span class="ruby-identifier">obj_</span>[<span class="ruby-string">'name'</span>] = <span class="ruby-identifier">name_</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">name_</span>
+    <span class="ruby-identifier">axis_</span>.<span class="ruby-identifier">to_json_object</span>(<span class="ruby-identifier">obj_</span>)
+    <span class="ruby-identifier">obj_</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- to_json_array-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- to_json_array-method -->
+
+    
+      <div id="method-i-unlocked_copy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">unlocked_copy</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create an unlocked copy of this structure that can be further modified.</p>
+          
+
+          
+          <div class="method-source-code" id="unlocked_copy-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 208</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">unlocked_copy</span>
+  <span class="ruby-identifier">copy_</span> = <span class="ruby-constant">Structure</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">each</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">copy_</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>, <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">name</span>) }
+  <span class="ruby-identifier">copy_</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- unlocked_copy-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- unlocked_copy-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+
