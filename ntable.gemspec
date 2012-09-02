@@ -3,7 +3,7 @@
 # NTable gemspec
 #
 # -----------------------------------------------------------------------------
-# Copyright 2011 Daniel Azuma
+# Copyright 2012 Daniel Azuma
 #
 # All rights reserved.
 #
@@ -36,8 +36,8 @@
 
 ::Gem::Specification.new do |s_|
   s_.name = 'ntable'
-  s_.summary = 'NTable is an N-dimensional table data structure for Ruby.'
-  s_.description = "NTable is an N-dimensional table data structure for Ruby."
+  s_.summary = 'NTable is an n-dimensional table data structure for Ruby.'
+  s_.description = "NTable provides a convenient data structure for storing n-dimensional tabular data. It works with zero-dimensional scalar values, arrays, tables, and any arbitrary-dimensional hypertables. Each dimension is described by an axis object. The \"rows\" in that dimension might be identified by numbers or names. You can perform slice operations across any dimension, as well as reductions and dimensional decomposition. Finally, serialization is provided via a custom JSON schema, as well as a simple \"hash of hashes\" or \"array of arrays\" approach."
   s_.version = "#{::File.read('Version').strip}.nonrelease"
   s_.author = 'Daniel Azuma'
   s_.email = 'dazuma@gmail.com'
