@@ -89,15 +89,6 @@ module NTable
     end
 
 
-    # Attempt to return a new axis that is the concatenation of this axis
-    # and the given axis. Returns nil if it doesn't make sense (e.g. if
-    # the given axis is not compatible with this one.)
-
-    def concat(rhs_)
-      rhs_
-    end
-
-
     # Populate the given hash with the configuration of this axis.
     # The hash will eventually be serialized via JSON.
 
@@ -115,12 +106,13 @@ module NTable
   end
 
 
-  # An axis in which the rows are explicitly named with label strings.
+  # An axis in which the labels are explicitly provided as strings.
 
   class LabeledAxis
 
 
     # Create a LabeledAxis given an array of the label strings.
+    # Symbols may also be provided, but will be converted to strings.
 
     def initialize(labels_)
       @a = labels_.map{ |label_| label_.to_s }
@@ -147,6 +139,7 @@ module NTable
 
     attr_reader :size
 
+
     def label_to_index(label_)
       @h[label_.to_s]
     end
@@ -156,19 +149,9 @@ module NTable
     end
 
 
-    def concat(rhs_)
-      if rhs_.is_a?(LabeledAxis) && !@a.find{ |label_| rhs_.label_to_index(label_) }
-        LabeledAxis.new(@a + rhs_.instance_variable_get(:@a))
-      else
-        nil
-      end
-    end
-
-
     def to_json_object(json_obj_)
       json_obj_['labels'] = @a
     end
-
 
     def from_json_object(json_obj_)
       initialize(json_obj_['labels'] || [])
@@ -178,13 +161,15 @@ module NTable
   end
 
 
-  # An axis in which the rows are numerically identified.
+  # An axis in which the rows are numerically identified by a range
+  # of consecutive integers.
 
   class IndexedAxis
 
 
     # Create an IndexedAxis with the given number of rows. The optional
     # start parameter indicates the number of the first row (default 0).
+
     def initialize(size_, start_=0)
       @size = size_
       @start = start_
@@ -209,6 +194,7 @@ module NTable
     attr_reader :size
     attr_reader :start
 
+
     def label_to_index(label_)
       label_ >= @start && label_ < @size + @start ? label_ - @start : nil
     end
@@ -218,20 +204,10 @@ module NTable
     end
 
 
-    def concat(rhs_)
-      if rhs_.is_a?(IndexedAxis)
-        IndexedAxis.new(@size + rhs_.size, @start)
-      else
-        nil
-      end
-    end
-
-
     def to_json_object(json_obj_)
       json_obj_['size'] = @size
       json_obj_['start'] = @start unless @start == 0
     end
-
 
     def from_json_object(json_obj_)
       initialize(json_obj_['size'], json_obj_['start'].to_i)

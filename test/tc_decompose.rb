@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# Table partition tests
+# Table decomposition tests
 #
 # -----------------------------------------------------------------------------
 # Copyright 2012 Daniel Azuma
@@ -41,7 +41,7 @@ require 'ntable'
 module NTable
   module Tests  # :nodoc:
 
-    class TestPartition < ::MiniTest::Unit::TestCase  # :nodoc:
+    class TestDecompose < ::MiniTest::Unit::TestCase  # :nodoc:
 
 
       def setup
@@ -56,43 +56,43 @@ module NTable
       end
 
 
-      def test_scalar_partition
+      def test_scalar_decompose
         t1_ = Table.new(@scalar_structure, :load => [:foo])
-        t2_ = t1_.partition([])
+        t2_ = t1_.decompose([])
         assert_equal(0, t2_.dim)
         assert_equal(1, t2_.size)
         assert_equal(t1_, t2_.get)
       end
 
 
-      def test_1d_partition_inner
+      def test_1d_decompose_inner
         t1_ = Table.new(@structure_1d, :load => (2..11).to_a)
-        t2_ = t1_.partition([0])
+        t2_ = t1_.decompose([0])
         assert_equal(0, t2_.dim)
         assert_equal(1, t2_.size)
         assert_equal(t1_, t2_.get)
       end
 
 
-      def test_1d_partition_outer
+      def test_1d_decompose_outer
         t1_ = Table.new(@structure_1d, :load => (2..11).to_a)
-        t2_ = t1_.partition([])
+        t2_ = t1_.decompose([])
         assert_equal(Table.new(@scalar_structure, :load => [2]), t2_.get(1))
         assert_equal(Table.new(@scalar_structure, :load => [3]), t2_.get(2))
       end
 
 
-      def test_2d_partition
+      def test_2d_decompose
         t1_ = Table.new(@structure_2d, :load => (2..21).to_a)
-        t2_ = t1_.partition([1])
+        t2_ = t1_.decompose([1])
         assert_equal(Table.new(@structure_row, :load => [2, 3]), t2_.get(1))
         assert_equal(Table.new(@structure_row, :load => [4, 5]), t2_.get(2))
       end
 
 
-      def test_2d_partition_reduce
+      def test_2d_decompose_reduce
         t1_ = Table.new(@structure_2d, :load => (2..21).to_a)
-        t2_ = t1_.partition_reduce([1], :*)
+        t2_ = t1_.decompose_reduce([1], :*)
         assert_equal(6, t2_.get(1))
         assert_equal(20, t2_.get(2))
       end

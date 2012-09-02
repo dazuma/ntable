@@ -37,40 +37,59 @@
 module NTable
 
 
-  # A Structure describes all the dimensions of a table. It is
+  # A Structure describes how a table is laid out: how many dimensions
+  # it has, how large the table is in each of those dimensions, what the
+  # axes are called, and how the coordinates are labeled/named. It is
   # essentially an ordered list of named axes, along with some
-  # meta-information, and it is capable of performing computations
+  # meta-information. A Structure is capable of performing computations
   # such as determining how to look up data at a particular coordinate.
   #
   # Generally, you create a new empty structure, and then use the #add
-  # method to define the axes.
+  # method to define the axes. Provide the axis by creating an axis
+  # object (for example, an instance of IndexedAxis or LabeledAxis.)
+  # You can also optionally provide a name for the axis.
   #
   # Once a Structure is used by a table, it is locked and cannot be
   # modified further. However, a Structure can be shared by multiple
   # tables.
+  #
+  # Many table operations (such as slice) automatically compute the
+  # structure of the result.
 
   class Structure
 
 
+    # A data structure that provides information about a particular
+    # axis/dimension in a Structure. It provides access to the axis
+    # itself, as well as the axis's name (if any) and 0-based index
+    # into the list of axes. You should never need to create an
+    # AxisInfo yourself, but you can obtain one from Structure#axis_info.
+
     class AxisInfo  # :nodoc:
 
-      def initialize(axis_, index_, name_, step_=nil)
+      def initialize(axis_, index_, name_, step_=nil)  # :nodoc:
         @axis = axis_
         @index = index_
         @name = name_
         @step = step_
       end
 
+      # The axis object
       attr_reader :axis
+      # The 0-based index of this axis in the structure. i.e. the first,
+      # most major axis has index 0.
       attr_reader :index
+      # The name of this axis in the structure as a string, or nil for
+      # no name.
       attr_reader :name
-      attr_reader :step
+
+      attr_reader :step  # :nodoc:
 
 
-      def eql?(obj_)
+      def eql?(obj_)  # :nodoc:
         obj_.is_a?(AxisInfo) && obj_.axis.eql?(@axis) && obj_.name.eql?(@name)
       end
-      alias_method :==, :eql?
+      alias_method :==, :eql?  # :nodoc:
 
 
       def _set_axis(axis_)  # :nodoc:
@@ -88,11 +107,13 @@ module NTable
     end
 
 
-    # A coordinate into a table
+    # A coordinate into a table. This object is often provided during
+    # iteration to indicate where you are in the iteration. You should
+    # not need to create a Position object yourself.
 
     class Position
 
-      def initialize(structure_, vector_)
+      def initialize(structure_, vector_)  # :nodoc:
         @structure = structure_
         @vector = vector_
         @offset = @coords = nil
@@ -104,8 +125,11 @@ module NTable
       end
       alias_method :==, :eql?
 
+      attr_reader :structure  # :nodoc:
 
-      attr_reader :structure
+
+      # Returns the label of the coordinate along the given axis. The
+      # axis may be provided by name or index.
 
       def coord(axis_)
         ainfo_ = @structure.axis_info(axis_)
@@ -113,14 +137,26 @@ module NTable
       end
       alias_method :[], :coord
 
+
+      # Returns an array of all coordinate labels along the axes in
+      # order.
+
       def coord_array
         _coords.dup
       end
+
+
+      # Returns the Position of the "next" cell in the table, or nil
+      # if this is the last cell.
 
       def next
         v_ = @vector.dup
         @structure._inc_vector(v_) ? nil : Position.new(@structure, v_)
       end
+
+
+      # Returns the Position of the "previous" cell in the table, or nil
+      # if this is the first cell.
 
       def prev
         v_ = @vector.dup
@@ -139,14 +175,17 @@ module NTable
     end
 
 
-    # Create an empty Structure
+    # Create an empty Structure. An empty structure corresponds to a
+    # table with no axes and a single value (i.e. a scalar). Generally,
+    # you should add axes using the Structure#add method before using
+    # the structure.
 
     def initialize
       @indexes = []
       @names = {}
       @size = 1
       @locked = false
-      @sparse = false
+      @parent = nil
     end
 
 
@@ -174,18 +213,28 @@ module NTable
 
 
     # Returns true if the two structures are equivalent, both in the
-    # axes and in the offsets.
+    # axes and in the parentage. The structure of a shared slice is not
+    # equivalent, in this sense, to the "same" structure created from
+    # scratch, because the former is a subview of a larger structure
+    # whereas the latter is not.
 
     def eql?(rhs_)
-      rhs_.is_a?(Structure) && rhs_.instance_variable_get(:@indexes).eql?(@indexes)
+      rhs_.equal?(self) ||
+        rhs_.is_a?(Structure) &&
+        @parent.eql?(rhs_.instance_variable_get(:@parent)) &&
+        @indexes.eql?(rhs_.instance_variable_get(:@indexes))
     end
 
 
     # Returns true if the two structures are equivalent in the axes but
-    # not necessarily in the offsets.
+    # not necessarily in the offsets. The structure of a shared slice
+    # is equivalent, in this sense, to the "same" structure created from
+    # scratch, even though one is a subview and the other is not.
 
     def ==(rhs_)
-      if rhs_.is_a?(Structure)
+      if rhs_.equal?(self)
+        true
+      elsif rhs_.is_a?(Structure)
         rhs_indexes_ = rhs_.instance_variable_get(:@indexes)
         if rhs_indexes_.size == @indexes.size
           rhs_indexes_.each_with_index do |rhs_ai_, i_|
@@ -194,10 +243,16 @@ module NTable
           end
           return true
         end
+        false
+      else
+        false
       end
-      false
     end
 
+
+    # Append an axis to the configuration of this structure. You must
+    # provide the axis, as an object that duck-types EmptyAxis. You may
+    # also provide an optional name string.
 
     def add(axis_, name_=nil)
       raise StructureStateError, "Structure locked" if @locked
@@ -210,59 +265,90 @@ module NTable
     end
 
 
+    # Remove the given axis from the configuration.
+    # You may specify the axis by 0-based index, or by name string.
+    # Raises UnknownAxisError if there is no such axis.
+
     def remove(axis_)
       raise StructureStateError, "Structure locked" if @locked
-      if (ainfo_ = axis_info(axis_))
-        index_ = ainfo_.index
-        @names.delete(ainfo_.name)
-        @indexes.delete_at(index_)
-        @indexes[index_..-1].each{ |ai_| ai_._dec_index }
-        size_ = ainfo_.axis.size
-        if size_ == 0
-          @size = @indexes.inject(1){ |s_, ai_| s_ * ai_.axis.size }
-        else
-          @size /= size_
-        end
+      ainfo_ = axis_info(axis_)
+      unless ainfo_
+        raise UnknownAxisError, "Unknown axis: #{axis_.inspect}"
+      end
+      index_ = ainfo_.index
+      @names.delete(ainfo_.name)
+      @indexes.delete_at(index_)
+      @indexes[index_..-1].each{ |ai_| ai_._dec_index }
+      size_ = ainfo_.axis.size
+      if size_ == 0
+        @size = @indexes.inject(1){ |s_, ai_| s_ * ai_.axis.size }
+      else
+        @size /= size_
       end
       self
     end
 
+
+    # Replace the given axis already in the configuration, with the
+    # given new axis. The old axis must be specified by 0-based index
+    # or by name string. The new axis must be provided as an axis
+    # object that duck-types EmptyAxis.
+    #
+    # Raises UnknownAxisError if the given old axis specification
+    # does not match an actual axis.
 
     def replace(axis_, naxis_=nil)
       raise StructureStateError, "Structure locked" if @locked
-      if (ainfo_ = axis_info(axis_))
-        osize_ = ainfo_.axis.size
-        naxis_ ||= yield(ainfo_)
-        ainfo_._set_axis = naxis_
-        if osize_ == 0
-          @size = @indexes.inject(1){ |size_, ai_| size_ * ai_.axis.size }
-        else
-          @size = @size / osize_ * naxis_.size
-        end
+      ainfo_ = axis_info(axis_)
+      unless ainfo_
+        raise UnknownAxisError, "Unknown axis: #{axis_.inspect}"
+      end
+      osize_ = ainfo_.axis.size
+      naxis_ ||= yield(ainfo_)
+      ainfo_._set_axis(naxis_)
+      if osize_ == 0
+        @size = @indexes.inject(1){ |size_, ai_| size_ * ai_.axis.size }
+      else
+        @size = @size / osize_ * naxis_.size
       end
       self
     end
 
 
-    def sparse?
-      @sparse
+    # Returns the parent structure if this is a sub-view into a larger
+    # structure, or nil if not.
+
+    def parent
+      @parent
     end
 
+
+    # Returns the number of axes/dimensions currently in this structure.
 
     def dim
       @indexes.size
     end
 
 
+    # Returns true if this is a degenerate/scalar structure. That is,
+    # if the dimension is 0.
+
     def degenerate?
       @indexes.size == 0
     end
 
 
+    # Returns an array of AxisInfo objects representing all the axes
+    # of this structure.
+
     def all_axis_info
       @indexes.dup
     end
 
+
+    # Returns the AxisInfo object representing the given axis. The axis
+    # must be specified by 0-based index or by name string. Returns nil
+    # if there is no such axis.
 
     def axis_info(axis_)
       case axis_
@@ -274,23 +360,9 @@ module NTable
     end
 
 
-    def get_axis(axis_)
-      ainfo_ = axis_info(axis_)
-      ainfo_ ? ainfo_.axis : nil
-    end
-
-
-    def get_index(axis_)
-      ainfo_ = axis_info(axis_)
-      ainfo_ ? ainfo_.index : nil
-    end
-
-
-    def get_name(axis_)
-      ainfo_ = axis_info(axis_)
-      ainfo_ ? ainfo_.name : nil
-    end
-
+    # Lock this structure, preventing further modification. Generally,
+    # this is done automatically when a structure is used by a table,
+    # and you do not need to call it yourself.
 
     def lock!
       unless @locked
@@ -307,26 +379,52 @@ module NTable
     end
 
 
+    # Returns true if this structure has been locked.
+
     def locked?
       @locked
     end
 
+
+    # Returns the number of cells in a table with this structure.
 
     def size
       @size
     end
 
 
+    # Returns true if this structure implies an "empty" table, one with
+    # no cells. This happens only if at least one of the axes has a
+    # zero size.
+
     def empty?
       @size == 0
     end
 
+
+    # Creates a Position object for the given argument. The argument
+    # may be a hash of row labels by axis name, or it may be an array
+    # of row labels for the axes in order.
 
     def position(arg_)
       vector_ = _vector(arg_)
       vector_ ? Position.new(self, vector_) : nil
     end
 
+
+    def substructure_including(*axes_)
+      _substructure(axes_.flatten, true)
+    end
+
+
+    def substructure_omitting(*axes_)
+      _substructure(axes_.flatten, false)
+    end
+
+
+    # Returns an array of objects representing the configuration of
+    # this structure. Such an array can be serialized as JSON, and
+    # used to replicate this structure using from_json_array.
 
     def to_json_array
       @indexes.map do |ai_|
@@ -345,7 +443,13 @@ module NTable
     end
 
 
+    # Use the given array to reconstitute a structure previously
+    # serialized using Structure#to_json_array.
+
     def from_json_array(array_)
+      if @indexes.size > 0
+        raise StructureStateError, "There are already axes in this structure"
+      end
       array_.each do |obj_|
         name_ = obj_['name']
         type_ = obj_['type'] || 'Empty'
@@ -365,7 +469,30 @@ module NTable
     end
 
 
-    def _offset(arg_)
+    def _substructure(axes_, bool_)  # :nodoc:
+      raise StructureStateError, "Structure not locked" unless @locked
+      sub_ = Structure.new
+      indexes_ = []
+      names_ = {}
+      size_ = 1
+      @indexes.each do |ainfo_|
+        if axes_.include?(ainfo_.index) == bool_
+          nainfo_ = AxisInfo.new(ainfo_.axis, indexes_.size, ainfo_.name, ainfo_.step)
+          indexes_ << nainfo_
+          names_[ainfo_.name] = nainfo_
+          size_ *= ainfo_.axis.size
+        end
+      end
+      sub_.instance_variable_set(:@indexes, indexes_)
+      sub_.instance_variable_set(:@names, names_)
+      sub_.instance_variable_set(:@size, size_)
+      sub_.instance_variable_set(:@locked, true)
+      sub_.instance_variable_set(:@parent, self)
+      sub_
+    end
+
+
+    def _offset(arg_)  # :nodoc:
       raise StructureStateError, "Structure not locked" unless @locked
       return nil unless @size > 0
       case arg_
@@ -399,7 +526,7 @@ module NTable
     end
 
 
-    def _vector(arg_)
+    def _vector(arg_)  # :nodoc:
       raise StructureStateError, "Structure not locked" unless @locked
       return nil unless @size > 0
       vec_ = ::Array.new(@indexes.size, 0)
@@ -469,28 +596,6 @@ module NTable
         end
       end
       false
-    end
-
-
-    def _copy_with(axes_, bool_)  # :nodoc:
-      copy_ = Structure.new
-      indexes_ = []
-      names_ = {}
-      size_ = 1
-      @indexes.each do |ainfo_|
-        if axes_.include?(ainfo_.index) == bool_
-          nainfo_ = AxisInfo.new(ainfo_.axis, indexes_.size, ainfo_.name, ainfo_.step)
-          indexes_ << nainfo_
-          names_[ainfo_.name] = nainfo_
-          size_ *= ainfo_.axis.size
-        end
-      end
-      copy_.instance_variable_set(:@indexes, indexes_)
-      copy_.instance_variable_set(:@names, names_)
-      copy_.instance_variable_set(:@size, size_)
-      copy_.instance_variable_set(:@locked, true)
-      copy_.instance_variable_set(:@sparse, true)
-      copy_
     end
 
 

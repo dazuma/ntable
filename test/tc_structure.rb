@@ -67,10 +67,10 @@ module NTable
       def test_add_single_axis
         s_ = Structure.new
         s_.add(@labeled1, :first)
-        assert_equal(@labeled1, s_.get_axis(0))
-        assert_equal(@labeled1, s_.get_axis(:first))
-        assert_equal(0, s_.get_index(:first))
-        assert_equal('first', s_.get_name(0))
+        assert_equal(@labeled1, s_.axis_info(0).axis)
+        assert_equal(@labeled1, s_.axis_info(:first).axis)
+        assert_equal(0, s_.axis_info(:first).index)
+        assert_equal('first', s_.axis_info(0).name)
       end
 
 
@@ -79,16 +79,16 @@ module NTable
         s_.add(@labeled1, :first)
         s_.add(@indexed1, :second)
         s_.add(@indexed1)
-        assert_equal(@labeled1, s_.get_axis(0))
-        assert_equal(@labeled1, s_.get_axis(:first))
-        assert_equal(0, s_.get_index(:first))
-        assert_equal('first', s_.get_name(0))
-        assert_equal(@indexed1, s_.get_axis(1))
-        assert_equal(@indexed1, s_.get_axis(:second))
-        assert_equal(1, s_.get_index(:second))
-        assert_equal('second', s_.get_name(1))
-        assert_equal(@indexed1, s_.get_axis(2))
-        assert_nil(s_.get_name(2))
+        assert_equal(@labeled1, s_.axis_info(0).axis)
+        assert_equal(@labeled1, s_.axis_info(:first).axis)
+        assert_equal(0, s_.axis_info(:first).index)
+        assert_equal('first', s_.axis_info(0).name)
+        assert_equal(@indexed1, s_.axis_info(1).axis)
+        assert_equal(@indexed1, s_.axis_info(:second).axis)
+        assert_equal(1, s_.axis_info(:second).index)
+        assert_equal('second', s_.axis_info(1).name)
+        assert_equal(@indexed1, s_.axis_info(2).axis)
+        assert_nil(s_.axis_info(2).name)
       end
 
 
@@ -98,12 +98,12 @@ module NTable
         s_.add(@indexed1, :second)
         s_.remove(:first)
         assert_equal(1, s_.dim)
-        assert_equal(@indexed1, s_.get_axis(0))
-        assert_equal(@indexed1, s_.get_axis(:second))
-        assert_equal(0, s_.get_index(:second))
-        assert_equal('second', s_.get_name(0))
-        assert_nil(s_.get_name(1))
-        assert_nil(s_.get_index(:first))
+        assert_equal(@indexed1, s_.axis_info(0).axis)
+        assert_equal(@indexed1, s_.axis_info(:second).axis)
+        assert_equal(0, s_.axis_info(:second).index)
+        assert_equal('second', s_.axis_info(0).name)
+        assert_nil(s_.axis_info(1))
+        assert_nil(s_.axis_info(:first))
       end
 
 

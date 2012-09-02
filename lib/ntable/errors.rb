@@ -37,22 +37,36 @@
 module NTable
 
 
-  # Base class
+  # Base class for all NTable errors
+
   class NTableError < ::StandardError
   end
 
+
+  # Raised if the structure lock/unlock state is incorrect for the
+  # current operation. For example, it is raised if you attempt to
+  # add an axis to a locked structure.
 
   class StructureStateError < NTableError
   end
 
 
+  # An attempt was made to perform an operation on two tables that were
+  # not compatible with one another.
+
   class StructureMismatchError < NTableError
   end
 
 
+  # A given axis name or index was not recognized.
+
   class UnknownAxisError < NTableError
   end
 
+
+  # Raised if you attempt to modify a table that is locked. Locked
+  # tables are usually "sub-views" into other tables, and cannot be
+  # edited directly because they share data with the parent table.
 
   class TableLockedError < NTableError
   end

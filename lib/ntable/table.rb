@@ -40,62 +40,81 @@ require 'json'
 module NTable
 
 
-  # A table object.
+  # An N-dimensional table object, comprising structure and values.
 
   class Table
 
 
+    # Create a table with the given structure.
+    #
+    # You can initialize the data using the following hash keys:
+    #
+    # [<tt>:fill</tt>]
+    #   Fill all cells with the given value.
+    # [<tt>:load</tt>]
+    #   Load the cell data with the values from the given array, in order.
+
     def initialize(structure_, data_={})
       @structure = structure_
       @structure.lock!
-      if (share_ = data_[:share])
-        @vals = share_
-        @offset = data_[:offset].to_i
-        @shared = true
-      else
-        size_ = @structure.size
-        if (load_ = data_[:load])
-          load_size_ = load_.size
-          if load_size_ > size_
-            @vals = load_[0, size_]
-          elsif load_size_ < size_
-            @vals = load_ + ::Array.new(size_ - load_size_, data_[:fill])
-          else
-            @vals = load_.dup
-          end
-        elsif (acquire_ = data_[:acquire])
-          @vals = acquire_
+      size_ = @structure.size
+      if (load_ = data_[:load])
+        load_size_ = load_.size
+        if load_size_ > size_
+          @vals = load_[0, size_]
+        elsif load_size_ < size_
+          @vals = load_ + ::Array.new(size_ - load_size_, data_[:fill])
         else
-          @vals = ::Array.new(size_, data_[:fill])
+          @vals = load_.dup
         end
-        @offset = 0
-        @shared = false
+      elsif (acquire_ = data_[:acquire])
+        @vals = acquire_
+      else
+        @vals = ::Array.new(size_, data_[:fill])
       end
+      @offset = data_[:offset].to_i
+      @parent = data_[:parent]
     end
 
 
-    def initialize_copy(other_)
-      if other_.shared?
+    def initialize_copy(other_)  # :nodoc:
+      if other_.parent
         @structure = other_.structure.unlocked_copy
         @structure.lock!
         @vals = other_._compacted_vals
         @offset = 0
-        @shared = false
+        @parent = nil
       else
         initialize(other_.structure, :load => other_.instance_variable_get(:@vals))
       end
     end
 
 
+    # Returns true if the two tables are equivalent, both in the data
+    # and in the parentage. The structure of a shared slice is not
+    # equivalent, in this sense, to the "same" table created from
+    # scratch, because the former is a "sparse" subset of a parent
+    # whereas the latter is not.
+
     def eql?(rhs_)
-      rhs_.is_a?(Table) && rhs_.structure.eql?(@structure) &&
+      self.equal?(rhs_) ||
+        rhs_.is_a?(Table) &&
+        @structure.eql?(rhs_.structure) && @parent.eql?(rhs_.parent) &&
+        rhs_.instance_variable_get(:@offset) == @offset &&
         rhs_.instance_variable_get(:@vals).eql?(@vals)
     end
 
 
+    # Returns true if the two tables are equivalent in data but not
+    # necessarily parentage. The structure of a shared slice may be
+    # equivalent, in this sense, to the "same" table created from
+    # scratch with no parent.
+
     def ==(rhs_)
-      if rhs_.is_a?(Table)
-        if rhs_.shared? || self.shared?
+      if self.equal?(rhs_)
+        true
+      elsif rhs_.is_a?(Table)
+        if rhs_.parent || self.parent
           if @structure == rhs_.structure
             riter_ = rhs_.each
             liter_ = self.each
@@ -109,37 +128,67 @@ module NTable
         else
           rhs_.structure.eql?(@structure) && rhs_.instance_variable_get(:@vals).eql?(@vals)
         end
+      else
+        false
       end
     end
 
 
+    # The Structure of this table
     attr_reader :structure
 
+
+    # The number of cells in this table.
 
     def size
       @structure.size
     end
 
 
+    # The number of dimensions/axes in this table.
+
     def dim
       @structure.dim
     end
 
+
+    # True if this table has no cells.
 
     def empty?
       @structure.empty?
     end
 
 
+    # True if this is a degenerate (scalar) table with a single cell
+    # and no dimensions.
+
     def degenerate?
       @structure.degenerate?
     end
 
 
-    def shared?
-      @shared
+    # Return the parent of this table. A table with a parent shares the
+    # parent's data, and cannot have its data modified directly. Instead,
+    # if the parent table is modified, the changes are reflected in the
+    # child. Returns nil if this table has no parent.
+
+    def parent
+      @parent
     end
 
+
+    # Returns the value in the cell at the given coordinates, which
+    # must be given as labels.
+    # You may specify the cell as an array of coordinates, or as a
+    # hash mapping axis name to coordinate.
+    #
+    # For example, for a typical database result set with an axis called
+    # "row" of numerically identified rows, and an axis called "col" with
+    # string-named columns, these call sequences are equivalent:
+    #
+    #  get(3, 'name')
+    #  get([3, 'name'])
+    #  get(:row => 3, :col => 'name')
 
     def get(*args_)
       if args_.size == 1
@@ -152,8 +201,17 @@ module NTable
     alias_method :[], :get
 
 
+    # Set the value in the cell at the given coordinates. If a block is
+    # given, it is passed the current value and expects the new value
+    # to be its result. If no block is given, the last argument is taken
+    # to be the new value. The remaining arguments identify the cell,
+    # using the same syntax as for Table#get.
+    #
+    # You cannot set a value in a table with a parent. Instead, you must
+    # modify the parent, and those changes will be reflected in the child.
+
     def set!(*args_, &block_)
-      raise TableLockedError if @shared
+      raise TableLockedError if @parent
       value_ = block_ ? nil : args_.pop
       if args_.size == 1
         first_ = args_.first
@@ -172,8 +230,13 @@ module NTable
     alias_method :[]=, :set!
 
 
+    # Load an array of values into the table cells, in order.
+    #
+    # You cannot load values into a table with a parent. Instead, you must
+    # modify the parent, and those changes will be reflected in the child.
+
     def load!(vals_)
-      raise TableLockedError if @shared
+      raise TableLockedError if @parent
       is_ = vals_.size
       vs_ = @vals.size
       if is_ < vs_
@@ -186,14 +249,22 @@ module NTable
     end
 
 
+    # Fill all table cells with the given value.
+    #
+    # You cannot load values into a table with a parent. Instead, you must
+    # modify the parent, and those changes will be reflected in the child.
+
     def fill!(value_)
-      raise TableLockedError if @shared
+      raise TableLockedError if @parent
       @vals.fill(value_)
     end
 
 
+    # Iterate over all table cells, in order, and call the given block.
+    # If no block is given, an ::Enumerator is returned.
+
     def each(&block_)
-      if @shared
+      if @parent
         if block_given?
           vec_ = ::Array.new(@structure.dim, 0)
           @structure.size.times do
@@ -209,6 +280,9 @@ module NTable
     end
 
 
+    # Iterate over all table cells, and call the given block with the
+    # value and the Structure::Position for the cell.
+
     def each_with_position
       vec_ = ::Array.new(@structure.dim, 0)
       @structure.size.times do
@@ -220,8 +294,12 @@ module NTable
     end
 
 
+    # Return a new table whose structure is the same as this table, and
+    # whose values are given by mapping the current table's values through
+    # the given block.
+
     def map(&block_)
-      if @shared
+      if @parent
         vec_ = ::Array.new(@structure.dim, 0)
         nvals_ = (0...@structure.size).map do |i_|
           val_ = yield(@vals[@offset + @structure._compute_offset_for_vector(vec_)])
@@ -235,8 +313,11 @@ module NTable
     end
 
 
+    # Same as Table#map except the block is passed the current table's
+    # value for each cell, and the cell's Structure::Position.
+
     def map_with_position
-      nstructure_ = @structure.sparse? ? @structure.unlocked_copy : @structure
+      nstructure_ = @structure.parent ? @structure.unlocked_copy : @structure
       vec_ = ::Array.new(@structure.dim, 0)
       nvals_ = (0...@structure.size).map do |i_|
         nval_ = yield(@vals[@offset + @structure._compute_offset_for_vector(vec_)],
@@ -248,15 +329,27 @@ module NTable
     end
 
 
+    # Modify the current table in place, mapping values through the given
+    # block.
+    #
+    # You cannot set values in a table with a parent. Instead, you must
+    # modify the parent, and those changes will be reflected in the child.
+
     def map!(&block_)
-      raise TableLockedError if @shared
+      raise TableLockedError if @parent
       @vals.map!(&block_)
       self
     end
 
 
+    # Modify the current table in place, mapping values through the given
+    # block, which takes both the old value and the Structure::Position.
+    #
+    # You cannot set values in a table with a parent. Instead, you must
+    # modify the parent, and those changes will be reflected in the child.
+
     def map_with_position!
-      raise TableLockedError if @shared
+      raise TableLockedError if @parent
       vec_ = ::Array.new(@structure.dim, 0)
       @vals.map! do |val_|
         nval_ = yield(val_, Structure::Position.new(@structure, vec_))
@@ -266,6 +359,8 @@ module NTable
       self
     end
 
+
+    # Performs a reduce on the entire table and returns the result.
 
     def reduce(*args_)
       nothing_ = ::Object.new
@@ -308,6 +403,8 @@ module NTable
     alias_method :inject, :reduce
 
 
+    # Performs a reduce on the entire table and returns the result.
+
     def reduce_with_position(*args_)
       nothing_ = ::Object.new
       case args_.size
@@ -330,13 +427,15 @@ module NTable
     alias_method :inject_with_position, :reduce_with_position
 
 
-    # Returns a new table whose values are slices of this table,
-    # containing all the original data. Effectively "partitions" the
-    # dimensions of this table into axes on the "inner" tables and
-    # axes on the "outer" table. You must pass the names or indexes
-    # of the "inner" axes.
+    # Decomposes this table, breaking it into a set of lower-dimensional
+    # tables, all arranged in a table. For example, you could decompose
+    # a two-dimensional table into a one-dimensional table OF one-dimensional
+    # tables. The axes of the lower-dimensional tables are called the
+    # "inner" axes. You must specify the inner axes as an array of
+    # axis specifications (indexes or names).
 
-    def partition(axes_)
+    def decompose(*axes_)
+      axes_ = axes_.flatten
       axis_indexes_ = []
       axes_.each do |a_|
         if (ainfo_ = @structure.axis_info(a_))
@@ -345,12 +444,13 @@ module NTable
           raise UnknownAxisError, "Unknown axis: #{a_.inspect}"
         end
       end
-      inner_struct_ = @structure._copy_with(axis_indexes_, true)
-      outer_struct_ = @structure._copy_with(axis_indexes_, false)
+      inner_struct_ = @structure.substructure_including(axis_indexes_)
+      outer_struct_ = @structure.substructure_omitting(axis_indexes_)
       vec_ = ::Array.new(outer_struct_.dim, 0)
       tables_ = (0...outer_struct_.size).map do |i_|
-        t_ = Table.new(inner_struct_, :share => @vals,
-          :offset => outer_struct_._compute_offset_for_vector(vec_))
+        t_ = Table.new(inner_struct_, :acquire => @vals,
+          :offset => outer_struct_._compute_offset_for_vector(vec_),
+          :parent => self)
         outer_struct_._inc_vector(vec_)
         t_
       end
@@ -358,13 +458,13 @@ module NTable
     end
 
 
-    def partition_reduce(axes_, *args_, &block_)
-      partition(axes_).map{ |sub_| sub_.reduce(*args_, &block_) }
+    def decompose_reduce(decompose_axes_, *reduce_args_, &block_)
+      decompose(decompose_axes_).map{ |sub_| sub_.reduce(*reduce_args_, &block_) }
     end
 
 
-    def partition_reduce_with_position(axes_, *args_, &block_)
-      partition(axes_).map{ |sub_| sub_.reduce_with_position(*args_, &block_) }
+    def decompose_reduce_with_position(decompose_axes_, *reduce_args_, &block_)
+      decompose(decompose_axes_).map{ |sub_| sub_.reduce_with_position(*reduce_args_, &block_) }
     end
 
 
@@ -383,7 +483,8 @@ module NTable
           end
         end
       end
-      Table.new(@structure._copy_with(select_set_, false), :share => @vals, :offset => offset_)
+      Table.new(@structure.substructure_omitting(select_set_.keys),
+        :acquire => @vals, :offset => offset_, :parent => self)
     end
 
 
@@ -392,93 +493,8 @@ module NTable
     end
 
 
-    def concat(rhs_, axis_=nil)
-      # Get axes
-      my_ainfo_ = @structure.all_axis_info
-      rhs_ainfo_ = rhs_.structure.all_axis_info
-      unless my_ainfo_.size == rhs_ainfo_.size
-        raise StructureMismatchError, "Tables have different dimensions"
-      end
-
-      # Determine the concatenated axis
-      concat_index_ = concat_axis_ = concat_ainfo_ = nil
-      if axis_
-        concat_ainfo_ = @structure.axis_info(axis_)
-        unless concat_ainfo_
-          raise StructureMismatchError, "Unable to find specified concatenation axis: #{axis_}"
-        end
-        concat_index_ = concat_ainfo_.index
-        concat_axis_ = concat_ainfo_.axis.concat(rhs_ainfo_[concat_index_].axis)
-        unless concat_axis_
-          raise StructureMismatchError, "Axes cannot be concatenated"
-        end
-      else
-        my_ainfo_.each_with_index do |my_ai_, i_|
-          rhs_ai_ = rhs_ainfo_[i_]
-          unless my_ai_.axis.eql?(rhs_ai_.axis)
-            concat_ainfo_ = my_ai_
-            concat_index_ = i_
-            concat_axis_ = my_ai_.axis.concat(rhs_ai_.axis)
-            unless concat_axis_
-              raise StructureMismatchError, "Axes cannot be concatenated"
-            end
-            break
-          end
-        end
-        unless concat_axis_
-          my_ainfo_.each_with_index do |my_ai_, i_|
-            rhs_ai_ = rhs_ainfo_[i_]
-            concat_axis_ = my_ai_.axis.concat(rhs_ai_.axis)
-            if concat_axis_
-              concat_ainfo_ = my_ai_
-              concat_index_ = i_
-              break
-            end
-          end
-        end
-        unless concat_axis_
-          raise StructureMismatchError, "Unable to find an axis that can be concatenated"
-        end
-      end
-
-      # Create the concatenated structure
-      sum_structure_ = Structure.new
-      my_ainfo_.each_with_index do |my_ai_, i_|
-        rhs_ai_ = rhs_ainfo_[i_]
-        unless my_ai_.name == rhs_ai_.name
-          raise StructureMismatchError, "Axis #{i_} names do not match"
-        end
-        if concat_index_ == i_
-          sum_structure_.add(concat_axis_, my_ai_.name)
-        else
-          unless my_ai_.axis.eql?(rhs_ai_.axis)
-            raise StructureMismatchError, "Non-concatenating axes #{i_} are not equal"
-          end
-          sum_structure_.add(my_ai_.axis, my_ai_.name)
-        end
-      end
-
-      # Copy the data, interleaved
-      lhs_vals_ = @shared ? _compacted_vals : @vals
-      rhs_vals_ = rhs_.shared? ? rhs_._compacted_vals : rhs_.instance_variable_get(:@vals)
-      inner_step_ = concat_ainfo_.step
-      lhs_step_ = concat_ainfo_.axis.size * inner_step_
-      rhs_step_ = rhs_ainfo_[concat_index_].axis.size * inner_step_
-      outer_size_ = @structure.size / lhs_step_
-      sum_structure_.lock!
-      sum_vals_ = ::Array.new(sum_structure_.size)
-      sum_step_ = lhs_step_ + rhs_step_
-      outer_size_.times do |i_|
-        sum_vals_[i_*sum_step_,lhs_step_] = lhs_vals_[i_*lhs_step_,lhs_step_]
-        sum_vals_[i_*sum_step_+lhs_step_,rhs_step_] = rhs_vals_[i_*rhs_step_,rhs_step_]
-      end
-      Table.new(sum_structure_, :acquire => sum_vals_)
-    end
-    alias_method :+, :concat
-
-
     def to_json_object
-      {'type' => 'ntable', 'axes' => @structure.to_json_array, 'values' => @shared ? _compacted_vals : @vals}
+      {'type' => 'ntable', 'axes' => @structure.to_json_array, 'values' => @parent ? _compacted_vals : @vals}
     end
 
 
@@ -488,14 +504,18 @@ module NTable
 
 
     def to_nested_object(opts_={})
-      _to_nested_obj(0, ::Array.new(@structure.dim, 0), opts_)
+      if @structure.degenerate?
+        @vals[@offset]
+      else
+        _to_nested_obj(0, ::Array.new(@structure.dim, 0), opts_)
+      end
     end
 
 
     def _to_nested_obj(aidx_, vec_, opts_)  # :nodoc:
       exclude_ = opts_.include?(:exclude_value)
       exclude_value_ = opts_[:exclude_value] if exclude_
-      axis_ = @structure.get_axis(aidx_)
+      axis_ = @structure.axis_info(aidx_).axis
       result_ = IndexedAxis === axis_ ? [] : {}
       (0...axis_.size).map do |i_|
         vec_[aidx_] = i_
@@ -549,8 +569,7 @@ module NTable
           case ai_
           when ::Hash
             labels_ = ai_.keys
-            sort_ = field_[:sort]
-            if sort_
+            if (sort_ = field_[:sort])
               if sort_.respond_to?(:call)
                 func_ = sort_
               elsif sort_ == :numeric
@@ -559,6 +578,9 @@ module NTable
                 func_ = nil
               end
               labels_.sort!(&func_)
+            end
+            if (xform_ = field_[:transform])
+              labels_.map!(&xform_)
             end
             axis_ = LabeledAxis.new(labels_)
           when ::Array
