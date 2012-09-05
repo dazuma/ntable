@@ -412,10 +412,18 @@ module NTable
     end
 
 
+    # Create a new substructure of this structure. The new structure
+    # has this structure as its parent, but includes only the given
+    # axes, which can be provided as an array of axis names or indexes.
+
     def substructure_including(*axes_)
       _substructure(axes_.flatten, true)
     end
 
+
+    # Create a new substructure of this structure. The new structure
+    # has this structure as its parent, but includes all axes EXCEPT the
+    # given axes, provided as an array of axis names or indexes.
 
     def substructure_omitting(*axes_)
       _substructure(axes_.flatten, false)
@@ -466,6 +474,21 @@ module NTable
         add(axis_, name_)
       end
       self
+    end
+
+
+    # Create a new table using this structure as the structure.
+    # Note that this also has the side effect of locking this structure.
+    #
+    # You can initialize the data using the following options:
+    #
+    # [<tt>:fill</tt>]
+    #   Fill all cells with the given value.
+    # [<tt>:load</tt>]
+    #   Load the cell data with the values from the given array, in order.
+
+    def create(data_={})
+      Table.new(self, data_)
     end
 
 
@@ -609,13 +632,24 @@ module NTable
     end
 
 
-    def self.add(axis_, name_=nil)
-      self.new.add(axis_, name_)
-    end
+    class << self
 
 
-    def self.from_json_array(array_)
-      self.new.from_json_array(array_)
+      # Create a new structure and automatically add the given axis.
+      # See Structure#add.
+
+      def add(axis_, name_=nil)
+        self.new.add(axis_, name_)
+      end
+
+
+      # Deserialize a structure from the given JSON array
+
+      def from_json_array(array_)
+        self.new.from_json_array(array_)
+      end
+
+
     end
 
 

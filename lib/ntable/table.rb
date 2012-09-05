@@ -45,14 +45,8 @@ module NTable
   class Table
 
 
-    # Create a table with the given structure.
-    #
-    # You can initialize the data using the following hash keys:
-    #
-    # [<tt>:fill</tt>]
-    #   Fill all cells with the given value.
-    # [<tt>:load</tt>]
-    #   Load the cell data with the values from the given array, in order.
+    # This is a low-level table creation mechanism.
+    # Generally, you should use ::NTable.create instead.
 
     def initialize(structure_, data_={})
       @structure = structure_
@@ -189,16 +183,25 @@ module NTable
     #  get(3, 'name')
     #  get([3, 'name'])
     #  get(:row => 3, :col => 'name')
+    #
+    # Raises NoSuchCellError if the coordinates do not exist.
 
     def get(*args_)
-      if args_.size == 1
-        first_ = args_.first
-        args_ = first_ if first_.is_a?(::Hash) || first_.is_a?(::Array)
+      offset_ = _offset_for_args(args_)
+      unless offset_
+        raise NoSuchCellError
       end
-      offset_ = @structure._offset(args_)
-      offset_ ? @vals[@offset + offset_] : nil
+      @vals[@offset + offset_]
     end
     alias_method :[], :get
+
+
+    # Returns a boolean indicating whether the given cell coordinates
+    # actually exist. The arguments use the same syntax as for Table#get.
+
+    def include?(*args_)
+      _offset_for_args(args_) ? true : false
+    end
 
 
     # Set the value in the cell at the given coordinates. If a block is
@@ -209,23 +212,23 @@ module NTable
     #
     # You cannot set a value in a table with a parent. Instead, you must
     # modify the parent, and those changes will be reflected in the child.
+    #
+    # Raises NoSuchCellError if the coordinates do not exist.
+    #
+    # Returns self so calls can be chained.
 
     def set!(*args_, &block_)
       raise TableLockedError if @parent
       value_ = block_ ? nil : args_.pop
-      if args_.size == 1
-        first_ = args_.first
-        args_ = first_ if first_.is_a?(::Hash) || first_.is_a?(::Array)
+      offset_ = _offset_for_args(args_)
+      unless offset_
+        raise NoSuchCellError
       end
-      offset_ = @structure._offset(args_)
-      if offset_
-        if block_
-          value_ = block_.call(@vals[@offset + offset_])
-        end
-        @vals[@offset + offset_] = value_
-      else
-        @missing_value
+      if block_
+        value_ = block_.call(@vals[@offset + offset_])
       end
+      @vals[@offset + offset_] = value_
+      self
     end
     alias_method :[]=, :set!
 
@@ -234,6 +237,8 @@ module NTable
     #
     # You cannot load values into a table with a parent. Instead, you must
     # modify the parent, and those changes will be reflected in the child.
+    #
+    # Returns self so calls can be chained.
 
     def load!(vals_)
       raise TableLockedError if @parent
@@ -246,6 +251,7 @@ module NTable
       else
         @vals = vals_.dup
       end
+      self
     end
 
 
@@ -253,10 +259,13 @@ module NTable
     #
     # You cannot load values into a table with a parent. Instead, you must
     # modify the parent, and those changes will be reflected in the child.
+    #
+    # Returns self so calls can be chained.
 
     def fill!(value_)
       raise TableLockedError if @parent
       @vals.fill(value_)
+      self
     end
 
 
@@ -600,121 +609,12 @@ module NTable
     end
 
 
-    @numeric_sort = ::Proc.new{ |a_, b_| a_.to_f <=> b_.to_f }
-
-
-    class << self
-
-
-      # Construct a table given a JSON object representation.
-
-      def from_json_object(json_)
-        new(Structure.from_json_array(json_['axes'] || []), :load => json_['values'] || [])
+    def _offset_for_args(args_)
+      if args_.size == 1
+        first_ = args_.first
+        args_ = first_ if first_.is_a?(::Hash) || first_.is_a?(::Array)
       end
-
-
-      # Construct a table given a JSON unparsed string representation.
-
-      def parse_json(json_)
-        from_json_object(::JSON.parse(json_))
-      end
-
-
-      # Construct a table given nested hashes and arrays.
-
-      def from_nested_object(obj_, field_opts_=[], opts_={})
-        axis_data_ = []
-        _populate_nested_axes(axis_data_, 0, obj_)
-        struct_ = Structure.new
-        axis_data_.each_with_index do |ai_, i_|
-          field_ = field_opts_[i_] || {}
-          axis_ = nil
-          name_ = field_[:name]
-          case ai_
-          when ::Hash
-            labels_ = ai_.keys
-            if (sort_ = field_[:sort])
-              if sort_.respond_to?(:call)
-                func_ = sort_
-              elsif sort_ == :numeric
-                func_ = @numeric_sort
-              else
-                func_ = nil
-              end
-              labels_.sort!(&func_)
-            end
-            if (xform_ = field_[:transform])
-              labels_.map!(&xform_)
-            end
-            axis_ = LabeledAxis.new(labels_)
-          when ::Array
-            axis_ = IndexedAxis.new(ai_[1].to_i - ai_[0].to_i, ai_[0].to_i)
-          end
-          struct_.add(axis_, name_) if axis_
-        end
-        table_ = new(struct_, :fill => opts_[:fill])
-        _populate_nested_values(table_, [], obj_)
-        table_
-      end
-
-
-      def _populate_nested_axes(axis_data_, index_, obj_)  # :nodoc:
-        ai_ = axis_data_[index_]
-        case obj_
-        when ::Hash
-          if ::Hash === ai_
-            set_ = ai_
-          else
-            set_ = axis_data_[index_] = {}
-            (ai_[0]...ai_[1]).each{ |i_| set_[i_.to_s] = true } if ::Array === ai_
-          end
-          obj_.each do |k_, v_|
-            set_[k_.to_s] = true
-            _populate_nested_axes(axis_data_, index_+1, v_)
-          end
-        when ::Array
-          if ::Hash === ai_
-            obj_.each_with_index do |v_, i_|
-              ai_[i_.to_s] = true
-              _populate_nested_axes(axis_data_, index_+1, v_)
-            end
-          else
-            s_ = obj_.size
-            if ::Array === ai_
-              if s_ > 0
-                ai_[1] = s_ if !ai_[1] || s_ > ai_[1]
-                ai_[0] = s_ if !ai_[0]
-              end
-            else
-              ai_ = axis_data_[index_] = (s_ == 0 ? [nil, nil] : [s_, s_])
-            end
-            obj_.each_with_index do |v_, i_|
-              ai_[0] = i_ if ai_[0] > i_ && !v_.nil?
-              _populate_nested_axes(axis_data_, index_+1, v_)
-            end
-          end
-        end
-      end
-
-
-      def _populate_nested_values(table_, path_, obj_)  # :nodoc:
-        if path_.size == table_.dim
-          table_.set!(*path_, obj_)
-        else
-          case obj_
-          when ::Hash
-            obj_.each do |k_, v_|
-              _populate_nested_values(table_, path_ + [k_.to_s], v_)
-            end
-          when ::Array
-            obj_.each_with_index do |v_, i_|
-              _populate_nested_values(table_, path_ + [i_], v_) unless v_.nil?
-            end
-          end
-        end
-      end
-
-
+      @structure._offset(args_)
     end
 
 

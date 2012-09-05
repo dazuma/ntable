@@ -47,7 +47,7 @@ module NTable
       def setup
         @labeled_axis = LabeledAxis.new([:red, :white, :blue])
         @indexed_axis = IndexedAxis.new(10)
-        @structure = Structure.new.add(@indexed_axis, :row).add(@labeled_axis, :column)
+        @structure = Structure.add(@indexed_axis, :row).add(@labeled_axis, :column)
       end
 
 
@@ -120,6 +120,32 @@ module NTable
         refute_equal(t1_, t2_)
         t2_[:row => 0, :column => :red] = 1
         assert_equal(t1_, t2_)
+      end
+
+
+      def test_convenience_construction
+        t_ = NTable.structure(@indexed_axis, :row).add(@labeled_axis, :column).create(:fill => 1)
+        assert_equal(1, t_.get(0, :red))
+      end
+
+
+      def test_include_p
+        t1_ = Table.new(@structure, :fill => 0)
+        assert_equal(true, t1_.include?(0, :red))
+        assert_equal(true, t1_.include?(9, :blue))
+        assert_equal(false, t1_.include?(10, :red))
+        assert_equal(false, t1_.include?(0, :black))
+      end
+
+
+      def test_no_such_cell
+        t1_ = Table.new(@structure, :fill => 0)
+        assert_raises(NoSuchCellError) do
+          t1_[10, :red]
+        end
+        assert_raises(NoSuchCellError) do
+          t1_[0, :black]
+        end
       end
 
 

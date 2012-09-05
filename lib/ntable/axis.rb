@@ -114,7 +114,8 @@ module NTable
     # Create a LabeledAxis given an array of the label strings.
     # Symbols may also be provided, but will be converted to strings.
 
-    def initialize(labels_)
+    def initialize(*labels_)
+      labels_ = labels_.flatten
       @a = labels_.map{ |label_| label_.to_s }
       @h = {}
       @a.each_with_index{ |n_, i_| @h[n_] = i_ }
@@ -123,9 +124,12 @@ module NTable
 
 
     def eql?(obj_)
-      obj_.is_a?(LabeledAxis) && obj_.instance_variable_get(:@a).eql?(@a)
+      obj_.is_a?(LabeledAxis) && @a.eql?(obj_.instance_variable_get(:@a))
     end
-    alias_method :==, :eql?
+
+    def ==(obj_)
+      obj_.is_a?(LabeledAxis) && @a == obj_.instance_variable_get(:@a)
+    end
 
     def hash
       @a.hash
@@ -211,6 +215,64 @@ module NTable
 
     def from_json_object(json_obj_)
       initialize(json_obj_['size'], json_obj_['start'].to_i)
+    end
+
+
+  end
+
+
+  # An axis in which the labels are arbitrary objects.
+  # This axis cannot be serialized.
+
+  class ObjectAxis
+
+
+    # Create a ObjectAxis given an array of the label objects.
+
+    def initialize(labels_)
+      @a = labels_.dup
+      @h = {}
+      @a.each_with_index{ |n_, i_| @h[n_] = i_ }
+      @size = labels_.size
+    end
+
+
+    def eql?(obj_)
+      obj_.is_a?(ObjectAxis) && @a.eql?(obj_.instance_variable_get(:@a))
+    end
+
+    def ==(obj_)
+      obj_.is_a?(ObjectAxis) && @a == obj_.instance_variable_get(:@a)
+    end
+
+    def hash
+      @a.hash
+    end
+
+    def inspect
+      "#<#{self.class}:0x#{object_id.to_s(16)} #{@a.inspect}>"
+    end
+    alias_method :to_s, :inspect
+
+
+    attr_reader :size
+
+
+    def label_to_index(label_)
+      @h[label_]
+    end
+
+    def index_to_label(index_)
+      @a[index_]
+    end
+
+
+    def to_json_object(json_obj_)
+      raise "Unable to JSON serialize an ObjectAxis"
+    end
+
+    def from_json_object(json_obj_)
+      raise "Unable to JSON serialize an ObjectAxis"
     end
 
 

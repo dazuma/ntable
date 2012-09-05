@@ -54,6 +54,7 @@ module NTable
         axis_ = LabeledAxis.new([:one, :two])
         assert_equal(0, axis_.label_to_index(:one))
         assert_equal(1, axis_.label_to_index(:two))
+        assert_equal(0, axis_.label_to_index('one'))
         assert_nil(axis_.label_to_index(:three))
       end
 
@@ -68,7 +69,7 @@ module NTable
 
       def test_labeled_axis_equality
         axis1_ = LabeledAxis.new([:one, :two])
-        axis2_ = LabeledAxis.new([:one, :two])
+        axis2_ = LabeledAxis.new([:one, 'two'])
         axis3_ = LabeledAxis.new([:one, :three])
         assert_equal(axis1_, axis2_)
         refute_equal(axis1_, axis3_)
@@ -77,6 +78,44 @@ module NTable
 
       def test_labeled_axis_empty
         axis_ = LabeledAxis.new([])
+        assert_equal(0, axis_.size)
+      end
+
+
+      def test_object_axis_size
+        axis_ = ObjectAxis.new([:one, :two])
+        assert_equal(2, axis_.size)
+      end
+
+
+      def test_object_axis_label_to_index
+        axis_ = ObjectAxis.new([:one, :two])
+        assert_equal(0, axis_.label_to_index(:one))
+        assert_equal(1, axis_.label_to_index(:two))
+        assert_nil(axis_.label_to_index('one'))
+        assert_nil(axis_.label_to_index(:three))
+      end
+
+
+      def test_object_axis_index_to_label
+        axis_ = ObjectAxis.new([:one, :two])
+        assert_equal(:one, axis_.index_to_label(0))
+        assert_equal(:two, axis_.index_to_label(1))
+        assert_nil(axis_.index_to_label(2))
+      end
+
+
+      def test_object_axis_equality
+        axis1_ = ObjectAxis.new([:one, :two])
+        axis2_ = ObjectAxis.new([:one, :two])
+        axis3_ = ObjectAxis.new([:one, 'two'])
+        assert_equal(axis1_, axis2_)
+        refute_equal(axis1_, axis3_)
+      end
+
+
+      def test_object_axis_empty
+        axis_ = ObjectAxis.new([])
         assert_equal(0, axis_.size)
       end
 

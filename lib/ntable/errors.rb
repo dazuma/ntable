@@ -72,4 +72,10 @@ module NTable
   end
 
 
+  # Raised if you attempt to access a nonexistent cell.
+
+  class NoSuchCellError < NTableError
+  end
+
+
 end

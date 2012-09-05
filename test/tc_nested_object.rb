@@ -46,6 +46,7 @@ module NTable
 
       def setup
         @labeled_axis_2 = LabeledAxis.new([:one, :two])
+        @object_axis_2 = ObjectAxis.new([:one, :two])
         @labeled_axis_3 = LabeledAxis.new([:blue, :red, :white])
         @indexed_axis_2 = IndexedAxis.new(2)
         @indexed_axis_10 = IndexedAxis.new(10, 1)
@@ -182,6 +183,19 @@ module NTable
           :load => [4, 5, 1, 2, 3, 6])
         assert_equal({'red' => [1,2], 'white' => [3, 6], 'blue' => [4,5]},
           t1_.to_nested_object)
+      end
+
+
+      def test_from_level_1_labeled_with_objectify
+        obj_ = {:one => 1, :two => 2}
+        t1_ = Table.from_nested_object(obj_, [{:sort => true, :objectify => true}])
+        assert_equal(Table.new(Structure.add(@object_axis_2), :load => [1,2]), t1_)
+      end
+
+
+      def test_to_level_1_labeled_with_objectify
+        t1_ = Table.new(Structure.add(@object_axis_2), :load => [1,2])
+        assert_equal({:one => 1, :two => 2}, t1_.to_nested_object)
       end
 
 

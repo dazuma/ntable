@@ -1,3 +1,13 @@
+=== 0.1.1 / 2012-09-04
+
+* The "preferred" construction methods are now module methods on ::NTable.
+* Added an ObjectAxis type that lets labels be any arbitrary object.
+* NTable.from_nested_object now understands :objectify and :stringify options. These control whether the axis ends up as an ObjectAxis or LabeledAxis, and optionally let you provide a proc to convert the labels yourself.
+* INCOMPATIBLE CHANGE: Table#get and Table#set! now raise NoSuchCellError if the cell specification doesn't exist.
+* Added Table#include? to test for the correctness of a cell specification.
+# Table#set!, Table#load!, and Table#fill! now return self so they can be chained.
+* Filled out some more documentation.
+
 === 0.1.0 / 2012-09-01
 
 * Initial test release
