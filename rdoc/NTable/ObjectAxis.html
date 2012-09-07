@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::LabeledAxis - NTable 0.1.1 Documentation</title>
+<title>class NTable::ObjectAxis - NTable 0.1.1 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -148,11 +148,12 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="class">class NTable::LabeledAxis</h1>
+  <h1 class="class">class NTable::ObjectAxis</h1>
 
   <div id="description" class="description">
     
-<p>An axis in which the labels are explicitly provided as strings.</p>
+<p>An axis in which the labels are arbitrary objects. This axis cannot be
+serialized.</p>
 
   </div><!-- description -->
 
@@ -198,24 +199,22 @@
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(*labels_)</span>
+            class="method-args">(labels_)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
 
         <div class="method-description">
           
-          <p>Create a <a href="LabeledAxis.html">LabeledAxis</a> given an array of the
-label strings. Symbols may also be provided, but will be converted to
-strings.</p>
+          <p>Create a <a href="ObjectAxis.html">ObjectAxis</a> given an array of the
+label objects.</p>
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 117</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(*<span class="ruby-identifier">labels_</span>)
-  <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">flatten</span>
-  <span class="ruby-ivar">@a</span> = <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">label_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">label_</span>.<span class="ruby-identifier">to_s</span> }
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 232</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">labels_</span>)
+  <span class="ruby-ivar">@a</span> = <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-ivar">@h</span> = {}
   <span class="ruby-ivar">@a</span>.<span class="ruby-identifier">each_with_index</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">n_</span>, <span class="ruby-identifier">i_</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@h</span>[<span class="ruby-identifier">n_</span>] = <span class="ruby-identifier">i_</span> }
   <span class="ruby-ivar">@size</span> = <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">size</span>
@@ -252,9 +251,9 @@ strings.</p>
 
           
           <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 130</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 244</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">obj_</span>)
-  <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">LabeledAxis</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@a</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@a</span>)
+  <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ObjectAxis</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@a</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@a</span>)
 <span class="ruby-keyword">end</span></pre>
           </div><!-- 3D-3D-source -->
           
@@ -282,9 +281,9 @@ strings.</p>
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 126</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 240</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>)
-  <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">LabeledAxis</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@a</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@a</span>))
+  <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ObjectAxis</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@a</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@a</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- eql-3F-source -->
           
@@ -312,9 +311,9 @@ strings.</p>
 
           
           <div class="method-source-code" id="from_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 160</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 274</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">json_obj_</span>)
-  <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'labels'</span>] <span class="ruby-operator">||</span> [])
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Unable to JSON serialize an ObjectAxis&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- from_json_object-source -->
           
@@ -342,7 +341,7 @@ strings.</p>
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 134</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 248</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
   <span class="ruby-ivar">@a</span>.<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -372,7 +371,7 @@ strings.</p>
 
           
           <div class="method-source-code" id="index_to_label-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 151</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 265</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index_to_label</span>(<span class="ruby-identifier">index_</span>)
   <span class="ruby-ivar">@a</span>[<span class="ruby-identifier">index_</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -402,7 +401,7 @@ strings.</p>
 
           
           <div class="method-source-code" id="inspect-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 138</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 252</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">inspect</span>
   <span class="ruby-node">&quot;#&lt;#{self.class}:0x#{object_id.to_s(16)} #{@a.inspect}&gt;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -412,7 +411,7 @@ strings.</p>
 
         
         <div class="aliases">
-          Also aliased as: <a href="LabeledAxis.html#method-i-to_s">to_s</a>
+          Also aliased as: <a href="ObjectAxis.html#method-i-to_s">to_s</a>
         </div>
         
 
@@ -436,9 +435,9 @@ strings.</p>
 
           
           <div class="method-source-code" id="label_to_index-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 147</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 261</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">label_to_index</span>(<span class="ruby-identifier">label_</span>)
-  <span class="ruby-ivar">@h</span>[<span class="ruby-identifier">label_</span>.<span class="ruby-identifier">to_s</span>]
+  <span class="ruby-ivar">@h</span>[<span class="ruby-identifier">label_</span>]
 <span class="ruby-keyword">end</span></pre>
           </div><!-- label_to_index-source -->
           
@@ -466,9 +465,9 @@ strings.</p>
 
           
           <div class="method-source-code" id="to_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 156</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 270</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json_object</span>(<span class="ruby-identifier">json_obj_</span>)
-  <span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'labels'</span>] = <span class="ruby-ivar">@a</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Unable to JSON serialize an ObjectAxis&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- to_json_object-source -->
           
@@ -501,7 +500,7 @@ strings.</p>
 
         
         <div class="aliases">
-          Alias for: <a href="LabeledAxis.html#method-i-inspect">inspect</a>
+          Alias for: <a href="ObjectAxis.html#method-i-inspect">inspect</a>
         </div>
         
       </div><!-- to_s-method -->

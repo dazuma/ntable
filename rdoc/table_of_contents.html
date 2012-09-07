@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>Table of Contents - NTable 0.1.0 Documentation</title>
+<title>Table of Contents - NTable 0.1.1 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -21,7 +21,7 @@
 
 
 <body class="indexpage">
-<h1>Table of Contents - NTable 0.1.0 Documentation</h1>
+<h1>Table of Contents - NTable 0.1.1 Documentation</h1>
 
 <h2>Pages</h2>
 <ul>
@@ -30,6 +30,7 @@
 
     <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
     <ul class="initially-hidden">
+      <li><a href="History_rdoc.html#label-0.1.1+%2F+2012-09-07">0.1.1 / 2012-09-07</a>
       <li><a href="History_rdoc.html#label-0.1.0+%2F+2012-09-01">0.1.0 / 2012-09-01</a>
     </ul>
   </li>
@@ -54,6 +55,14 @@
 <ul>
   <li class="module">
     <a href="NTable.html">NTable</a>
+
+    <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
+    <ul class="initially-hidden">
+      <li><a href="NTable.html#label-Basics">Basics</a>
+      <li><a href="NTable.html#label-Iterating">Iterating</a>
+      <li><a href="NTable.html#label-Slicing+and+decomposition">Slicing and decomposition</a>
+      <li><a href="NTable.html#label-Serialization">Serialization</a>
+    </ul>
   </li>
     <li class="class">
     <a href="NTable/EmptyAxis.html">NTable::EmptyAxis</a>
@@ -66,6 +75,12 @@
   </li>
     <li class="class">
     <a href="NTable/NTableError.html">NTable::NTableError</a>
+  </li>
+    <li class="class">
+    <a href="NTable/NoSuchCellError.html">NTable::NoSuchCellError</a>
+  </li>
+    <li class="class">
+    <a href="NTable/ObjectAxis.html">NTable::ObjectAxis</a>
   </li>
     <li class="class">
     <a href="NTable/Structure.html">NTable::Structure</a>
@@ -96,15 +111,23 @@
   
     <li class="method"><a href="NTable/Structure.html#method-c-add">::add &mdash; NTable::Structure</a>
   
+    <li class="method"><a href="NTable.html#method-c-create">::create &mdash; NTable</a>
+  
     <li class="method"><a href="NTable/Structure.html#method-c-from_json_array">::from_json_array &mdash; NTable::Structure</a>
+  
+    <li class="method"><a href="NTable.html#method-c-from_json_object">::from_json_object &mdash; NTable</a>
   
     <li class="method"><a href="NTable/Table.html#method-c-from_json_object">::from_json_object &mdash; NTable::Table</a>
   
     <li class="method"><a href="NTable/Table.html#method-c-from_nested_object">::from_nested_object &mdash; NTable::Table</a>
   
-    <li class="method"><a href="NTable/IndexedAxis.html#method-c-new">::new &mdash; NTable::IndexedAxis</a>
+    <li class="method"><a href="NTable.html#method-c-from_nested_object">::from_nested_object &mdash; NTable</a>
   
     <li class="method"><a href="NTable/Table.html#method-c-new">::new &mdash; NTable::Table</a>
+  
+    <li class="method"><a href="NTable/IndexedAxis.html#method-c-new">::new &mdash; NTable::IndexedAxis</a>
+  
+    <li class="method"><a href="NTable/ObjectAxis.html#method-c-new">::new &mdash; NTable::ObjectAxis</a>
   
     <li class="method"><a href="NTable/LabeledAxis.html#method-c-new">::new &mdash; NTable::LabeledAxis</a>
   
@@ -112,23 +135,31 @@
   
     <li class="method"><a href="NTable/Table.html#method-c-parse_json">::parse_json &mdash; NTable::Table</a>
   
-    <li class="method"><a href="NTable/EmptyAxis.html#method-i-3D-3D">#== &mdash; NTable::EmptyAxis</a>
+    <li class="method"><a href="NTable.html#method-c-parse_json">::parse_json &mdash; NTable</a>
   
-    <li class="method"><a href="NTable/Structure.html#method-i-3D-3D">#== &mdash; NTable::Structure</a>
-  
-    <li class="method"><a href="NTable/Structure/Position.html#method-i-3D-3D">#== &mdash; NTable::Structure::Position</a>
+    <li class="method"><a href="NTable.html#method-c-structure">::structure &mdash; NTable</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-3D-3D">#== &mdash; NTable::Table</a>
   
-    <li class="method"><a href="NTable/IndexedAxis.html#method-i-3D-3D">#== &mdash; NTable::IndexedAxis</a>
+    <li class="method"><a href="NTable/EmptyAxis.html#method-i-3D-3D">#== &mdash; NTable::EmptyAxis</a>
+  
+    <li class="method"><a href="NTable/Structure/Position.html#method-i-3D-3D">#== &mdash; NTable::Structure::Position</a>
+  
+    <li class="method"><a href="NTable/Structure.html#method-i-3D-3D">#== &mdash; NTable::Structure</a>
   
     <li class="method"><a href="NTable/LabeledAxis.html#method-i-3D-3D">#== &mdash; NTable::LabeledAxis</a>
+  
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-3D-3D">#== &mdash; NTable::ObjectAxis</a>
+  
+    <li class="method"><a href="NTable/IndexedAxis.html#method-i-3D-3D">#== &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/Structure/Position.html#method-i-5B-5D">#[] &mdash; NTable::Structure::Position</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-5B-5D">#[] &mdash; NTable::Table</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-5B-5D-3D">#[]= &mdash; NTable::Table</a>
+  
+    <li class="method"><a href="NTable/Table.html#method-i-_offset_for_args">#_offset_for_args &mdash; NTable::Table</a>
   
     <li class="method"><a href="NTable/Structure.html#method-i-add">#add &mdash; NTable::Structure</a>
   
@@ -140,15 +171,17 @@
   
     <li class="method"><a href="NTable/Structure/Position.html#method-i-coord_array">#coord_array &mdash; NTable::Structure::Position</a>
   
+    <li class="method"><a href="NTable/Structure.html#method-i-create">#create &mdash; NTable::Structure</a>
+  
     <li class="method"><a href="NTable/Table.html#method-i-decompose">#decompose &mdash; NTable::Table</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-decompose_reduce">#decompose_reduce &mdash; NTable::Table</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-decompose_reduce_with_position">#decompose_reduce_with_position &mdash; NTable::Table</a>
   
-    <li class="method"><a href="NTable/Structure.html#method-i-degenerate-3F">#degenerate? &mdash; NTable::Structure</a>
-  
     <li class="method"><a href="NTable/Table.html#method-i-degenerate-3F">#degenerate? &mdash; NTable::Table</a>
+  
+    <li class="method"><a href="NTable/Structure.html#method-i-degenerate-3F">#degenerate? &mdash; NTable::Structure</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-dim">#dim &mdash; NTable::Table</a>
   
@@ -158,17 +191,19 @@
   
     <li class="method"><a href="NTable/Table.html#method-i-each_with_position">#each_with_position &mdash; NTable::Table</a>
   
-    <li class="method"><a href="NTable/Table.html#method-i-empty-3F">#empty? &mdash; NTable::Table</a>
-  
     <li class="method"><a href="NTable/Structure.html#method-i-empty-3F">#empty? &mdash; NTable::Structure</a>
   
-    <li class="method"><a href="NTable/LabeledAxis.html#method-i-eql-3F">#eql? &mdash; NTable::LabeledAxis</a>
+    <li class="method"><a href="NTable/Table.html#method-i-empty-3F">#empty? &mdash; NTable::Table</a>
   
-    <li class="method"><a href="NTable/Structure/Position.html#method-i-eql-3F">#eql? &mdash; NTable::Structure::Position</a>
+    <li class="method"><a href="NTable/IndexedAxis.html#method-i-eql-3F">#eql? &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/Structure.html#method-i-eql-3F">#eql? &mdash; NTable::Structure</a>
   
-    <li class="method"><a href="NTable/IndexedAxis.html#method-i-eql-3F">#eql? &mdash; NTable::IndexedAxis</a>
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-eql-3F">#eql? &mdash; NTable::ObjectAxis</a>
+  
+    <li class="method"><a href="NTable/Structure/Position.html#method-i-eql-3F">#eql? &mdash; NTable::Structure::Position</a>
+  
+    <li class="method"><a href="NTable/LabeledAxis.html#method-i-eql-3F">#eql? &mdash; NTable::LabeledAxis</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-eql-3F">#eql? &mdash; NTable::Table</a>
   
@@ -178,41 +213,53 @@
   
     <li class="method"><a href="NTable/Structure.html#method-i-from_json_array">#from_json_array &mdash; NTable::Structure</a>
   
-    <li class="method"><a href="NTable/IndexedAxis.html#method-i-from_json_object">#from_json_object &mdash; NTable::IndexedAxis</a>
+    <li class="method"><a href="NTable/LabeledAxis.html#method-i-from_json_object">#from_json_object &mdash; NTable::LabeledAxis</a>
+  
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-from_json_object">#from_json_object &mdash; NTable::ObjectAxis</a>
   
     <li class="method"><a href="NTable/EmptyAxis.html#method-i-from_json_object">#from_json_object &mdash; NTable::EmptyAxis</a>
   
-    <li class="method"><a href="NTable/LabeledAxis.html#method-i-from_json_object">#from_json_object &mdash; NTable::LabeledAxis</a>
+    <li class="method"><a href="NTable/IndexedAxis.html#method-i-from_json_object">#from_json_object &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-get">#get &mdash; NTable::Table</a>
-  
-    <li class="method"><a href="NTable/LabeledAxis.html#method-i-hash">#hash &mdash; NTable::LabeledAxis</a>
   
     <li class="method"><a href="NTable/IndexedAxis.html#method-i-hash">#hash &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/EmptyAxis.html#method-i-hash">#hash &mdash; NTable::EmptyAxis</a>
   
-    <li class="method"><a href="NTable/EmptyAxis.html#method-i-index_to_label">#index_to_label &mdash; NTable::EmptyAxis</a>
+    <li class="method"><a href="NTable/LabeledAxis.html#method-i-hash">#hash &mdash; NTable::LabeledAxis</a>
+  
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-hash">#hash &mdash; NTable::ObjectAxis</a>
+  
+    <li class="method"><a href="NTable/Table.html#method-i-include-3F">#include? &mdash; NTable::Table</a>
+  
+    <li class="method"><a href="NTable/IndexedAxis.html#method-i-index_to_label">#index_to_label &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/LabeledAxis.html#method-i-index_to_label">#index_to_label &mdash; NTable::LabeledAxis</a>
   
-    <li class="method"><a href="NTable/IndexedAxis.html#method-i-index_to_label">#index_to_label &mdash; NTable::IndexedAxis</a>
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-index_to_label">#index_to_label &mdash; NTable::ObjectAxis</a>
+  
+    <li class="method"><a href="NTable/EmptyAxis.html#method-i-index_to_label">#index_to_label &mdash; NTable::EmptyAxis</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-inject">#inject &mdash; NTable::Table</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-inject_with_position">#inject_with_position &mdash; NTable::Table</a>
   
+    <li class="method"><a href="NTable/LabeledAxis.html#method-i-inspect">#inspect &mdash; NTable::LabeledAxis</a>
+  
     <li class="method"><a href="NTable/EmptyAxis.html#method-i-inspect">#inspect &mdash; NTable::EmptyAxis</a>
+  
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-inspect">#inspect &mdash; NTable::ObjectAxis</a>
   
     <li class="method"><a href="NTable/IndexedAxis.html#method-i-inspect">#inspect &mdash; NTable::IndexedAxis</a>
   
-    <li class="method"><a href="NTable/LabeledAxis.html#method-i-inspect">#inspect &mdash; NTable::LabeledAxis</a>
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-label_to_index">#label_to_index &mdash; NTable::ObjectAxis</a>
   
-    <li class="method"><a href="NTable/IndexedAxis.html#method-i-label_to_index">#label_to_index &mdash; NTable::IndexedAxis</a>
+    <li class="method"><a href="NTable/LabeledAxis.html#method-i-label_to_index">#label_to_index &mdash; NTable::LabeledAxis</a>
   
     <li class="method"><a href="NTable/EmptyAxis.html#method-i-label_to_index">#label_to_index &mdash; NTable::EmptyAxis</a>
   
-    <li class="method"><a href="NTable/LabeledAxis.html#method-i-label_to_index">#label_to_index &mdash; NTable::LabeledAxis</a>
+    <li class="method"><a href="NTable/IndexedAxis.html#method-i-label_to_index">#label_to_index &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-load-21">#load! &mdash; NTable::Table</a>
   
@@ -230,9 +277,9 @@
   
     <li class="method"><a href="NTable/Structure/Position.html#method-i-next">#next &mdash; NTable::Structure::Position</a>
   
-    <li class="method"><a href="NTable/Structure.html#method-i-parent">#parent &mdash; NTable::Structure</a>
-  
     <li class="method"><a href="NTable/Table.html#method-i-parent">#parent &mdash; NTable::Table</a>
+  
+    <li class="method"><a href="NTable/Structure.html#method-i-parent">#parent &mdash; NTable::Structure</a>
   
     <li class="method"><a href="NTable/Structure.html#method-i-position">#position &mdash; NTable::Structure</a>
   
@@ -250,11 +297,11 @@
   
     <li class="method"><a href="NTable/Table.html#method-i-shared_slice">#shared_slice &mdash; NTable::Table</a>
   
+    <li class="method"><a href="NTable/EmptyAxis.html#method-i-size">#size &mdash; NTable::EmptyAxis</a>
+  
     <li class="method"><a href="NTable/Structure.html#method-i-size">#size &mdash; NTable::Structure</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-size">#size &mdash; NTable::Table</a>
-  
-    <li class="method"><a href="NTable/EmptyAxis.html#method-i-size">#size &mdash; NTable::EmptyAxis</a>
   
     <li class="method"><a href="NTable/Table.html#method-i-slice">#slice &mdash; NTable::Table</a>
   
@@ -266,21 +313,25 @@
   
     <li class="method"><a href="NTable/Structure.html#method-i-to_json_array">#to_json_array &mdash; NTable::Structure</a>
   
+    <li class="method"><a href="NTable/Table.html#method-i-to_json_object">#to_json_object &mdash; NTable::Table</a>
+  
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-to_json_object">#to_json_object &mdash; NTable::ObjectAxis</a>
+  
     <li class="method"><a href="NTable/IndexedAxis.html#method-i-to_json_object">#to_json_object &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/LabeledAxis.html#method-i-to_json_object">#to_json_object &mdash; NTable::LabeledAxis</a>
   
     <li class="method"><a href="NTable/EmptyAxis.html#method-i-to_json_object">#to_json_object &mdash; NTable::EmptyAxis</a>
   
-    <li class="method"><a href="NTable/Table.html#method-i-to_json_object">#to_json_object &mdash; NTable::Table</a>
-  
     <li class="method"><a href="NTable/Table.html#method-i-to_nested_object">#to_nested_object &mdash; NTable::Table</a>
+  
+    <li class="method"><a href="NTable/ObjectAxis.html#method-i-to_s">#to_s &mdash; NTable::ObjectAxis</a>
+  
+    <li class="method"><a href="NTable/EmptyAxis.html#method-i-to_s">#to_s &mdash; NTable::EmptyAxis</a>
   
     <li class="method"><a href="NTable/IndexedAxis.html#method-i-to_s">#to_s &mdash; NTable::IndexedAxis</a>
   
     <li class="method"><a href="NTable/LabeledAxis.html#method-i-to_s">#to_s &mdash; NTable::LabeledAxis</a>
-  
-    <li class="method"><a href="NTable/EmptyAxis.html#method-i-to_s">#to_s &mdash; NTable::EmptyAxis</a>
   
     <li class="method"><a href="NTable/Structure.html#method-i-unlocked_copy">#unlocked_copy &mdash; NTable::Structure</a>
   

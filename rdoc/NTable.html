@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module NTable - NTable 0.1.0 Documentation</title>
+<title>module NTable - NTable 0.1.1 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -48,6 +48,7 @@
   <h3 class="section-header">Defined In</h3>
   <ul>
     <li>lib/ntable/axis.rb
+    <li>lib/ntable/construction.rb
     <li>lib/ntable/errors.rb
     <li>lib/ntable/structure.rb
     <li>lib/ntable/table.rb
@@ -62,7 +63,25 @@
     
     
     
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
     
+    <li><a href="#method-c-create">::create</a>
+    
+    <li><a href="#method-c-from_json_object">::from_json_object</a>
+    
+    <li><a href="#method-c-from_nested_object">::from_nested_object</a>
+    
+    <li><a href="#method-c-parse_json">::parse_json</a>
+    
+    <li><a href="#method-c-structure">::structure</a>
+    
+  </ul>
+</nav>
+
   </div>
 
   <div id="project-metadata">
@@ -93,6 +112,10 @@
   
     <li><a href="./NTable/NTableError.html">NTable::NTableError</a>
   
+    <li><a href="./NTable/NoSuchCellError.html">NTable::NoSuchCellError</a>
+  
+    <li><a href="./NTable/ObjectAxis.html">NTable::ObjectAxis</a>
+  
     <li><a href="./NTable/Structure.html">NTable::Structure</a>
   
     <li><a href="./NTable/Structure/Position.html">NTable::Structure::Position</a>
@@ -121,6 +144,64 @@
 <p><a href="NTable.html">NTable</a> is an N-dimensional table data structure
 for Ruby.</p>
 
+<h2 id="label-Basics">Basics</h2>
+
+<p>This is a convenient data structure for storing tabular data of arbitrary
+dimensionality. An <a href="NTable.html">NTable</a> can represent
+zero-dimensional data (i.e. a simple scalar value), one-dimensional data
+(i.e. an array or dictionary), a two-dimensional table such as a database
+result set or spreadsheet, or any number of higher dimensions.</p>
+
+<p>The structure of the table is defined explicitly. Each dimension is
+represented by an axis, which describes how many “rows” the table has in
+that dimension, and how each row is labeled. For example, you could have a
+“numeric” indexed axis whose rows are identified by indexes. Or you could
+have a “string” labeled axis identified by names (e.g. columns in a
+database.)</p>
+
+<p>For example, a typical two-dimensional spreadsheet would have
+numerically-identified “rows”, and columns identified by name. You might
+describe the structure of the table with two axes, the major one a numeric
+indexed axis, and the minor one a string labeled axis. In code, such a
+table with 100 rows and two columns could be created like this:</p>
+
+<pre>table = NTable.structure(NTable::IndexedAxis.new(100)).
+               add(NTable::LabeledAxis(:name, :address)).
+               create</pre>
+
+<p>You can then look up individual cells like this:</p>
+
+<pre>value = table[10, :address]</pre>
+
+<p>Axes can be given names as well:</p>
+
+<pre>table = NTable.structure(NTable::IndexedAxis.new(100), :row).
+               add(NTable::LabeledAxis(:name, :address), :col).
+               create</pre>
+
+<p>Then you can specify the axes by name when you look up:</p>
+
+<pre class="ruby"><span class="ruby-identifier">value</span> = <span class="ruby-identifier">table</span>[:<span class="ruby-identifier">row</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">10</span>, :<span class="ruby-identifier">col</span> =<span class="ruby-operator">&gt;</span> :<span class="ruby-identifier">address</span>]
+</pre>
+
+<p>You can use the same syntax to set data:</p>
+
+<pre class="ruby"><span class="ruby-identifier">table</span>[<span class="ruby-value">10</span>, :<span class="ruby-identifier">address</span>] = <span class="ruby-string">&quot;123 Main Street&quot;</span>
+<span class="ruby-identifier">table</span>[:<span class="ruby-identifier">row</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">10</span>, :<span class="ruby-identifier">col</span> =<span class="ruby-operator">&gt;</span> :<span class="ruby-identifier">address</span>] = <span class="ruby-string">&quot;123 Main Street&quot;</span>
+</pre>
+
+<h2 id="label-Iterating">Iterating</h2>
+
+<p>(to be written)</p>
+
+<h2 id="label-Slicing+and+decomposition">Slicing and decomposition</h2>
+
+<p>(to be written)</p>
+
+<h2 id="label-Serialization">Serialization</h2>
+
+<p>(to be written)</p>
+
   </div><!-- description -->
 
   
@@ -137,6 +218,276 @@ for Ruby.</p>
 
     <!-- Methods -->
     
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">(structure_, data_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a table with the given <a
+href="NTable/Structure.html">Structure</a>.</p>
+
+<p>You can initialize the data using the following options:</p>
+<dl class="rdoc-list label-list"><dt><code>:fill</code>
+<dd>
+<p>Fill all cells with the given value.</p>
+</dd><dt><code>:load</code>
+<dd>
+<p>Load the cell data with the values from the given array, in order.</p>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">structure_</span>, <span class="ruby-identifier">data_</span>={})
+  <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">structure_</span>, <span class="ruby-identifier">data_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create-method -->
+
+    
+      <div id="method-c-from_json_object" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">from_json_object</span><span
+            class="method-args">(json_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Construct a table given a JSON object representation.</p>
+          
+
+          
+          <div class="method-source-code" id="from_json_object-source">
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">json_</span>)
+  <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Structure</span>.<span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">json_</span>[<span class="ruby-string">'axes'</span>] <span class="ruby-operator">||</span> []), <span class="ruby-value">:load</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">json_</span>[<span class="ruby-string">'values'</span>] <span class="ruby-operator">||</span> [])
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- from_json_object-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- from_json_object-method -->
+
+    
+      <div id="method-c-from_nested_object" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">from_nested_object</span><span
+            class="method-args">(obj_, field_opts_=[], opts_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Construct a table given nested hashes and arrays.</p>
+
+<p>The second argument is an array of hashes, providing options for the axes
+in order. Recognized keys in these hashes include:</p>
+<dl class="rdoc-list label-list"><dt><code>:name</code>
+<dd>
+<p>The name of the axis, as a string or symbol</p>
+</dd><dt><code>:sort</code>
+<dd>
+<p>The sort strategy. You can provide a callable object such as a Proc, or one
+of the constants <code>:numeric</code> or <code>:string</code>. If you omit
+this key or set it to false, no sort is done on the labels for this axis.</p>
+</dd><dt><code>:objectify</code>
+<dd>
+<p>An optional Proc that modifies the labels. The Proc should take a single
+argument and return the new label. If an objectify proc is provided, the
+resulting axis will be an <a href="NTable/ObjectAxis.html">ObjectAxis</a>.
+You can also pass true instead of a Proc; this will create an <a
+href="NTable/ObjectAxis.html">ObjectAxis</a> and make the conversion a nop.</p>
+</dd><dt><code>:stringify</code>
+<dd>
+<p>An optional Proc that modifies the labels. The Proc should take a single
+argument and return the new label, which will then be converted to a string
+if it isn’t one already. If a stringify proc is provided, the resulting
+axis will be a <a href="NTable/LabeledAxis.html">LabeledAxis</a>. You can
+also pass true instead of a Proc; this will create an <a
+href="NTable/LabeledAxis.html">LabeledAxis</a> and make the conversion a
+simple to_s.</p>
+</dd></dl>
+
+<p>The third argument is an optional hash of miscellaneous options. The
+following keys are recognized:</p>
+<dl class="rdoc-list label-list"><dt><code>:fill</code>
+<dd>
+<p>Fill all cells not explicitly set, with the given value. Default is nil.</p>
+</dd><dt><code>:objectify_by_default</code>
+<dd>
+<p>By default, all hash-created axes are <a
+href="NTable/LabeledAxis.html">LabeledAxis</a> unless an
+<code>:objectify</code> field option is explicitly provided. This option,
+if true, reverses this behavior. You can pass true, or a Proc that
+transforms the label.</p>
+</dd><dt><code>:stringify_by_default</code>
+<dd>
+<p>If set to a Proc, this Proc is used as the default stringification routine
+for converting labels for a <a
+href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="from_nested_object-source">
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">from_nested_object</span>(<span class="ruby-identifier">obj_</span>, <span class="ruby-identifier">field_opts_</span>=[], <span class="ruby-identifier">opts_</span>={})
+  <span class="ruby-identifier">axis_data_</span> = []
+  <span class="ruby-identifier">_populate_nested_axes</span>(<span class="ruby-identifier">axis_data_</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">obj_</span>)
+  <span class="ruby-identifier">objectify_by_default_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:objectify_by_default</span>]
+  <span class="ruby-identifier">stringify_by_default_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:stringify_by_default</span>]
+  <span class="ruby-identifier">struct_</span> = <span class="ruby-constant">Structure</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">axis_data_</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span>, <span class="ruby-identifier">i_</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">field_</span> = <span class="ruby-identifier">field_opts_</span>[<span class="ruby-identifier">i_</span>] <span class="ruby-operator">||</span> {}
+    <span class="ruby-identifier">axis_</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:name</span>]
+    <span class="ruby-keyword">case</span> <span class="ruby-identifier">ai_</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-operator">::</span><span class="ruby-constant">Hash</span>
+      <span class="ruby-identifier">objectify_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:objectify</span>]
+      <span class="ruby-identifier">stringify_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:stringify</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">stringify_by_default_</span>
+      <span class="ruby-identifier">objectify_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">objectify_by_default_</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stringify_</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">objectify_</span>
+        <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">keys</span>
+        <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">map!</span>(&amp;<span class="ruby-identifier">objectify_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">objectify_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
+        <span class="ruby-identifier">klass_</span> = <span class="ruby-constant">ObjectAxis</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">h_</span> = {}
+        <span class="ruby-identifier">stringify_</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stringify_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
+        <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k_</span>, <span class="ruby-identifier">v_</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">k_</span> = <span class="ruby-identifier">stringify_</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">k_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">stringify_</span>
+          <span class="ruby-identifier">h_</span>[<span class="ruby-identifier">k_</span>.<span class="ruby-identifier">to_s</span>] = <span class="ruby-keyword">true</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">h_</span>.<span class="ruby-identifier">keys</span>
+        <span class="ruby-identifier">klass_</span> = <span class="ruby-constant">LabeledAxis</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">if</span> (<span class="ruby-identifier">sort_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:sort</span>])
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">sort_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
+          <span class="ruby-identifier">func_</span> = <span class="ruby-identifier">sort_</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">sort_</span> <span class="ruby-operator">==</span> <span class="ruby-value">:numeric</span>
+          <span class="ruby-identifier">func_</span> = <span class="ruby-ivar">@numeric_sort</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">func_</span> = <span class="ruby-keyword">nil</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">sort!</span>(&amp;<span class="ruby-identifier">func_</span>)
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">axis_</span> = <span class="ruby-identifier">klass_</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">labels_</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-operator">::</span><span class="ruby-constant">Array</span>
+      <span class="ruby-identifier">axis_</span> = <span class="ruby-constant">IndexedAxis</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ai_</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>, <span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">struct_</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">axis_</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">table_</span> = <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">struct_</span>, <span class="ruby-value">:fill</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:fill</span>])
+  <span class="ruby-identifier">_populate_nested_values</span>(<span class="ruby-identifier">table_</span>, [], <span class="ruby-identifier">obj_</span>)
+  <span class="ruby-identifier">table_</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- from_nested_object-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- from_nested_object-method -->
+
+    
+      <div id="method-c-parse_json" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_json</span><span
+            class="method-args">(json_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Construct a table given a JSON unparsed string representation.</p>
+          
+
+          
+          <div class="method-source-code" id="parse_json-source">
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 89</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_json</span>(<span class="ruby-identifier">json_</span>)
+  <span class="ruby-identifier">from_json_object</span>(<span class="ruby-operator">::</span><span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">json_</span>))
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- parse_json-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- parse_json-method -->
+
+    
+      <div id="method-c-structure" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">structure</span><span
+            class="method-args">(axis_=nil, name_=nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create and return a new <a href="NTable/Structure.html">Structure</a>.</p>
+
+<p>If you pass the optional axis argument, that axis will be added to the
+structure.</p>
+
+<p>The most convenient way to create a table is probably to chain methods off
+this method. For example:</p>
+
+<pre class="ruby"><span class="ruby-constant">NTable</span>.<span class="ruby-identifier">structure</span>(<span class="ruby-constant">NTable</span><span class="ruby-operator">::</span><span class="ruby-constant">IndexedAxis</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">10</span>)).
+  <span class="ruby-identifier">add</span>(<span class="ruby-constant">NTable</span><span class="ruby-operator">::</span><span class="ruby-constant">LabeledAxis</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">column1</span>, :<span class="ruby-identifier">column2</span>)).
+  <span class="ruby-identifier">create</span>(:<span class="ruby-identifier">fill</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)
+</pre>
+          
+
+          
+          <div class="method-source-code" id="structure-source">
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">structure</span>(<span class="ruby-identifier">axis_</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">axis_</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Structure</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>) <span class="ruby-operator">:</span> <span class="ruby-constant">Structure</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- structure-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- structure-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
   </section><!-- 5Buntitled-5D -->
 
 </div><!-- documentation -->

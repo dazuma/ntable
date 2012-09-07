@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>History - NTable 0.1.0 Documentation</title>
+<title>History - NTable 0.1.1 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -71,6 +71,10 @@
   
     <li><a href="./NTable/NTableError.html">NTable::NTableError</a>
   
+    <li><a href="./NTable/NoSuchCellError.html">NTable::NoSuchCellError</a>
+  
+    <li><a href="./NTable/ObjectAxis.html">NTable::ObjectAxis</a>
+  
     <li><a href="./NTable/Structure.html">NTable::Structure</a>
   
     <li><a href="./NTable/Structure/Position.html">NTable::Structure::Position</a>
@@ -93,6 +97,31 @@
 
 <div id="documentation" class="description">
   
+<h3 id="label-0.1.1+%2F+2012-09-07">0.1.1 / 2012-09-07</h3>
+<ul><li>
+<p>The “preferred” construction methods are now module methods on <a
+href="NTable.html">::NTable</a>.</p>
+</li><li>
+<p>Added an ObjectAxis type that lets labels be any arbitrary object.</p>
+</li><li>
+<p><a
+href="NTable.html#method-c-from_nested_object">NTable.from_nested_object</a>
+now understands :objectify and :stringify options. These control whether
+the axis ends up as an ObjectAxis or LabeledAxis, and optionally let you
+provide a proc to convert the labels yourself.</p>
+</li><li>
+<p>INCOMPATIBLE CHANGE: Table#get and Table#set! now raise NoSuchCellError if
+the cell specification doesn’t exist.</p>
+</li><li>
+<p>Added Table#include? to test for the correctness of a cell specification.</p>
+</li></ul>
+
+<p># Table#set!, Table#load!, and Table#fill! now return self so they can be
+chained.</p>
+<ul><li>
+<p>Filled out some more documentation.</p>
+</li></ul>
+
 <h3 id="label-0.1.0+%2F+2012-09-01">0.1.0 / 2012-09-01</h3>
 <ul><li>
 <p>Initial test release</p>

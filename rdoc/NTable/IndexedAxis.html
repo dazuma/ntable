@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::IndexedAxis - NTable 0.1.0 Documentation</title>
+<title>class NTable::IndexedAxis - NTable 0.1.1 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -123,6 +123,10 @@
   
     <li><a href="../NTable/NTableError.html">NTable::NTableError</a>
   
+    <li><a href="../NTable/NoSuchCellError.html">NTable::NoSuchCellError</a>
+  
+    <li><a href="../NTable/ObjectAxis.html">NTable::ObjectAxis</a>
+  
     <li><a href="../NTable/Structure.html">NTable::Structure</a>
   
     <li><a href="../NTable/Structure/Position.html">NTable::Structure::Position</a>
@@ -222,7 +226,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 173</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 177</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">size_</span>, <span class="ruby-identifier">start_</span>=<span class="ruby-value">0</span>)
   <span class="ruby-ivar">@size</span> = <span class="ruby-identifier">size_</span>
   <span class="ruby-ivar">@start</span> = <span class="ruby-identifier">start_</span>
@@ -286,7 +290,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 179</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 183</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>)
   <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">IndexedAxis</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-ivar">@size</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">start</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-ivar">@start</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -320,7 +324,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="from_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 212</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 216</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">json_obj_</span>)
   <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'size'</span>], <span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'start'</span>].<span class="ruby-identifier">to_i</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -350,7 +354,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 184</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 188</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
   <span class="ruby-ivar">@size</span>.<span class="ruby-identifier">hash</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@start</span>.<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -380,7 +384,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="index_to_label-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 202</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 206</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index_to_label</span>(<span class="ruby-identifier">index_</span>)
   <span class="ruby-identifier">index_</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">index_</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@size</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">index_</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@start</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -410,7 +414,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="inspect-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 188</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 192</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">inspect</span>
   <span class="ruby-node">&quot;#&lt;#{self.class}:0x#{object_id.to_s(16)} size=#{@size} start=#{@start}&gt;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -444,7 +448,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="label_to_index-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 198</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 202</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">label_to_index</span>(<span class="ruby-identifier">label_</span>)
   <span class="ruby-identifier">label_</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@start</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">label_</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@size</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@start</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">label_</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@start</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -474,7 +478,7 @@ of rows. The optional start parameter indicates the number of the first row
 
           
           <div class="method-source-code" id="to_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 207</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 211</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json_object</span>(<span class="ruby-identifier">json_obj_</span>)
   <span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'size'</span>] = <span class="ruby-ivar">@size</span>
   <span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'start'</span>] = <span class="ruby-ivar">@start</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@start</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>

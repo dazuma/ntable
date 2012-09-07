@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::Structure - NTable 0.1.0 Documentation</title>
+<title>class NTable::Structure - NTable 0.1.1 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -84,6 +84,8 @@
     
     <li><a href="#method-i-axis_info">#axis_info</a>
     
+    <li><a href="#method-i-create">#create</a>
+    
     <li><a href="#method-i-degenerate-3F">#degenerate?</a>
     
     <li><a href="#method-i-dim">#dim</a>
@@ -148,6 +150,10 @@
     <li><a href="../NTable/LabeledAxis.html">NTable::LabeledAxis</a>
   
     <li><a href="../NTable/NTableError.html">NTable::NTableError</a>
+  
+    <li><a href="../NTable/NoSuchCellError.html">NTable::NoSuchCellError</a>
+  
+    <li><a href="../NTable/ObjectAxis.html">NTable::ObjectAxis</a>
   
     <li><a href="../NTable/Structure.html">NTable::Structure</a>
   
@@ -227,13 +233,14 @@ of the result.</p>
 
         <div class="method-description">
           
-          
+          <p>Create a new structure and automatically add the given axis. See <a
+href="Structure.html#method-i-add">#add</a>.</p>
           
 
           
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 612</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 641</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>)
 <span class="ruby-keyword">end</span></pre>
           </div><!-- add-source -->
@@ -257,13 +264,13 @@ of the result.</p>
 
         <div class="method-description">
           
-          
+          <p>Deserialize a structure from the given JSON array</p>
           
 
           
           <div class="method-source-code" id="from_json_array-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 617</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 648</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
 <span class="ruby-keyword">end</span></pre>
           </div><!-- from_json_array-source -->
@@ -473,6 +480,46 @@ such axis.</p>
       </div><!-- axis_info-method -->
 
     
+      <div id="method-i-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">(data_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a new table using this structure as the structure. Note that this
+also has the side effect of locking this structure.</p>
+
+<p>You can initialize the data using the following options:</p>
+<dl class="rdoc-list label-list"><dt><code>:fill</code>
+<dd>
+<p>Fill all cells with the given value.</p>
+</dd><dt><code>:load</code>
+<dd>
+<p>Load the cell data with the values from the given array, in order.</p>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 490</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">data_</span>={})
+  <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create-method -->
+
+    
       <div id="method-i-degenerate-3F" class="method-detail ">
         
         <div class="method-heading">
@@ -618,7 +665,7 @@ a subview of a larger structure whereas the latter is not.</p>
 
           
           <div class="method-source-code" id="from_json_array-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 449</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 457</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;There are already axes in this structure&quot;</span>
@@ -923,12 +970,14 @@ old axis specification does not match an actual axis.</p>
 
         <div class="method-description">
           
-          
+          <p>Create a new substructure of this structure. The new structure has this
+structure as its parent, but includes only the given axes, which can be
+provided as an array of axis names or indexes.</p>
           
 
           
           <div class="method-source-code" id="substructure_including-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 415</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 419</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">substructure_including</span>(*<span class="ruby-identifier">axes_</span>)
   <span class="ruby-identifier">_substructure</span>(<span class="ruby-identifier">axes_</span>.<span class="ruby-identifier">flatten</span>, <span class="ruby-keyword">true</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -953,12 +1002,14 @@ old axis specification does not match an actual axis.</p>
 
         <div class="method-description">
           
-          
+          <p>Create a new substructure of this structure. The new structure has this
+structure as its parent, but includes all axes EXCEPT the given axes,
+provided as an array of axis names or indexes.</p>
           
 
           
           <div class="method-source-code" id="substructure_omitting-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 420</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 428</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">substructure_omitting</span>(*<span class="ruby-identifier">axes_</span>)
   <span class="ruby-identifier">_substructure</span>(<span class="ruby-identifier">axes_</span>.<span class="ruby-identifier">flatten</span>, <span class="ruby-keyword">false</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -990,7 +1041,7 @@ this structure using from_json_array.</p>
 
           
           <div class="method-source-code" id="to_json_array-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 429</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 437</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json_array</span>
   <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">name</span>
