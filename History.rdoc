@@ -1,4 +1,4 @@
-=== 0.1.1 / 2012-09-04
+=== 0.1.1 / 2012-09-07
 
 * The "preferred" construction methods are now module methods on ::NTable.
 * Added an ObjectAxis type that lets labels be any arbitrary object.
