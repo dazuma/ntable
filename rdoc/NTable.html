@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module NTable - NTable 0.1.2 Documentation</title>
+<title>module NTable - NTable 0.1.3 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -50,6 +50,7 @@
     <li>lib/ntable/axis.rb
     <li>lib/ntable/construction.rb
     <li>lib/ntable/errors.rb
+    <li>lib/ntable/index_wrapper.rb
     <li>lib/ntable/structure.rb
     <li>lib/ntable/table.rb
     <li>lib/ntable.rb
@@ -74,6 +75,8 @@
     <li><a href="#method-c-from_json_object">::from_json_object</a>
     
     <li><a href="#method-c-from_nested_object">::from_nested_object</a>
+    
+    <li><a href="#method-c-index">::index</a>
     
     <li><a href="#method-c-parse_json">::parse_json</a>
     
@@ -105,6 +108,8 @@
     <li><a href="./NTable.html">NTable</a>
   
     <li><a href="./NTable/EmptyAxis.html">NTable::EmptyAxis</a>
+  
+    <li><a href="./NTable/IndexWrapper.html">NTable::IndexWrapper</a>
   
     <li><a href="./NTable/IndexedAxis.html">NTable::IndexedAxis</a>
   
@@ -250,7 +255,7 @@ href="NTable/Structure.html">Structure</a>.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 75</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 78</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">structure_</span>, <span class="ruby-identifier">data_</span>={})
   <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">structure_</span>, <span class="ruby-identifier">data_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -280,7 +285,7 @@ href="NTable/Structure.html">Structure</a>.</p>
 
           
           <div class="method-source-code" id="from_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 82</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 85</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">json_</span>)
   <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Structure</span>.<span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">json_</span>[<span class="ruby-string">'axes'</span>] <span class="ruby-operator">||</span> []), <span class="ruby-value">:load</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">json_</span>[<span class="ruby-string">'values'</span>] <span class="ruby-operator">||</span> [])
 <span class="ruby-keyword">end</span></pre>
@@ -357,7 +362,7 @@ href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
 
           
           <div class="method-source-code" id="from_nested_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 135</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 138</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_nested_object</span>(<span class="ruby-identifier">obj_</span>, <span class="ruby-identifier">field_opts_</span>=[], <span class="ruby-identifier">opts_</span>={})
   <span class="ruby-identifier">axis_data_</span> = []
   <span class="ruby-identifier">_populate_nested_axes</span>(<span class="ruby-identifier">axis_data_</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">obj_</span>)
@@ -374,22 +379,36 @@ href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
       <span class="ruby-identifier">stringify_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:stringify</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">stringify_by_default_</span>
       <span class="ruby-identifier">objectify_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">objectify_by_default_</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stringify_</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">objectify_</span>
-        <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">keys</span>
-        <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">map!</span>(&amp;<span class="ruby-identifier">objectify_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">objectify_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">objectify_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
+          <span class="ruby-identifier">h_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>
+          <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k_</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">nv_</span> = <span class="ruby-identifier">objectify_</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">k_</span>)
+            <span class="ruby-identifier">ai_</span>[<span class="ruby-identifier">k_</span>] = <span class="ruby-identifier">nv_</span>
+            <span class="ruby-identifier">h_</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">nv_</span>
+          <span class="ruby-keyword">end</span>
+          <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">h_</span>.<span class="ruby-identifier">to_a</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">keys</span>
+        <span class="ruby-keyword">end</span>
         <span class="ruby-identifier">klass_</span> = <span class="ruby-constant">ObjectAxis</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">h_</span> = {}
         <span class="ruby-identifier">stringify_</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stringify_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
-        <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k_</span>, <span class="ruby-identifier">v_</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">k_</span> = <span class="ruby-identifier">stringify_</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">k_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">stringify_</span>
-          <span class="ruby-identifier">h_</span>[<span class="ruby-identifier">k_</span>.<span class="ruby-identifier">to_s</span>] = <span class="ruby-keyword">true</span>
+          <span class="ruby-identifier">h_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>
+        <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k_</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">nv_</span> = (<span class="ruby-identifier">stringify_</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">stringify_</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">k_</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">k_</span>).<span class="ruby-identifier">to_s</span>
+          <span class="ruby-identifier">ai_</span>[<span class="ruby-identifier">k_</span>] = <span class="ruby-identifier">nv_</span>
+          <span class="ruby-identifier">h_</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">nv_</span>
         <span class="ruby-keyword">end</span>
-        <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">h_</span>.<span class="ruby-identifier">keys</span>
+        <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">h_</span>.<span class="ruby-identifier">to_a</span>
         <span class="ruby-identifier">klass_</span> = <span class="ruby-constant">LabeledAxis</span>
       <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">if</span> (<span class="ruby-identifier">sort_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:sort</span>])
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">sort_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
           <span class="ruby-identifier">func_</span> = <span class="ruby-identifier">sort_</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">sort_</span> <span class="ruby-operator">==</span> <span class="ruby-value">:string</span>
+          <span class="ruby-identifier">func_</span> = <span class="ruby-ivar">@string_sort</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">sort_</span> <span class="ruby-operator">==</span> <span class="ruby-value">:integer</span>
+          <span class="ruby-identifier">func_</span> = <span class="ruby-ivar">@integer_sort</span>
         <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">sort_</span> <span class="ruby-operator">==</span> <span class="ruby-value">:numeric</span>
           <span class="ruby-identifier">func_</span> = <span class="ruby-ivar">@numeric_sort</span>
         <span class="ruby-keyword">else</span>
@@ -404,7 +423,7 @@ href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
     <span class="ruby-identifier">struct_</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">axis_</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">table_</span> = <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">struct_</span>, <span class="ruby-value">:fill</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:fill</span>])
-  <span class="ruby-identifier">_populate_nested_values</span>(<span class="ruby-identifier">table_</span>, [], <span class="ruby-identifier">obj_</span>)
+  <span class="ruby-identifier">_populate_nested_values</span>(<span class="ruby-identifier">table_</span>, [], <span class="ruby-identifier">axis_data_</span>, <span class="ruby-identifier">obj_</span>)
   <span class="ruby-identifier">table_</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- from_nested_object-source -->
@@ -415,6 +434,37 @@ href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
 
         
       </div><!-- from_nested_object-method -->
+
+    
+      <div id="method-c-index" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">index</span><span
+            class="method-args">(val_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Convenience method for creating an <a
+href="NTable/IndexWrapper.html">IndexWrapper</a></p>
+          
+
+          
+          <div class="method-source-code" id="index-source">
+            <pre><span class="ruby-comment"># File lib/ntable/index_wrapper.rb, line 68</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">val_</span>)
+  <span class="ruby-constant">IndexWrapper</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">val_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- index-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- index-method -->
 
     
       <div id="method-c-parse_json" class="method-detail ">
@@ -433,7 +483,7 @@ href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
 
           
           <div class="method-source-code" id="parse_json-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 89</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 92</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_json</span>(<span class="ruby-identifier">json_</span>)
   <span class="ruby-identifier">from_json_object</span>(<span class="ruby-operator">::</span><span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">json_</span>))
 <span class="ruby-keyword">end</span></pre>
@@ -474,7 +524,7 @@ this method. For example:</p>
 
           
           <div class="method-source-code" id="structure-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 61</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 64</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">structure</span>(<span class="ruby-identifier">axis_</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">axis_</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Structure</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>) <span class="ruby-operator">:</span> <span class="ruby-constant">Structure</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
