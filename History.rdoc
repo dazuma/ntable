@@ -1,3 +1,13 @@
+=== 0.1.2 / 2012-09-09
+
+I took a long look at ntable's interface, and the usage patterns of my own personal projects that depended on it, and decided some simplification was needed.
+
+* INCOMPATIBLE CHANGE: Renamed the "index_to_label" and "label_to_index" methods on axis objects to "label" and "index", respectively.
+* INCOMPATIBLE CHANGE: Renamed the "axis", "index", and "name" methods on AxisInfo to "axis_object", "axis_index", and "axis_name", respectively.
+* Added "index", "label", and "size" methods to AxisInfo, delegating to the underlying axis object. This means AxisInfo is now effectively a proxy for the axis implementation, which should normally no longer need to be accessed.
+* INCOMPATIBLE CHANGE: Renamed the "axis_info" and "all_axis_info" methods of Structure to "axis" and "all_axes", respectively.
+* The "axis" and "all_axes" methods of Structure are now exposed on Table, so you should not need to access the structure too often.
+
 === 0.1.1 / 2012-09-07
 
 * The "preferred" construction methods are now module methods on ::NTable.

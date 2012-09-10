@@ -52,18 +52,18 @@ module NTable
 
       def test_labeled_axis_label_to_index
         axis_ = LabeledAxis.new([:one, :two])
-        assert_equal(0, axis_.label_to_index(:one))
-        assert_equal(1, axis_.label_to_index(:two))
-        assert_equal(0, axis_.label_to_index('one'))
-        assert_nil(axis_.label_to_index(:three))
+        assert_equal(0, axis_.index(:one))
+        assert_equal(1, axis_.index(:two))
+        assert_equal(0, axis_.index('one'))
+        assert_nil(axis_.index(:three))
       end
 
 
       def test_labeled_axis_index_to_label
         axis_ = LabeledAxis.new([:one, :two])
-        assert_equal('one', axis_.index_to_label(0))
-        assert_equal('two', axis_.index_to_label(1))
-        assert_nil(axis_.index_to_label(2))
+        assert_equal('one', axis_.label(0))
+        assert_equal('two', axis_.label(1))
+        assert_nil(axis_.label(2))
       end
 
 
@@ -90,18 +90,18 @@ module NTable
 
       def test_object_axis_label_to_index
         axis_ = ObjectAxis.new([:one, :two])
-        assert_equal(0, axis_.label_to_index(:one))
-        assert_equal(1, axis_.label_to_index(:two))
-        assert_nil(axis_.label_to_index('one'))
-        assert_nil(axis_.label_to_index(:three))
+        assert_equal(0, axis_.index(:one))
+        assert_equal(1, axis_.index(:two))
+        assert_nil(axis_.index('one'))
+        assert_nil(axis_.index(:three))
       end
 
 
       def test_object_axis_index_to_label
         axis_ = ObjectAxis.new([:one, :two])
-        assert_equal(:one, axis_.index_to_label(0))
-        assert_equal(:two, axis_.index_to_label(1))
-        assert_nil(axis_.index_to_label(2))
+        assert_equal(:one, axis_.label(0))
+        assert_equal(:two, axis_.label(1))
+        assert_nil(axis_.label(2))
       end
 
 
@@ -128,17 +128,17 @@ module NTable
 
       def test_indexed_axis_label_to_index
         axis_ = IndexedAxis.new(2, 4)
-        assert_equal(0, axis_.label_to_index(4))
-        assert_equal(1, axis_.label_to_index(5))
-        assert_nil(axis_.label_to_index(3))
+        assert_equal(0, axis_.index(4))
+        assert_equal(1, axis_.index(5))
+        assert_nil(axis_.index(3))
       end
 
 
       def test_indexed_axis_index_to_label
         axis_ = IndexedAxis.new(2, 4)
-        assert_equal(4, axis_.index_to_label(0))
-        assert_equal(5, axis_.index_to_label(1))
-        assert_nil(axis_.index_to_label(2))
+        assert_equal(4, axis_.label(0))
+        assert_equal(5, axis_.label(1))
+        assert_nil(axis_.label(2))
       end
 
 

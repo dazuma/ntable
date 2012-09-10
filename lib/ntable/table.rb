@@ -161,6 +161,23 @@ module NTable
     end
 
 
+    # Returns the AxisInfo object representing the given axis. The axis
+    # must be specified by 0-based index or by name string. Returns nil
+    # if there is no such axis.
+
+    def axis(axis_)
+      @structure.axis(axis_)
+    end
+
+
+    # Returns an array of AxisInfo objects representing all the axes
+    # of the structure of this table.
+
+    def all_axes
+      @structure.all_axes
+    end
+
+
     # Return the parent of this table. A table with a parent shares the
     # parent's data, and cannot have its data modified directly. Instead,
     # if the parent table is modified, the changes are reflected in the
@@ -473,8 +490,8 @@ module NTable
       axes_ = axes_.flatten
       axis_indexes_ = []
       axes_.each do |a_|
-        if (ainfo_ = @structure.axis_info(a_))
-          axis_indexes_ << ainfo_.index
+        if (ainfo_ = @structure.axis(a_))
+          axis_indexes_ << ainfo_.axis_index
         else
           raise UnknownAxisError, "Unknown axis: #{a_.inspect}"
         end
@@ -523,10 +540,10 @@ module NTable
       offset_ = @offset
       select_set_ = {}
       hash_.each do |k_, v_|
-        if (ainfo_ = @structure.axis_info(k_))
-          aindex_ = ainfo_.index
+        if (ainfo_ = @structure.axis(k_))
+          aindex_ = ainfo_.axis_index
           unless select_set_.include?(aindex_)
-            lindex_ = ainfo_.axis.label_to_index(v_)
+            lindex_ = ainfo_.index(v_)
             if lindex_
               offset_ += ainfo_.step * lindex_
               select_set_[aindex_] = true
@@ -582,7 +599,7 @@ module NTable
     def _to_nested_obj(aidx_, vec_, opts_)  # :nodoc:
       exclude_ = opts_.include?(:exclude_value)
       exclude_value_ = opts_[:exclude_value] if exclude_
-      axis_ = @structure.axis_info(aidx_).axis
+      axis_ = @structure.axis(aidx_).axis_object
       result_ = IndexedAxis === axis_ ? [] : {}
       (0...axis_.size).map do |i_|
         vec_[aidx_] = i_
@@ -592,7 +609,7 @@ module NTable
           _to_nested_obj(aidx_ + 1, vec_, opts_)
         end
         if !exclude_ || !val_.eql?(exclude_value_)
-          result_[axis_.index_to_label(i_)] = val_
+          result_[axis_.label(i_)] = val_
         end
       end
       result_

@@ -49,14 +49,22 @@ module NTable
   class EmptyAxis
 
 
+    # Axis objects must implement an equality check.
+
     def eql?(obj_)
       obj_.is_a?(EmptyAxis)
     end
     alias_method :==, :eql?
 
+
+    # Axis objects must implement a hash
+
     def hash
       self.class.hash
     end
+
+
+    # Axis methods should implement display methods for debugging.
 
     def inspect
       "#<#{self.class}:0x#{object_id.to_s(16)}>"
@@ -75,7 +83,7 @@ module NTable
     # Given a label object, return the corresponding 0-based integer index.
     # Returns nil if the label is not recognized.
 
-    def label_to_index(label_)
+    def index(label_)
       nil
     end
 
@@ -84,7 +92,7 @@ module NTable
     # Returns nil if the index is out of bounds (i.e. is less than 0 or
     # greater than or equal to size.)
 
-    def index_to_label(index_)
+    def label(index_)
       nil
     end
 
@@ -144,11 +152,11 @@ module NTable
     attr_reader :size
 
 
-    def label_to_index(label_)
+    def index(label_)
       @h[label_.to_s]
     end
 
-    def index_to_label(index_)
+    def label(index_)
       @a[index_]
     end
 
@@ -186,7 +194,7 @@ module NTable
     alias_method :==, :eql?
 
     def hash
-      @size.hash + @start.hash
+      @size.hash ^ @start.hash
     end
 
     def inspect
@@ -199,11 +207,11 @@ module NTable
     attr_reader :start
 
 
-    def label_to_index(label_)
+    def index(label_)
       label_ >= @start && label_ < @size + @start ? label_ - @start : nil
     end
 
-    def index_to_label(index_)
+    def label(index_)
       index_ >= 0 && index_ < @size ? index_ + @start : nil
     end
 
@@ -258,11 +266,11 @@ module NTable
     attr_reader :size
 
 
-    def label_to_index(label_)
+    def index(label_)
       @h[label_]
     end
 
-    def index_to_label(index_)
+    def label(index_)
       @a[index_]
     end
 

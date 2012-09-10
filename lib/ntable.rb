@@ -58,7 +58,7 @@
 # such a table with 100 rows and two columns could be created like this:
 #
 #  table = NTable.structure(NTable::IndexedAxis.new(100)).
-#                 add(NTable::LabeledAxis(:name, :address)).
+#                 add(NTable::LabeledAxis.new(:name, :address)).
 #                 create
 #
 # You can then look up individual cells like this:
@@ -68,7 +68,7 @@
 # Axes can be given names as well:
 #
 #  table = NTable.structure(NTable::IndexedAxis.new(100), :row).
-#                 add(NTable::LabeledAxis(:name, :address), :col).
+#                 add(NTable::LabeledAxis.new(:name, :address), :col).
 #                 create
 #
 # Then you can specify the axes by name when you look up:
