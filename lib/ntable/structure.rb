@@ -132,6 +132,18 @@ module NTable
         @axis_index -= 1
       end
 
+
+      def _compute_offset(v_)
+        if v_.is_a?(::NTable::IndexWrapper)
+          index_ = v_.to_i
+          index_ = nil if index_ < 0 || index_ >= @axis_object.size
+        else
+          index_ = @axis_object.index(v_)
+          index_ = v_ if !index_ && v_.is_a?(::Integer) && v_ >= 0 && v_ < @axis_object.size
+        end
+        index_ ? @step * index_ : nil
+      end
+
     end
 
 
@@ -551,9 +563,9 @@ module NTable
         offset_ = 0
         arg_.each do |k_, v_|
           if (ainfo_ = axis(k_))
-            index_ = ainfo_.index(v_)
-            return nil unless index_
-            offset_ += ainfo_.step * index_
+            delta_ = ainfo_._compute_offset(v_)
+            return nil unless delta_
+            offset_ += delta_
           else
             return nil
           end
@@ -563,9 +575,9 @@ module NTable
         offset_ = 0
         arg_.each_with_index do |v_, i_|
           if (ainfo_ = @indexes[i_])
-            index_ = ainfo_.index(v_)
-            return nil unless index_
-            offset_ += ainfo_.step * index_
+            delta_ = ainfo_._compute_offset(v_)
+            return nil unless delta_
+            offset_ += delta_
           else
             return nil
           end

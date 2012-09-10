@@ -47,7 +47,9 @@ module NTable
       def setup
         @labeled_axis = LabeledAxis.new([:red, :white, :blue])
         @indexed_axis = IndexedAxis.new(10)
+        @indexed_axis_1 = IndexedAxis.new(10, 1)
         @structure = Structure.add(@indexed_axis, :row).add(@labeled_axis, :column)
+        @structure_1 = Structure.add(@indexed_axis_1, :row).add(@labeled_axis, :column)
       end
 
 
@@ -81,6 +83,15 @@ module NTable
       end
 
 
+      def test_load_and_get_indexes
+        table_ = Table.new(@structure_1, :load => (0..29).to_a)
+        assert_equal(14, table_.get(5, 2))
+        assert_equal(14, table_.get(0 => 5, 1 => 2))
+        assert_equal(17, table_.get(::NTable.index(5), 2))
+        assert_equal(17, table_.get(0 => ::NTable.index(5), 1 => 2))
+      end
+
+
       def test_set_from_array
         table_ = Table.new(@structure)
         table_.set!(0, :red, "foo")
@@ -98,6 +109,16 @@ module NTable
         assert_equal("foo", table_.get(0, :red))
         assert_equal("bar", table_[5, :blue])
         assert_nil(table_.get(5, :white))
+      end
+
+
+      def test_set_indexes
+        table_ = Table.new(@structure_1)
+        table_.set!(1, 1, "foo")
+        table_[1 => 2, 0 => ::NTable.index(5)] = "bar"
+        assert_equal("foo", table_.get(::NTable.index(0), :white))
+        assert_equal("bar", table_[6, :blue])
+        assert_nil(table_.get(5, :blue))
       end
 
 

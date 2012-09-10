@@ -1,3 +1,8 @@
+=== 0.1.3 / 2012-09-10
+
+* Creating a table from a nested object, using a label conversion procedure, tended to fail with NoSuchCellError. Fixed and added test cases.
+* Support cell lookup using the 0-based row index as well as the label.
+
 === 0.1.2 / 2012-09-09
 
 I took a long look at ntable's interface, and the usage patterns of my own personal projects that depended on it, and decided some simplification was needed.

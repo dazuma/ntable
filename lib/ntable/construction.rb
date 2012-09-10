@@ -34,6 +34,7 @@
 ;
 
 
+require 'set'
 require 'json'
 
 
@@ -41,6 +42,8 @@ module NTable
 
 
   @numeric_sort = ::Proc.new{ |a_, b_| a_.to_f <=> b_.to_f }
+  @integer_sort = ::Proc.new{ |a_, b_| a_.to_i <=> b_.to_i }
+  @string_sort = ::Proc.new{ |a_, b_| a_.to_s <=> b_.to_s }
 
 
   class << self
@@ -148,22 +151,36 @@ module NTable
           stringify_ = field_[:stringify] || stringify_by_default_
           objectify_ ||= objectify_by_default_ unless stringify_
           if objectify_
-            labels_ = ai_.keys
-            labels_.map!(&objectify_) if objectify_.respond_to?(:call)
+            if objectify_.respond_to?(:call)
+              h_ = ::Set.new
+              ai_.keys.each do |k_|
+                nv_ = objectify_.call(k_)
+                ai_[k_] = nv_
+                h_ << nv_
+              end
+              labels_ = h_.to_a
+            else
+              labels_ = ai_.keys
+            end
             klass_ = ObjectAxis
           else
-            h_ = {}
             stringify_ = nil unless stringify_.respond_to?(:call)
-            ai_.each do |k_, v_|
-              k_ = stringify_.call(k_) if stringify_
-              h_[k_.to_s] = true
+              h_ = ::Set.new
+            ai_.keys.each do |k_|
+              nv_ = (stringify_ ? stringify_.call(k_) : k_).to_s
+              ai_[k_] = nv_
+              h_ << nv_
             end
-            labels_ = h_.keys
+            labels_ = h_.to_a
             klass_ = LabeledAxis
           end
           if (sort_ = field_[:sort])
             if sort_.respond_to?(:call)
               func_ = sort_
+            elsif sort_ == :string
+              func_ = @string_sort
+            elsif sort_ == :integer
+              func_ = @integer_sort
             elsif sort_ == :numeric
               func_ = @numeric_sort
             else
@@ -178,7 +195,7 @@ module NTable
         struct_.add(axis_, name_) if axis_
       end
       table_ = Table.new(struct_, :fill => opts_[:fill])
-      _populate_nested_values(table_, [], obj_)
+      _populate_nested_values(table_, [], axis_data_, obj_)
       table_
     end
 
@@ -191,16 +208,16 @@ module NTable
           set_ = ai_
         else
           set_ = axis_data_[index_] = {}
-          (ai_[0]...ai_[1]).each{ |i_| set_[i_] = true } if ::Array === ai_
+          (ai_[0]...ai_[1]).each{ |i_| set_[i_] = i_ } if ::Array === ai_
         end
         obj_.each do |k_, v_|
-          set_[k_] = true
+          set_[k_] = k_
           _populate_nested_axes(axis_data_, index_+1, v_)
         end
       when ::Array
         if ::Hash === ai_
           obj_.each_with_index do |v_, i_|
-            ai_[i_] = true
+            ai_[i_] = i_
             _populate_nested_axes(axis_data_, index_+1, v_)
           end
         else
@@ -222,18 +239,19 @@ module NTable
     end
 
 
-    def _populate_nested_values(table_, path_, obj_)  # :nodoc:
+    def _populate_nested_values(table_, path_, axis_data_, obj_)  # :nodoc:
       if path_.size == table_.dim
         table_.set!(*path_, obj_)
       else
         case obj_
         when ::Hash
+          h_ = axis_data_[path_.size]
           obj_.each do |k_, v_|
-            _populate_nested_values(table_, path_ + [k_], v_)
+            _populate_nested_values(table_, path_ + [h_[k_]], axis_data_, v_)
           end
         when ::Array
           obj_.each_with_index do |v_, i_|
-            _populate_nested_values(table_, path_ + [i_], v_) unless v_.nil?
+            _populate_nested_values(table_, path_ + [i_], axis_data_, v_) unless v_.nil?
           end
         end
       end

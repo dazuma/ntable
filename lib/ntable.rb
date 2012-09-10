@@ -99,5 +99,6 @@ end
 require 'ntable/errors'
 require 'ntable/axis'
 require 'ntable/structure'
+require 'ntable/index_wrapper'
 require 'ntable/table'
 require 'ntable/construction'

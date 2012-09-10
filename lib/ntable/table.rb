@@ -189,9 +189,9 @@ module NTable
 
 
     # Returns the value in the cell at the given coordinates, which
-    # must be given as labels.
+    # may be given as labels or as 0-based row indexes.
     # You may specify the cell as an array of coordinates, or as a
-    # hash mapping axis name to coordinate.
+    # hash mapping axis name or axis index to coordinate.
     #
     # For example, for a typical database result set with an axis called
     # "row" of numerically identified rows, and an axis called "col" with
@@ -200,6 +200,23 @@ module NTable
     #  get(3, 'name')
     #  get([3, 'name'])
     #  get(:row => 3, :col => 'name')
+    #  get(0 => 3, 1 => 'name')
+    #
+    # Alternately, you can provide row numbers (0-based) instead. If, for
+    # example, "name" is the second column (corresponding to index 1),
+    # then the following queries are also equivalent:
+    #
+    #  get(3, 1)
+    #  get(:row => 3, :col => 1)
+    #
+    # For axes whose labels are integers (for example, a numerically
+    # identified axis such as IndexedAxis), it is ambiguous whether a
+    # value is intended as a label or an index. In this case, NTable
+    # defalts to assuming the value is a label. If you want to force a
+    # value to be treated as a 0-based row index, wrap it in a call to
+    # NTable.index(), as follows:
+    #
+    #  get(NTable.index(3), 1)
     #
     # Raises NoSuchCellError if the coordinates do not exist.
 
@@ -450,10 +467,10 @@ module NTable
     # Performs a reduce on the entire table and returns the result.
     # You may use one of the following call sequences:
     #
-    # [reduce{ |accumulator, value, position| <i>block</i> }]
+    # [reduce_with_position{ |accumulator, value, position| <i>block</i> }]
     #   Reduces using the given block as the reduction function. The
     #   first element in the table is used as the initial accumulator.
-    # [reduce(initial){ |accumulator, value, position| <i>block</i> }]
+    # [reduce_with_position(initial){ |accumulator, value, position| <i>block</i> }]
     #   Reduces using the given block as the reduction function, with
     #   the given initial value for the accumulator.
 

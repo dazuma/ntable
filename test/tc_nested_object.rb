@@ -199,6 +199,22 @@ module NTable
       end
 
 
+      def test_from_level_1_labeled_with_objectify_conversion
+        obj_ = {'one' => 1, 'two' => 2}
+        t1_ = Table.from_nested_object(obj_,
+          [{:sort => true, :objectify => ::Proc.new{ |a_| a_.to_sym }}])
+        assert_equal(Table.new(Structure.add(@object_axis_2), :load => [1,2]), t1_)
+      end
+
+
+      def test_from_level_1_labeled_with_stringify_conversion
+        obj_ = {:one1 => 1, :two22 => 2}
+        t1_ = Table.from_nested_object(obj_,
+          [{:sort => true, :stringify => ::Proc.new{ |a_| a_.to_s.gsub(/\d/, '') }}])
+        assert_equal(Table.new(Structure.add(@labeled_axis_2), :load => [1,2]), t1_)
+      end
+
+
     end
 
   end
