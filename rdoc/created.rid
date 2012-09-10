@@ -1,9 +1,9 @@
-Fri, 07 Sep 2012 16:18:38 -0700
-lib/ntable/axis.rb	Tue, 04 Sep 2012 19:13:00 -0700
-lib/ntable/construction.rb	Tue, 04 Sep 2012 21:19:44 -0700
-lib/ntable/errors.rb	Tue, 04 Sep 2012 19:33:32 -0700
-lib/ntable/structure.rb	Tue, 04 Sep 2012 19:45:17 -0700
-lib/ntable/table.rb	Tue, 04 Sep 2012 19:40:02 -0700
-lib/ntable.rb	Fri, 07 Sep 2012 16:14:20 -0700
-History.rdoc	Fri, 07 Sep 2012 16:11:29 -0700
-README.rdoc	Sun, 02 Sep 2012 00:26:09 -0700
+Sun, 09 Sep 2012 21:51:54 -0700
+lib/ntable/axis.rb	Fri, 07 Sep 2012 17:13:00 -0700
+lib/ntable/construction.rb	Fri, 07 Sep 2012 16:19:45 -0700
+lib/ntable/errors.rb	Fri, 07 Sep 2012 16:19:45 -0700
+lib/ntable/structure.rb	Fri, 07 Sep 2012 17:10:37 -0700
+lib/ntable/table.rb	Fri, 07 Sep 2012 17:18:32 -0700
+lib/ntable.rb	Fri, 07 Sep 2012 17:29:31 -0700
+History.rdoc	Sun, 09 Sep 2012 21:13:32 -0700
+README.rdoc	Fri, 07 Sep 2012 16:19:45 -0700

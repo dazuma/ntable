@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>History - NTable 0.1.1 Documentation</title>
+<title>History - NTable 0.1.2 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -77,6 +77,8 @@
   
     <li><a href="./NTable/Structure.html">NTable::Structure</a>
   
+    <li><a href="./NTable/Structure/AxisInfo.html">NTable::Structure::AxisInfo</a>
+  
     <li><a href="./NTable/Structure/Position.html">NTable::Structure::Position</a>
   
     <li><a href="./NTable/StructureMismatchError.html">NTable::StructureMismatchError</a>
@@ -97,6 +99,30 @@
 
 <div id="documentation" class="description">
   
+<h3 id="label-0.1.2+%2F+2012-09-09">0.1.2 / 2012-09-09</h3>
+
+<p>I took a long look at ntable’s interface, and the usage patterns of my own
+personal projects that depended on it, and decided some simplification was
+needed.</p>
+<ul><li>
+<p>INCOMPATIBLE CHANGE: Renamed the “index_to_label” and “label_to_index”
+methods on axis objects to “label” and “index”, respectively.</p>
+</li><li>
+<p>INCOMPATIBLE CHANGE: Renamed the “axis”, “index”, and “name” methods on
+AxisInfo to “axis_object”, “axis_index”, and “axis_name”, respectively.</p>
+</li><li>
+<p>Added “index”, “label”, and “size” methods to AxisInfo, delegating to the
+underlying axis object. This means AxisInfo is now effectively a proxy for
+the axis implementation, which should normally no longer need to be
+accessed.</p>
+</li><li>
+<p>INCOMPATIBLE CHANGE: Renamed the “axis_info” and “all_axis_info” methods of
+Structure to “axis” and “all_axes”, respectively.</p>
+</li><li>
+<p>The “axis” and “all_axes” methods of Structure are now exposed on Table, so
+you should not need to access the structure too often.</p>
+</li></ul>
+
 <h3 id="label-0.1.1+%2F+2012-09-07">0.1.1 / 2012-09-07</h3>
 <ul><li>
 <p>The “preferred” construction methods are now module methods on <a

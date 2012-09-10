@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::Structure - NTable 0.1.1 Documentation</title>
+<title>class NTable::Structure - NTable 0.1.2 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -80,9 +80,9 @@
     
     <li><a href="#method-i-add">#add</a>
     
-    <li><a href="#method-i-all_axis_info">#all_axis_info</a>
+    <li><a href="#method-i-all_axes">#all_axes</a>
     
-    <li><a href="#method-i-axis_info">#axis_info</a>
+    <li><a href="#method-i-axis">#axis</a>
     
     <li><a href="#method-i-create">#create</a>
     
@@ -156,6 +156,8 @@
     <li><a href="../NTable/ObjectAxis.html">NTable::ObjectAxis</a>
   
     <li><a href="../NTable/Structure.html">NTable::Structure</a>
+  
+    <li><a href="../NTable/Structure/AxisInfo.html">NTable::Structure::AxisInfo</a>
   
     <li><a href="../NTable/Structure/Position.html">NTable::Structure::Position</a>
   
@@ -239,7 +241,7 @@ href="Structure.html#method-i-add">#add</a>.</p>
 
           
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 641</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 669</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -269,7 +271,7 @@ href="Structure.html#method-i-add">#add</a>.</p>
 
           
           <div class="method-source-code" id="from_json_array-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 648</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 676</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -303,7 +305,7 @@ structure.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 183</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 211</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
   <span class="ruby-ivar">@indexes</span> = []
   <span class="ruby-ivar">@names</span> = {}
@@ -346,7 +348,7 @@ one is a subview and the other is not.</p>
 
           
           <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 234</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 262</span>
 <span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">rhs_</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">equal?</span>(<span class="ruby-keyword">self</span>)
     <span class="ruby-keyword">true</span>
@@ -355,7 +357,7 @@ one is a subview and the other is not.</p>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">rhs_indexes_</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span>
       <span class="ruby-identifier">rhs_indexes_</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rhs_ai_</span>, <span class="ruby-identifier">i_</span><span class="ruby-operator">|</span>
         <span class="ruby-identifier">lhs_ai_</span> = <span class="ruby-ivar">@indexes</span>[<span class="ruby-identifier">i_</span>]
-        <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">lhs_ai_</span>.<span class="ruby-identifier">axis</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">rhs_ai_</span>.<span class="ruby-identifier">axis</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">lhs_ai_</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">rhs_ai_</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">lhs_ai_</span>.<span class="ruby-identifier">axis_object</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">rhs_ai_</span>.<span class="ruby-identifier">axis_object</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">lhs_ai_</span>.<span class="ruby-identifier">axis_name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">rhs_ai_</span>.<span class="ruby-identifier">axis_name</span>
       <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
     <span class="ruby-keyword">end</span>
@@ -392,7 +394,7 @@ You may also provide an optional name string.</p>
 
           
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 257</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 285</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;Structure locked&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@locked</span>
   <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">name_</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">name_</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
@@ -412,10 +414,10 @@ You may also provide an optional name string.</p>
       </div><!-- add-method -->
 
     
-      <div id="method-i-all_axis_info" class="method-detail ">
+      <div id="method-i-all_axes" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">all_axis_info</span><span
+          <span class="method-name">all_axes</span><span
             class="method-args">()</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
@@ -423,30 +425,30 @@ You may also provide an optional name string.</p>
 
         <div class="method-description">
           
-          <p>Returns an array of AxisInfo objects representing all the axes of this
-structure.</p>
+          <p>Returns an array of <a href="Structure/AxisInfo.html">AxisInfo</a> objects
+representing all the axes of this structure.</p>
           
 
           
-          <div class="method-source-code" id="all_axis_info-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 344</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_axis_info</span>
+          <div class="method-source-code" id="all_axes-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 372</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_axes</span>
   <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- all_axis_info-source -->
+          </div><!-- all_axes-source -->
           
         </div>
 
         
 
         
-      </div><!-- all_axis_info-method -->
+      </div><!-- all_axes-method -->
 
     
-      <div id="method-i-axis_info" class="method-detail ">
+      <div id="method-i-axis" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">axis_info</span><span
+          <span class="method-name">axis</span><span
             class="method-args">(axis_)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
@@ -454,15 +456,15 @@ structure.</p>
 
         <div class="method-description">
           
-          <p>Returns the AxisInfo object representing the given axis. The axis must be
-specified by 0-based index or by name string. Returns nil if there is no
-such axis.</p>
+          <p>Returns the <a href="Structure/AxisInfo.html">AxisInfo</a> object
+representing the given axis. The axis must be specified by 0-based index or
+by name string. Returns nil if there is no such axis.</p>
           
 
           
-          <div class="method-source-code" id="axis_info-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 353</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">axis_info</span>(<span class="ruby-identifier">axis_</span>)
+          <div class="method-source-code" id="axis-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 381</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">axis</span>(<span class="ruby-identifier">axis_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">axis_</span>
   <span class="ruby-keyword">when</span> <span class="ruby-operator">::</span><span class="ruby-constant">Integer</span>
     <span class="ruby-ivar">@indexes</span>[<span class="ruby-identifier">axis_</span>]
@@ -470,14 +472,14 @@ such axis.</p>
     <span class="ruby-ivar">@names</span>[<span class="ruby-identifier">axis_</span>.<span class="ruby-identifier">to_s</span>]
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- axis_info-source -->
+          </div><!-- axis-source -->
           
         </div>
 
         
 
         
-      </div><!-- axis_info-method -->
+      </div><!-- axis-method -->
 
     
       <div id="method-i-create" class="method-detail ">
@@ -506,7 +508,7 @@ also has the side effect of locking this structure.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 490</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 518</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">data_</span>={})
   <span class="ruby-constant">Table</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">data_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -537,7 +539,7 @@ dimension is 0.</p>
 
           
           <div class="method-source-code" id="degenerate-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 336</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 364</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">degenerate?</span>
   <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -567,7 +569,7 @@ dimension is 0.</p>
 
           
           <div class="method-source-code" id="dim-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 328</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 356</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">dim</span>
   <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span>
 <span class="ruby-keyword">end</span></pre>
@@ -598,7 +600,7 @@ This happens only if at least one of the axes has a zero size.</p>
 
           
           <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 400</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 428</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
   <span class="ruby-ivar">@size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -631,7 +633,7 @@ a subview of a larger structure whereas the latter is not.</p>
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 221</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 249</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
   <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">equal?</span>(<span class="ruby-keyword">self</span>) <span class="ruby-operator">||</span>
     <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Structure</span>) <span class="ruby-operator">&amp;&amp;</span>
@@ -665,7 +667,7 @@ a subview of a larger structure whereas the latter is not.</p>
 
           
           <div class="method-source-code" id="from_json_array-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 457</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 485</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_array</span>(<span class="ruby-identifier">array_</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;There are already axes in this structure&quot;</span>
@@ -715,14 +717,14 @@ to call it yourself.</p>
 
           
           <div class="method-source-code" id="lock-21-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 367</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 395</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">lock!</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@locked</span>
     <span class="ruby-ivar">@locked</span> = <span class="ruby-keyword">true</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
       <span class="ruby-identifier">s_</span> = <span class="ruby-ivar">@size</span>
       <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ainfo_</span><span class="ruby-operator">|</span>
-        <span class="ruby-identifier">s_</span> <span class="ruby-operator">/=</span> <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span>
+        <span class="ruby-identifier">s_</span> <span class="ruby-operator">/=</span> <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">size</span>
         <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">_set_step</span>(<span class="ruby-identifier">s_</span>)
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
@@ -755,7 +757,7 @@ to call it yourself.</p>
 
           
           <div class="method-source-code" id="locked-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 384</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 412</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">locked?</span>
   <span class="ruby-ivar">@locked</span>
 <span class="ruby-keyword">end</span></pre>
@@ -786,7 +788,7 @@ or nil if not.</p>
 
           
           <div class="method-source-code" id="parent-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 321</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 349</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parent</span>
   <span class="ruby-ivar">@parent</span>
 <span class="ruby-keyword">end</span></pre>
@@ -818,7 +820,7 @@ it may be an array of row labels for the axes in order.</p>
 
           
           <div class="method-source-code" id="position-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 409</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 437</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">position</span>(<span class="ruby-identifier">arg_</span>)
   <span class="ruby-identifier">vector_</span> = <span class="ruby-identifier">_vector</span>(<span class="ruby-identifier">arg_</span>)
   <span class="ruby-identifier">vector_</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Position</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">vector_</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
@@ -851,20 +853,20 @@ href="UnknownAxisError.html">UnknownAxisError</a> if there is no such axis.</p>
 
           
           <div class="method-source-code" id="remove-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 272</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 300</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remove</span>(<span class="ruby-identifier">axis_</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;Structure locked&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@locked</span>
-  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-identifier">axis_info</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-identifier">axis</span>(<span class="ruby-identifier">axis_</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ainfo_</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownAxisError</span>, <span class="ruby-node">&quot;Unknown axis: #{axis_.inspect}&quot;</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">index_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">index</span>
-  <span class="ruby-ivar">@names</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">name</span>)
+  <span class="ruby-identifier">index_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis_index</span>
+  <span class="ruby-ivar">@names</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis_name</span>)
   <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">delete_at</span>(<span class="ruby-identifier">index_</span>)
   <span class="ruby-ivar">@indexes</span>[<span class="ruby-identifier">index_</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">each</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">_dec_index</span> }
-  <span class="ruby-identifier">size_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span>
+  <span class="ruby-identifier">size_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">size</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">size_</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-    <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-value">1</span>){ <span class="ruby-operator">|</span><span class="ruby-identifier">s_</span>, <span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s_</span> * <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span> }
+    <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-value">1</span>){ <span class="ruby-operator">|</span><span class="ruby-identifier">s_</span>, <span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s_</span> * <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">size</span> }
   <span class="ruby-keyword">else</span>
     <span class="ruby-ivar">@size</span> <span class="ruby-operator">/=</span> <span class="ruby-identifier">size_</span>
   <span class="ruby-keyword">end</span>
@@ -902,18 +904,18 @@ old axis specification does not match an actual axis.</p>
 
           
           <div class="method-source-code" id="replace-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 300</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 328</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">replace</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">naxis_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">StructureStateError</span>, <span class="ruby-string">&quot;Structure locked&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@locked</span>
-  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-identifier">axis_info</span>(<span class="ruby-identifier">axis_</span>)
+  <span class="ruby-identifier">ainfo_</span> = <span class="ruby-identifier">axis</span>(<span class="ruby-identifier">axis_</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ainfo_</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownAxisError</span>, <span class="ruby-node">&quot;Unknown axis: #{axis_.inspect}&quot;</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">osize_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span>
+  <span class="ruby-identifier">osize_</span> = <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">size</span>
   <span class="ruby-identifier">naxis_</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">ainfo_</span>)
   <span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">_set_axis</span>(<span class="ruby-identifier">naxis_</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">osize_</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-    <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-value">1</span>){ <span class="ruby-operator">|</span><span class="ruby-identifier">size_</span>, <span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">size_</span> * <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>.<span class="ruby-identifier">size</span> }
+    <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-value">1</span>){ <span class="ruby-operator">|</span><span class="ruby-identifier">size_</span>, <span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">size_</span> * <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">size</span> }
   <span class="ruby-keyword">else</span>
     <span class="ruby-ivar">@size</span> = <span class="ruby-ivar">@size</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">osize_</span> * <span class="ruby-identifier">naxis_</span>.<span class="ruby-identifier">size</span>
   <span class="ruby-keyword">end</span>
@@ -945,7 +947,7 @@ old axis specification does not match an actual axis.</p>
 
           
           <div class="method-source-code" id="size-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 391</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 419</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">size</span>
   <span class="ruby-ivar">@size</span>
 <span class="ruby-keyword">end</span></pre>
@@ -977,7 +979,7 @@ provided as an array of axis names or indexes.</p>
 
           
           <div class="method-source-code" id="substructure_including-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 419</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 447</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">substructure_including</span>(*<span class="ruby-identifier">axes_</span>)
   <span class="ruby-identifier">_substructure</span>(<span class="ruby-identifier">axes_</span>.<span class="ruby-identifier">flatten</span>, <span class="ruby-keyword">true</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1009,7 +1011,7 @@ provided as an array of axis names or indexes.</p>
 
           
           <div class="method-source-code" id="substructure_omitting-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 428</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 456</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">substructure_omitting</span>(*<span class="ruby-identifier">axes_</span>)
   <span class="ruby-identifier">_substructure</span>(<span class="ruby-identifier">axes_</span>.<span class="ruby-identifier">flatten</span>, <span class="ruby-keyword">false</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1041,11 +1043,11 @@ this structure using from_json_array.</p>
 
           
           <div class="method-source-code" id="to_json_array-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 437</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 465</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json_array</span>
   <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">name</span>
-    <span class="ruby-identifier">axis_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>
+    <span class="ruby-identifier">name_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis_name</span>
+    <span class="ruby-identifier">axis_</span> = <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis_object</span>
     <span class="ruby-identifier">type_</span> = <span class="ruby-identifier">axis_</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">type_</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r^NTable::(\w+)Axis$/</span>
       <span class="ruby-identifier">type_</span> = <span class="ruby-node">$1</span>
@@ -1083,10 +1085,10 @@ this structure using from_json_array.</p>
 
           
           <div class="method-source-code" id="unlocked_copy-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 208</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 236</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">unlocked_copy</span>
   <span class="ruby-identifier">copy_</span> = <span class="ruby-constant">Structure</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">each</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">copy_</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis</span>, <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">name</span>) }
+  <span class="ruby-ivar">@indexes</span>.<span class="ruby-identifier">each</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">ai_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">copy_</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis_object</span>, <span class="ruby-identifier">ai_</span>.<span class="ruby-identifier">axis_name</span>) }
   <span class="ruby-identifier">copy_</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- unlocked_copy-source -->

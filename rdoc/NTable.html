@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module NTable - NTable 0.1.1 Documentation</title>
+<title>module NTable - NTable 0.1.2 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -118,6 +118,8 @@
   
     <li><a href="./NTable/Structure.html">NTable::Structure</a>
   
+    <li><a href="./NTable/Structure/AxisInfo.html">NTable::Structure::AxisInfo</a>
+  
     <li><a href="./NTable/Structure/Position.html">NTable::Structure::Position</a>
   
     <li><a href="./NTable/StructureMismatchError.html">NTable::StructureMismatchError</a>
@@ -166,7 +168,7 @@ indexed axis, and the minor one a string labeled axis. In code, such a
 table with 100 rows and two columns could be created like this:</p>
 
 <pre>table = NTable.structure(NTable::IndexedAxis.new(100)).
-               add(NTable::LabeledAxis(:name, :address)).
+               add(NTable::LabeledAxis.new(:name, :address)).
                create</pre>
 
 <p>You can then look up individual cells like this:</p>
@@ -176,7 +178,7 @@ table with 100 rows and two columns could be created like this:</p>
 <p>Axes can be given names as well:</p>
 
 <pre>table = NTable.structure(NTable::IndexedAxis.new(100), :row).
-               add(NTable::LabeledAxis(:name, :address), :col).
+               add(NTable::LabeledAxis.new(:name, :address), :col).
                create</pre>
 
 <p>Then you can specify the axes by name when you look up:</p>
