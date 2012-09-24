@@ -131,40 +131,45 @@ module NTable
     end
 
 
+    # See EmptyAxis#eql?
     def eql?(obj_)
       obj_.is_a?(LabeledAxis) && @a.eql?(obj_.instance_variable_get(:@a))
     end
+    alias_method :==, :eql?
 
-    def ==(obj_)
-      obj_.is_a?(LabeledAxis) && @a == obj_.instance_variable_get(:@a)
-    end
-
+    # See EmptyAxis#hash
     def hash
       @a.hash
     end
 
+    # See EmptyAxis#inspect
     def inspect
       "#<#{self.class}:0x#{object_id.to_s(16)} #{@a.inspect}>"
     end
     alias_method :to_s, :inspect
 
 
+    # See EmptyAxis#size
     attr_reader :size
 
 
+    # See EmptyAxis#index
     def index(label_)
       @h[label_.to_s]
     end
 
+    # See EmptyAxis#label
     def label(index_)
       @a[index_]
     end
 
 
+    # See EmptyAxis#to_json_object
     def to_json_object(json_obj_)
       json_obj_['labels'] = @a
     end
 
+    # See EmptyAxis#from_json_object
     def from_json_object(json_obj_)
       initialize(json_obj_['labels'] || [])
     end
@@ -188,39 +193,49 @@ module NTable
     end
 
 
+    # See EmptyAxis#eql?
     def eql?(obj_)
       obj_.is_a?(IndexedAxis) && obj_.size.eql?(@size) && obj_.start.eql?(@start)
     end
     alias_method :==, :eql?
 
+    # See EmptyAxis#hash
     def hash
       @size.hash ^ @start.hash
     end
 
+    # See EmptyAxis#inspect
     def inspect
       "#<#{self.class}:0x#{object_id.to_s(16)} size=#{@size} start=#{@start}>"
     end
     alias_method :to_s, :inspect
 
 
+    # See EmptyAxis#size
     attr_reader :size
+
+    # Retrieve the number of the first row
     attr_reader :start
 
 
+    # See EmptyAxis#index
     def index(label_)
       label_ >= @start && label_ < @size + @start ? label_ - @start : nil
     end
 
+    # See EmptyAxis#label
     def label(index_)
       index_ >= 0 && index_ < @size ? index_ + @start : nil
     end
 
 
+    # See EmptyAxis#to_json_object
     def to_json_object(json_obj_)
       json_obj_['size'] = @size
       json_obj_['start'] = @start unless @start == 0
     end
 
+    # See EmptyAxis#from_json_object
     def from_json_object(json_obj_)
       initialize(json_obj_['size'], json_obj_['start'].to_i)
     end
@@ -245,40 +260,49 @@ module NTable
     end
 
 
+    # See EmptyAxis#eql?
     def eql?(obj_)
       obj_.is_a?(ObjectAxis) && @a.eql?(obj_.instance_variable_get(:@a))
     end
 
+    # See EmptyAxis#==
     def ==(obj_)
       obj_.is_a?(ObjectAxis) && @a == obj_.instance_variable_get(:@a)
     end
 
+    # See EmptyAxis#hash
     def hash
       @a.hash
     end
 
+    # See EmptyAxis#inspect
     def inspect
       "#<#{self.class}:0x#{object_id.to_s(16)} #{@a.inspect}>"
     end
     alias_method :to_s, :inspect
 
 
+    # See EmptyAxis#size
     attr_reader :size
 
 
+    # See EmptyAxis#index
     def index(label_)
       @h[label_]
     end
 
+    # See EmptyAxis#label
     def label(index_)
       @a[index_]
     end
 
 
+    # See EmptyAxis#to_json_object
     def to_json_object(json_obj_)
       raise "Unable to JSON serialize an ObjectAxis"
     end
 
+    # See EmptyAxis#from_json_object
     def from_json_object(json_obj_)
       raise "Unable to JSON serialize an ObjectAxis"
     end

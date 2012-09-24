@@ -42,23 +42,34 @@ module NTable
 
   class IndexWrapper
 
+
     # Create an IndexWrapper with the given integer index
 
     def initialize(val_)
       @value = val_.to_i
     end
 
+
+    # Standard equality checker
+
     def eql?(rhs_)
       rhs_.is_a?(IndexWrapper) && @value == @rhs_.value
     end
     alias_method :==, :eql?
 
+
+    # Standard hash value
+
     def hash
       @value.hash
     end
 
+
+    # Retrieve the actual index
+
     attr_reader :value
     alias_method :to_i, :value
+
 
   end
 

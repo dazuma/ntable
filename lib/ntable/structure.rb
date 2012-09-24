@@ -130,10 +130,12 @@ module NTable
       include ::Enumerable
 
 
-      def eql?(obj_)  # :nodoc:
+      # Standard equality check
+
+      def eql?(obj_)
         obj_.is_a?(AxisInfo) && @axis_object.eql?(obj_.axis_object) && @axis_name.eql?(obj_.axis_name)
       end
-      alias_method :==, :eql?  # :nodoc:
+      alias_method :==, :eql?
 
 
       def _set_axis(axis_)  # :nodoc:
@@ -149,7 +151,7 @@ module NTable
       end
 
 
-      def _compute_offset(v_)
+      def _compute_offset(v_)  # :nodoc:
         if v_.is_a?(::NTable::IndexWrapper)
           index_ = v_.to_i
           index_ = nil if index_ < 0 || index_ >= @axis_object.size
@@ -176,10 +178,13 @@ module NTable
       end
 
 
+      # Standard equality check
+
       def eql?(obj_)
         obj_.is_a?(Position) && obj_.structure.eql?(@structure) && obj_._offset.eql?(self._offset)
       end
       alias_method :==, :eql?
+
 
       attr_reader :structure  # :nodoc:
 

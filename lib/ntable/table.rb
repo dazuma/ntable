@@ -643,7 +643,7 @@ module NTable
     end
 
 
-    def _offset_for_args(args_)
+    def _offset_for_args(args_)  # :nodoc:
       if args_.size == 1
         first_ = args_.first
         args_ = first_ if first_.is_a?(::Hash) || first_.is_a?(::Array)
