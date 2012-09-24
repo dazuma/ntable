@@ -74,6 +74,13 @@ module NTable
       end
 
 
+      def test_axis_info_enumerable
+        s_ = Structure.new
+        s_.add(@indexed1, :first)
+        assert_equal(45, s_.axis(0).inject(:+))
+      end
+
+
       def test_add_multi_axis
         s_ = Structure.new
         s_.add(@labeled1, :first)
@@ -89,6 +96,15 @@ module NTable
         assert_equal('second', s_.axis(1).axis_name)
         assert_equal(@indexed1, s_.axis(2).axis_object)
         assert_nil(s_.axis(2).axis_name)
+      end
+
+
+      def test_structure_enumerable
+        s_ = Structure.new
+        s_.add(@labeled1, :first)
+        s_.add(@indexed1, :second)
+        s_.add(@indexed1)
+        assert_equal([LabeledAxis, IndexedAxis, IndexedAxis], s_.map{ |ai_| ai_.axis_object.class })
       end
 
 

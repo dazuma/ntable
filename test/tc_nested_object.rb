@@ -47,6 +47,7 @@ module NTable
       def setup
         @labeled_axis_2 = LabeledAxis.new([:one, :two])
         @object_axis_2 = ObjectAxis.new([:one, :two])
+        @object_axis_3 = ObjectAxis.new([:one, :two, :three])
         @labeled_axis_3 = LabeledAxis.new([:blue, :red, :white])
         @indexed_axis_2 = IndexedAxis.new(2)
         @indexed_axis_10 = IndexedAxis.new(10, 1)
@@ -202,7 +203,7 @@ module NTable
       def test_from_level_1_labeled_with_objectify_conversion
         obj_ = {'one' => 1, 'two' => 2}
         t1_ = Table.from_nested_object(obj_,
-          [{:sort => true, :objectify => ::Proc.new{ |a_| a_.to_sym }}])
+          [{:sort => true, :objectify => ->(a_){ a_.to_sym }}])
         assert_equal(Table.new(Structure.add(@object_axis_2), :load => [1,2]), t1_)
       end
 
@@ -210,8 +211,17 @@ module NTable
       def test_from_level_1_labeled_with_stringify_conversion
         obj_ = {:one1 => 1, :two22 => 2}
         t1_ = Table.from_nested_object(obj_,
-          [{:sort => true, :stringify => ::Proc.new{ |a_| a_.to_s.gsub(/\d/, '') }}])
+          [{:sort => true, :stringify => ->(a_){ a_.to_s.gsub(/\d/, '') }}])
         assert_equal(Table.new(Structure.add(@labeled_axis_2), :load => [1,2]), t1_)
+      end
+
+
+      def test_from_level_1_labeled_with_objectify_and_postprocess
+        obj_ = {:one => 1, :two => 2}
+        t1_ = Table.from_nested_object(obj_,
+          [{:sort => true, :objectify => true, :postprocess => ->(labels_){ labels_ << :three }}],
+          :fill => 0)
+        assert_equal(Table.new(Structure.add(@object_axis_3), :load => [1,2,0]), t1_)
       end
 
 

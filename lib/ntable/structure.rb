@@ -104,6 +104,7 @@ module NTable
       def label(index_)
         @axis_object.label(index_)
       end
+      alias_method :[], :label
 
 
       # Return the number of rows along this axis.
@@ -112,6 +113,21 @@ module NTable
       def size
         @axis_object.size
       end
+
+
+      # Iterate over the labels, in order.
+
+      def each
+        if block_given?
+          @axis_object.size.times do |i_|
+            yield @axis_object.label(i_)
+          end
+        else
+          to_enum
+        end
+      end
+
+      include ::Enumerable
 
 
       def eql?(obj_)  # :nodoc:
@@ -398,11 +414,21 @@ module NTable
         @names[axis_.to_s]
       end
     end
+    alias_method :[], :axis
+
+
+    # Iterate over the axes in order, yielding AxisInfo objects.
+
+    def each(&block_)
+      @indexes.each(&block_)
+    end
+
+    include ::Enumerable
 
 
     # Lock this structure, preventing further modification. Generally,
-    # this is done automatically when a structure is used by a table,
-    # and you do not need to call it yourself.
+    # this is done automatically when a structure is used by a table;
+    # you normally do not need to call it yourself.
 
     def lock!
       unless @locked

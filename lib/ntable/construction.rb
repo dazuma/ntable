@@ -41,9 +41,9 @@ require 'json'
 module NTable
 
 
-  @numeric_sort = ::Proc.new{ |a_, b_| a_.to_f <=> b_.to_f }
-  @integer_sort = ::Proc.new{ |a_, b_| a_.to_i <=> b_.to_i }
-  @string_sort = ::Proc.new{ |a_, b_| a_.to_s <=> b_.to_s }
+  @numeric_sort = ->(a_, b_){ a_.to_f <=> b_.to_f }
+  @integer_sort = ->(a_, b_){ a_.to_i <=> b_.to_i }
+  @string_sort = ->(a_, b_){ a_.to_s <=> b_.to_s }
 
 
   class << self
@@ -119,6 +119,13 @@ module NTable
     #   proc is provided, the resulting axis will be a LabeledAxis.
     #   You can also pass true instead of a Proc; this will create an
     #   LabeledAxis and make the conversion a simple to_s.
+    # [<tt>:postprocess</tt>]
+    #   An optional Proc that postprocesses the final labels array.
+    #   It should take an array of labels and return a modified array
+    #   (which can be the original array modified in place). Called
+    #   after any sort has been completed.
+    #   You can use this, for example, to "fill in" labels that were
+    #   not present in the original data.
     #
     # The third argument is an optional hash of miscellaneous options.
     # The following keys are recognized:
@@ -188,6 +195,8 @@ module NTable
             end
             labels_.sort!(&func_)
           end
+          postprocess_ = field_[:postprocess]
+          labels_ = postprocess_.call(labels_) if postprocess_.respond_to?(:call)
           axis_ = klass_.new(labels_)
         when ::Array
           axis_ = IndexedAxis.new(ai_[1].to_i - ai_[0].to_i, ai_[0].to_i)
