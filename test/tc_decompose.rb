@@ -98,6 +98,13 @@ module NTable
       end
 
 
+      def test_decompose_after_decompose
+        t1_ = Table.new(@structure_2d, :load => (2..21).to_a)
+        t2_ = t1_.decompose([1]).get(2).decompose([0]).get
+        assert_equal(Table.new(@structure_row, :load => [4, 5]), t2_)
+      end
+
+
     end
 
   end

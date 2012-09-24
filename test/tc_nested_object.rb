@@ -140,6 +140,14 @@ module NTable
       end
 
 
+      def test_from_level_1_start_1_indexed_with_postprocess
+        obj_ = (1..12).to_a
+        t1_ = Table.from_nested_object(obj_,
+          [{:postprocess_range => ->(r_){ (1..10) }}])
+        assert_equal(Table.new(Structure.add(@indexed_axis_10), :load => (2..11).to_a), t1_)
+      end
+
+
       def test_from_level_2_indexed
         obj_ = [[nil, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], []]
         t1_ = Table.from_nested_object(obj_)
@@ -219,7 +227,7 @@ module NTable
       def test_from_level_1_labeled_with_objectify_and_postprocess
         obj_ = {:one => 1, :two => 2}
         t1_ = Table.from_nested_object(obj_,
-          [{:sort => true, :objectify => true, :postprocess => ->(labels_){ labels_ << :three }}],
+          [{:sort => true, :objectify => true, :postprocess_labels => ->(labels_){ labels_ << :three }}],
           :fill => 0)
         assert_equal(Table.new(Structure.add(@object_axis_3), :load => [1,2,0]), t1_)
       end

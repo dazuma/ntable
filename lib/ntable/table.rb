@@ -84,6 +84,15 @@ module NTable
     end
 
 
+    # Basic output.
+
+    def inspect
+      axes_ = @structure.all_axes.map{ |a_| "#{a_.axis_name}:#{a_.axis_object.class.name.sub('NTable::', '')}" }
+      "#<#{self.class}:0x#{object_id.to_s(16)} #{axes_.join(', ')}#{@parent ? ' (sub)' : ''} #{@vals.inspect}>"
+    end
+    alias_method :to_s, :inspect
+
+
     # Returns true if the two tables are equivalent, both in the data
     # and in the parentage. The structure of a shared slice is not
     # equivalent, in this sense, to the "same" table created from
@@ -525,7 +534,7 @@ module NTable
       vec_ = ::Array.new(outer_struct_.dim, 0)
       tables_ = (0...outer_struct_.size).map do |i_|
         t_ = Table.new(inner_struct_, :acquire => @vals,
-          :offset => outer_struct_._compute_offset_for_vector(vec_),
+          :offset => @offset + outer_struct_._compute_offset_for_vector(vec_),
           :parent => self)
         outer_struct_._inc_vector(vec_)
         t_

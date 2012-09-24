@@ -119,13 +119,25 @@ module NTable
     #   proc is provided, the resulting axis will be a LabeledAxis.
     #   You can also pass true instead of a Proc; this will create an
     #   LabeledAxis and make the conversion a simple to_s.
-    # [<tt>:postprocess</tt>]
-    #   An optional Proc that postprocesses the final labels array.
-    #   It should take an array of labels and return a modified array
-    #   (which can be the original array modified in place). Called
-    #   after any sort has been completed.
+    # [<tt>:postprocess_labels</tt>]
+    #   An optional Proc that postprocesses the final labels array, if
+    #   a LabeledAxis or an ObjectAxis is being generated.
+    #   It should take an array of labels and return the desired array.
+    #   You may modify the array in place and return the original.
+    #   This is called after any sort has been completed.
     #   You can use this, for example, to "fill in" labels that were
     #   not present in the original data.
+    #   WARNING: if you remove labels from the array, any data in those
+    #   locations will silently be lost.
+    # [<tt>:postprocess_range</tt>]
+    #   An optional Proc that postprocesses the final integer range, if
+    #   an IndexedAxis is being generated.
+    #   It should take a Range of integer as an argument, and return
+    #   either the original or a different Range.
+    #   You can use this, for example, to extend the range of this axis
+    #   beyond that for which data exists.
+    #   WARNING: if you remove values from the range, any data in those
+    #   locations will silently be lost.
     #
     # The third argument is an optional hash of miscellaneous options.
     # The following keys are recognized:
@@ -195,11 +207,17 @@ module NTable
             end
             labels_.sort!(&func_)
           end
-          postprocess_ = field_[:postprocess]
-          labels_ = postprocess_.call(labels_) if postprocess_.respond_to?(:call)
+          postprocess_ = field_[:postprocess_labels]
+          labels_ = postprocess_.call(labels_) || labels_ if postprocess_.respond_to?(:call)
           axis_ = klass_.new(labels_)
         when ::Array
-          axis_ = IndexedAxis.new(ai_[1].to_i - ai_[0].to_i, ai_[0].to_i)
+          range_ = ((ai_[0].to_i)...(ai_[1].to_i))
+          postprocess_ = field_[:postprocess_range]
+          range_ = postprocess_.call(range_) || range_ if postprocess_.respond_to?(:call)
+          ai_[0] = range_.first.to_i
+          ai_[1] = range_.last.to_i
+          ai_[1] += 1 unless range_.exclude_end?
+          axis_ = IndexedAxis.new(ai_[1] - ai_[0], ai_[0])
         end
         struct_.add(axis_, name_) if axis_
       end
@@ -250,7 +268,10 @@ module NTable
 
     def _populate_nested_values(table_, path_, axis_data_, obj_)  # :nodoc:
       if path_.size == table_.dim
-        table_.set!(*path_, obj_)
+        begin
+          table_.set!(*path_, obj_)
+        rescue NoSuchCellError
+        end
       else
         case obj_
         when ::Hash

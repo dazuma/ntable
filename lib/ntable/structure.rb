@@ -75,6 +75,14 @@ module NTable
       end
 
 
+      # Basic output.
+
+      def inspect
+        "#<#{self.class}:0x#{object_id.to_s(16)} #{@axis_name}:#{@axis_object.class.name.sub('NTable::', '')}>"
+      end
+      alias_method :to_s, :inspect
+
+
       # The underlying axis implementation
       attr_reader :axis_object
 
@@ -178,6 +186,14 @@ module NTable
       end
 
 
+      # Basic output.
+
+      def inspect
+        "#<#{self.class}:0x#{object_id.to_s(16)} #{coord_array.inspect}>"
+      end
+      alias_method :to_s, :inspect
+
+
       # Standard equality check
 
       def eql?(obj_)
@@ -278,6 +294,15 @@ module NTable
       @indexes.each{ |ai_| copy_.add(ai_.axis_object, ai_.axis_name) }
       copy_
     end
+
+
+    # Basic output.
+
+    def inspect
+      axes_ = @indexes.map{ |a_| "#{a_.axis_name}:#{a_.axis_object.class.name.sub('NTable::', '')}" }
+      "#<#{self.class}:0x#{object_id.to_s(16)} #{axes_.join(', ')}#{@parent ? ' (sub)' : ''}>"
+    end
+    alias_method :to_s, :inspect
 
 
     # Returns true if the two structures are equivalent, both in the

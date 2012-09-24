@@ -1,3 +1,11 @@
+=== 0.1.5 / 2012-09-24
+
+* INCOMPATIBLE CHANGE: Renamed :postprocess option in NTable.from_nested_object to :postprocess_labels.
+* NTable.from_nested_object learned :postprocess_range, which postprocesses a range for an IndexedAxis.
+* NTable.from_nested_object raised NoSuchCellError if you used :postprocess_label to remove a label accessed in the data. Now the data is just thrown away silently.
+* Calling decompose on a "shared" table (i.e. a slice previously obtained from decompose or shared_slice) yielded the wrong table. (The offset into the original table was incorrect.) Fixed.
+* Implemented a slightly nicer inspect for each type.
+
 === 0.1.4 / 2012-09-24
 
 * NTable::Structure and NTable::AxisInfo are now Enumerable, letting you iterate over the axes and labels, respectively.
