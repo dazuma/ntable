@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::Structure::Position - NTable 0.1.4 Documentation</title>
+<title>class NTable::Structure::Position - NTable 0.1.5 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -82,9 +82,13 @@
     
     <li><a href="#method-i-hash">#hash</a>
     
+    <li><a href="#method-i-inspect">#inspect</a>
+    
     <li><a href="#method-i-next">#next</a>
     
     <li><a href="#method-i-prev">#prev</a>
+    
+    <li><a href="#method-i-to_s">#to_s</a>
     
   </ul>
 </nav>
@@ -247,7 +251,7 @@ provided by name or index.</p>
 
           
           <div class="method-source-code" id="coord-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 202</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 218</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">coord</span>(<span class="ruby-identifier">axis_</span>)
   <span class="ruby-identifier">ainfo_</span> = <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">axis</span>(<span class="ruby-identifier">axis_</span>)
   <span class="ruby-identifier">ainfo_</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">_coords</span>[<span class="ruby-identifier">ainfo_</span>.<span class="ruby-identifier">axis_index</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
@@ -282,7 +286,7 @@ provided by name or index.</p>
 
           
           <div class="method-source-code" id="coord_array-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 212</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 228</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">coord_array</span>
   <span class="ruby-identifier">_coords</span>.<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
@@ -312,7 +316,7 @@ provided by name or index.</p>
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 183</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 199</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>)
   <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Position</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">structure</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-ivar">@structure</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">_offset</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">_offset</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -346,7 +350,7 @@ provided by name or index.</p>
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 191</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 207</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">hash</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@vector</span>.<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -358,6 +362,40 @@ provided by name or index.</p>
 
         
       </div><!-- hash-method -->
+
+    
+      <div id="method-i-inspect" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">inspect</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Basic output.</p>
+          
+
+          
+          <div class="method-source-code" id="inspect-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 191</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inspect</span>
+  <span class="ruby-node">&quot;#&lt;#{self.class}:0x#{object_id.to_s(16)} #{coord_array.inspect}&gt;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- inspect-source -->
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="Position.html#method-i-to_s">to_s</a>
+        </div>
+        
+
+        
+      </div><!-- inspect-method -->
 
     
       <div id="method-i-next" class="method-detail ">
@@ -377,7 +415,7 @@ table, or nil if this is the last cell.</p>
 
           
           <div class="method-source-code" id="next-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 220</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 236</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">next</span>
   <span class="ruby-identifier">v_</span> = <span class="ruby-ivar">@vector</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">_inc_vector</span>(<span class="ruby-identifier">v_</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Position</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>, <span class="ruby-identifier">v_</span>)
@@ -409,7 +447,7 @@ the table, or nil if this is the first cell.</p>
 
           
           <div class="method-source-code" id="prev-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 229</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 245</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">prev</span>
   <span class="ruby-identifier">v_</span> = <span class="ruby-ivar">@vector</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">_dec_vector</span>(<span class="ruby-identifier">v_</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Position</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>, <span class="ruby-identifier">v_</span>)
@@ -422,6 +460,33 @@ the table, or nil if this is the first cell.</p>
 
         
       </div><!-- prev-method -->
+
+    
+      <div id="method-i-to_s" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Position.html#method-i-inspect">inspect</a>
+        </div>
+        
+      </div><!-- to_s-method -->
 
     
     </section><!-- public-instance-method-details -->

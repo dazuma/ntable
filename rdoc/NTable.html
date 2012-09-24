@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module NTable - NTable 0.1.4 Documentation</title>
+<title>module NTable - NTable 0.1.5 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -338,13 +338,25 @@ axis will be a <a href="NTable/LabeledAxis.html">LabeledAxis</a>. You can
 also pass true instead of a Proc; this will create an <a
 href="NTable/LabeledAxis.html">LabeledAxis</a> and make the conversion a
 simple to_s.</p>
-</dd><dt><code>:postprocess</code>
+</dd><dt><code>:postprocess_labels</code>
 <dd>
-<p>An optional Proc that postprocesses the final labels array. It should take
-an array of labels and return a modified array (which can be the original
-array modified in place). Called after any sort has been completed. You can
-use this, for example, to “fill in” labels that were not present in the
-original data.</p>
+<p>An optional Proc that postprocesses the final labels array, if a <a
+href="NTable/LabeledAxis.html">LabeledAxis</a> or an <a
+href="NTable/ObjectAxis.html">ObjectAxis</a> is being generated. It should
+take an array of labels and return the desired array. You may modify the
+array in place and return the original. This is called after any sort has
+been completed. You can use this, for example, to “fill in” labels that
+were not present in the original data. WARNING: if you remove labels from
+the array, any data in those locations will silently be lost.</p>
+</dd><dt><code>:postprocess_range</code>
+<dd>
+<p>An optional Proc that postprocesses the final integer range, if an <a
+href="NTable/IndexedAxis.html">IndexedAxis</a> is being generated. It
+should take a Range of integer as an argument, and return either the
+original or a different Range. You can use this, for example, to extend the
+range of this axis beyond that for which data exists. WARNING: if you
+remove values from the range, any data in those locations will silently be
+lost.</p>
 </dd></dl>
 
 <p>The third argument is an optional hash of miscellaneous options. The
@@ -369,7 +381,7 @@ href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
 
           
           <div class="method-source-code" id="from_nested_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 145</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 157</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_nested_object</span>(<span class="ruby-identifier">obj_</span>, <span class="ruby-identifier">field_opts_</span>=[], <span class="ruby-identifier">opts_</span>={})
   <span class="ruby-identifier">axis_data_</span> = []
   <span class="ruby-identifier">_populate_nested_axes</span>(<span class="ruby-identifier">axis_data_</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">obj_</span>)
@@ -423,11 +435,17 @@ href="NTable/LabeledAxis.html">LabeledAxis</a>.</p>
         <span class="ruby-keyword">end</span>
         <span class="ruby-identifier">labels_</span>.<span class="ruby-identifier">sort!</span>(&amp;<span class="ruby-identifier">func_</span>)
       <span class="ruby-keyword">end</span>
-      <span class="ruby-identifier">postprocess_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:postprocess</span>]
-      <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">postprocess_</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">labels_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">postprocess_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
+      <span class="ruby-identifier">postprocess_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:postprocess_labels</span>]
+      <span class="ruby-identifier">labels_</span> = <span class="ruby-identifier">postprocess_</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">labels_</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">labels_</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">postprocess_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
       <span class="ruby-identifier">axis_</span> = <span class="ruby-identifier">klass_</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">labels_</span>)
     <span class="ruby-keyword">when</span> <span class="ruby-operator">::</span><span class="ruby-constant">Array</span>
-      <span class="ruby-identifier">axis_</span> = <span class="ruby-constant">IndexedAxis</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ai_</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>, <span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>)
+      <span class="ruby-identifier">range_</span> = ((<span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>)<span class="ruby-operator">...</span>(<span class="ruby-identifier">ai_</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>))
+      <span class="ruby-identifier">postprocess_</span> = <span class="ruby-identifier">field_</span>[<span class="ruby-value">:postprocess_range</span>]
+      <span class="ruby-identifier">range_</span> = <span class="ruby-identifier">postprocess_</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">range_</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">range_</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">postprocess_</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:call</span>)
+      <span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>] = <span class="ruby-identifier">range_</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">to_i</span>
+      <span class="ruby-identifier">ai_</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">range_</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">to_i</span>
+      <span class="ruby-identifier">ai_</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">range_</span>.<span class="ruby-identifier">exclude_end?</span>
+      <span class="ruby-identifier">axis_</span> = <span class="ruby-constant">IndexedAxis</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ai_</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">ai_</span>[<span class="ruby-value">0</span>])
     <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">struct_</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">axis_</span>, <span class="ruby-identifier">name_</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">axis_</span>
   <span class="ruby-keyword">end</span>

@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::Structure::AxisInfo - NTable 0.1.4 Documentation</title>
+<title>class NTable::Structure::AxisInfo - NTable 0.1.5 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -92,9 +92,13 @@
     
     <li><a href="#method-i-index">#index</a>
     
+    <li><a href="#method-i-inspect">#inspect</a>
+    
     <li><a href="#method-i-label">#label</a>
     
     <li><a href="#method-i-size">#size</a>
+    
+    <li><a href="#method-i-to_s">#to_s</a>
     
   </ul>
 </nav>
@@ -306,7 +310,7 @@ axis has number 0.</p>
 
           
           <div class="method-source-code" id="each-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 120</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 128</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
     <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i_</span><span class="ruby-operator">|</span>
@@ -342,7 +346,7 @@ axis has number 0.</p>
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 135</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 143</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>)
   <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">AxisInfo</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">axis_object</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@axis_name</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">axis_name</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -377,7 +381,7 @@ Returns nil if the label is not recognized.</p>
 
           
           <div class="method-source-code" id="index-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 95</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 103</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>(<span class="ruby-identifier">label_</span>)
   <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">label_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -389,6 +393,40 @@ Returns nil if the label is not recognized.</p>
 
         
       </div><!-- index-method -->
+
+    
+      <div id="method-i-inspect" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">inspect</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Basic output.</p>
+          
+
+          
+          <div class="method-source-code" id="inspect-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 80</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inspect</span>
+  <span class="ruby-node">&quot;#&lt;#{self.class}:0x#{object_id.to_s(16)} #{@axis_name}:#{@axis_object.class.name.sub('NTable::', '')}&gt;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- inspect-source -->
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="AxisInfo.html#method-i-to_s">to_s</a>
+        </div>
+        
+
+        
+      </div><!-- inspect-method -->
 
     
       <div id="method-i-label" class="method-detail ">
@@ -409,7 +447,7 @@ than or equal to size.)</p>
 
           
           <div class="method-source-code" id="label-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 104</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 112</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">label</span>(<span class="ruby-identifier">index_</span>)
   <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">label</span>(<span class="ruby-identifier">index_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -443,7 +481,7 @@ than or equal to size.)</p>
 
           
           <div class="method-source-code" id="size-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 113</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">size</span>
   <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">size</span>
 <span class="ruby-keyword">end</span></pre>
@@ -455,6 +493,33 @@ than or equal to size.)</p>
 
         
       </div><!-- size-method -->
+
+    
+      <div id="method-i-to_s" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="AxisInfo.html#method-i-inspect">inspect</a>
+        </div>
+        
+      </div><!-- to_s-method -->
 
     
     </section><!-- public-instance-method-details -->
