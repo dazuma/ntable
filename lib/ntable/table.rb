@@ -128,6 +128,13 @@ module NTable
     end
 
 
+    # Standard hash value
+
+    def hash
+      @structure.hash + @vals.hash + @offset.hash + @parent.hash
+    end
+
+
     # The Structure of this table
     attr_reader :structure
 

@@ -186,6 +186,13 @@ module NTable
       alias_method :==, :eql?
 
 
+      # Standard hash value
+
+      def hash
+        @structure.hash + @vector.hash
+      end
+
+
       attr_reader :structure  # :nodoc:
 
 
