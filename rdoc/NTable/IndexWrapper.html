@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::IndexWrapper - NTable 0.1.3 Documentation</title>
+<title>class NTable::IndexWrapper - NTable 0.1.4 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -173,7 +173,7 @@ an index rather than a label.</p>
 
         <div class="method-description">
         
-        
+        <p>Retrieve the actual index</p>
         
         </div>
       </div>
@@ -186,7 +186,7 @@ an index rather than a label.</p>
 
         <div class="method-description">
         
-        
+        <p>Retrieve the actual index</p>
         
         </div>
       </div>
@@ -217,7 +217,7 @@ integer index</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/ntable/index_wrapper.rb, line 47</span>
+            <pre><span class="ruby-comment"># File lib/ntable/index_wrapper.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">val_</span>)
   <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">val_</span>.<span class="ruby-identifier">to_i</span>
 <span class="ruby-keyword">end</span></pre>
@@ -275,12 +275,12 @@ integer index</p>
 
         <div class="method-description">
           
-          
+          <p>Standard equality checker</p>
           
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/index_wrapper.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/ntable/index_wrapper.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
   <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">IndexWrapper</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@value</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@rhs_</span>.<span class="ruby-identifier">value</span>
 <span class="ruby-keyword">end</span></pre>
@@ -309,12 +309,12 @@ integer index</p>
 
         <div class="method-description">
           
-          
+          <p>Standard hash value</p>
           
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/ntable/index_wrapper.rb, line 56</span>
+            <pre><span class="ruby-comment"># File lib/ntable/index_wrapper.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
   <span class="ruby-ivar">@value</span>.<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>

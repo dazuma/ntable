@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::LabeledAxis - NTable 0.1.3 Documentation</title>
+<title>class NTable::LabeledAxis - NTable 0.1.4 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -184,7 +184,7 @@
 
         <div class="method-description">
         
-        
+        <p>See <a href="EmptyAxis.html#method-i-size">NTable::EmptyAxis#size</a></p>
         
         </div>
       </div>
@@ -240,7 +240,7 @@ strings.</p>
       <h3 class="section-header">Public Instance Methods</h3>
 
     
-      <div id="method-i-3D-3D" class="method-detail ">
+      <div id="method-i-3D-3D" class="method-detail method-alias">
         
         <div class="method-heading">
           <span class="method-name">==</span><span
@@ -255,17 +255,14 @@ strings.</p>
           
 
           
-          <div class="method-source-code" id="3D-3D-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 138</span>
-<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">obj_</span>)
-  <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">LabeledAxis</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@a</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@a</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- 3D-3D-source -->
-          
         </div>
 
         
 
+        
+        <div class="aliases">
+          Alias for: <a href="LabeledAxis.html#method-i-eql-3F">eql?</a>
+        </div>
         
       </div><!-- 3D-3D-method -->
 
@@ -281,12 +278,12 @@ strings.</p>
 
         <div class="method-description">
           
-          
+          <p>See <a href="EmptyAxis.html#method-i-eql-3F">NTable::EmptyAxis#eql?</a></p>
           
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 134</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 135</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>)
   <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">LabeledAxis</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@a</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-value">:@a</span>))
 <span class="ruby-keyword">end</span></pre>
@@ -294,6 +291,10 @@ strings.</p>
           
         </div>
 
+        
+        <div class="aliases">
+          Also aliased as: <a href="LabeledAxis.html#method-i-3D-3D">==</a>
+        </div>
         
 
         
@@ -311,12 +312,13 @@ strings.</p>
 
         <div class="method-description">
           
-          
+          <p>See <a
+href="EmptyAxis.html#method-i-from_json_object">NTable::EmptyAxis#from_json_object</a></p>
           
 
           
           <div class="method-source-code" id="from_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 168</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 173</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">json_obj_</span>)
   <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'labels'</span>] <span class="ruby-operator">||</span> [])
 <span class="ruby-keyword">end</span></pre>
@@ -341,12 +343,12 @@ strings.</p>
 
         <div class="method-description">
           
-          
+          <p>See <a href="EmptyAxis.html#method-i-hash">NTable::EmptyAxis#hash</a></p>
           
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 142</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 141</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
   <span class="ruby-ivar">@a</span>.<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -371,12 +373,12 @@ strings.</p>
 
         <div class="method-description">
           
-          
+          <p>See <a href="EmptyAxis.html#method-i-index">NTable::EmptyAxis#index</a></p>
           
 
           
           <div class="method-source-code" id="index-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 155</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 157</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>(<span class="ruby-identifier">label_</span>)
   <span class="ruby-ivar">@h</span>[<span class="ruby-identifier">label_</span>.<span class="ruby-identifier">to_s</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -401,7 +403,7 @@ strings.</p>
 
         <div class="method-description">
           
-          
+          <p>See <a href="EmptyAxis.html#method-i-inspect">NTable::EmptyAxis#inspect</a></p>
           
 
           
@@ -435,12 +437,12 @@ strings.</p>
 
         <div class="method-description">
           
-          
+          <p>See <a href="EmptyAxis.html#method-i-label">NTable::EmptyAxis#label</a></p>
           
 
           
           <div class="method-source-code" id="label-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 159</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 162</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">label</span>(<span class="ruby-identifier">index_</span>)
   <span class="ruby-ivar">@a</span>[<span class="ruby-identifier">index_</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -465,12 +467,13 @@ strings.</p>
 
         <div class="method-description">
           
-          
+          <p>See <a
+href="EmptyAxis.html#method-i-to_json_object">NTable::EmptyAxis#to_json_object</a></p>
           
 
           
           <div class="method-source-code" id="to_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 164</span>
+            <pre><span class="ruby-comment"># File lib/ntable/axis.rb, line 168</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json_object</span>(<span class="ruby-identifier">json_obj_</span>)
   <span class="ruby-identifier">json_obj_</span>[<span class="ruby-string">'labels'</span>] = <span class="ruby-ivar">@a</span>
 <span class="ruby-keyword">end</span></pre>

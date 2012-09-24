@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::Table - NTable 0.1.3 Documentation</title>
+<title>class NTable::Table - NTable 0.1.4 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -85,8 +85,6 @@
     
     <li><a href="#method-i-5B-5D-3D">#[]=</a>
     
-    <li><a href="#method-i-_offset_for_args">#_offset_for_args</a>
-    
     <li><a href="#method-i-all_axes">#all_axes</a>
     
     <li><a href="#method-i-axis">#axis</a>
@@ -112,6 +110,8 @@
     <li><a href="#method-i-fill-21">#fill!</a>
     
     <li><a href="#method-i-get">#get</a>
+    
+    <li><a href="#method-i-hash">#hash</a>
     
     <li><a href="#method-i-include-3F">#include?</a>
     
@@ -274,7 +274,7 @@ href="../NTable.html#method-c-from_json_object">NTable.from_json_object</a></p>
 
           
           <div class="method-source-code" id="from_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 271</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 280</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">json_</span>)
   <span class="ruby-operator">::</span><span class="ruby-constant">NTable</span>.<span class="ruby-identifier">from_json_object</span>(<span class="ruby-identifier">json_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -305,7 +305,7 @@ href="../NTable.html#method-c-from_nested_object">NTable.from_nested_object</a><
 
           
           <div class="method-source-code" id="from_nested_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 285</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 294</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">from_nested_object</span>(<span class="ruby-identifier">obj_</span>, <span class="ruby-identifier">field_opts_</span>=[], <span class="ruby-identifier">opts_</span>={})
   <span class="ruby-operator">::</span><span class="ruby-constant">NTable</span>.<span class="ruby-identifier">from_nested_object</span>(<span class="ruby-identifier">obj_</span>, <span class="ruby-identifier">field_opts_</span>, <span class="ruby-identifier">opts_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -385,7 +385,7 @@ href="../NTable.html#method-c-parse_json">NTable.parse_json</a></p>
 
           
           <div class="method-source-code" id="parse_json-source">
-            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 278</span>
+            <pre><span class="ruby-comment"># File lib/ntable/construction.rb, line 287</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_json</span>(<span class="ruby-identifier">json_</span>)
   <span class="ruby-operator">::</span><span class="ruby-constant">NTable</span>.<span class="ruby-identifier">parse_json</span>(<span class="ruby-identifier">json_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -510,40 +510,6 @@ sense, to the “same” table created from scratch with no parent.</p>
       </div><!-- 5B-5D-3D-method -->
 
     
-      <div id="method-i-_offset_for_args" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">_offset_for_args</span><span
-            class="method-args">(args_)</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-
-          
-          <div class="method-source-code" id="_offset_for_args-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 646</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">_offset_for_args</span>(<span class="ruby-identifier">args_</span>)
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">args_</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
-    <span class="ruby-identifier">first_</span> = <span class="ruby-identifier">args_</span>.<span class="ruby-identifier">first</span>
-    <span class="ruby-identifier">args_</span> = <span class="ruby-identifier">first_</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">first_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Hash</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">first_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">_offset</span>(<span class="ruby-identifier">args_</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- _offset_for_args-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- _offset_for_args-method -->
-
-    
       <div id="method-i-all_axes" class="method-detail ">
         
         <div class="method-heading">
@@ -561,7 +527,7 @@ structure of this table.</p>
 
           
           <div class="method-source-code" id="all_axes-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 176</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 183</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">all_axes</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">all_axes</span>
 <span class="ruby-keyword">end</span></pre>
@@ -593,7 +559,7 @@ such axis.</p>
 
           
           <div class="method-source-code" id="axis-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 168</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 175</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">axis</span>(<span class="ruby-identifier">axis_</span>)
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">axis</span>(<span class="ruby-identifier">axis_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -627,7 +593,7 @@ which axes should be part of the lower-dimensional tables.</p>
 
           
           <div class="method-source-code" id="decompose-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 506</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 513</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">decompose</span>(*<span class="ruby-identifier">axes_</span>)
   <span class="ruby-identifier">axes_</span> = <span class="ruby-identifier">axes_</span>.<span class="ruby-identifier">flatten</span>
   <span class="ruby-identifier">axis_indexes_</span> = []
@@ -677,7 +643,7 @@ table, returning a table of the reduction values.</p>
 
           
           <div class="method-source-code" id="decompose_reduce-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 533</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 540</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">decompose_reduce</span>(<span class="ruby-identifier">decompose_axes_</span>, *<span class="ruby-identifier">reduce_args_</span>, &amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-identifier">decompose</span>(<span class="ruby-identifier">decompose_axes_</span>).<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">sub_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sub_</span>.<span class="ruby-identifier">reduce</span>(*<span class="ruby-identifier">reduce_args_</span>, &amp;<span class="ruby-identifier">block_</span>) }
 <span class="ruby-keyword">end</span></pre>
@@ -708,7 +674,7 @@ with position, returning a table of the reduction values.</p>
 
           
           <div class="method-source-code" id="decompose_reduce_with_position-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 541</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 548</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">decompose_reduce_with_position</span>(<span class="ruby-identifier">decompose_axes_</span>, *<span class="ruby-identifier">reduce_args_</span>, &amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-identifier">decompose</span>(<span class="ruby-identifier">decompose_axes_</span>).<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">sub_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sub_</span>.<span class="ruby-identifier">reduce_with_position</span>(*<span class="ruby-identifier">reduce_args_</span>, &amp;<span class="ruby-identifier">block_</span>) }
 <span class="ruby-keyword">end</span></pre>
@@ -739,7 +705,7 @@ dimensions.</p>
 
           
           <div class="method-source-code" id="degenerate-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 159</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 166</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">degenerate?</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">degenerate?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -769,7 +735,7 @@ dimensions.</p>
 
           
           <div class="method-source-code" id="dim-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 144</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 151</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">dim</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">dim</span>
 <span class="ruby-keyword">end</span></pre>
@@ -800,7 +766,7 @@ block is given, an ::Enumerator is returned.</p>
 
           
           <div class="method-source-code" id="each-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 309</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 316</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>(&amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
@@ -843,7 +809,7 @@ the <a href="Structure/Position.html">Structure::Position</a> for the cell.</p>
 
           
           <div class="method-source-code" id="each_with_position-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 329</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 336</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">each_with_position</span>
   <span class="ruby-identifier">vec_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">dim</span>, <span class="ruby-value">0</span>)
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span>
@@ -879,7 +845,7 @@ the <a href="Structure/Position.html">Structure::Position</a> for the cell.</p>
 
           
           <div class="method-source-code" id="empty-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 151</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 158</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">empty?</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -951,7 +917,7 @@ the parent, and those changes will be reflected in the child.</p>
 
           
           <div class="method-source-code" id="fill-21-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 299</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 306</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">fill!</span>(<span class="ruby-identifier">value_</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">TableLockedError</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
   <span class="ruby-ivar">@vals</span>.<span class="ruby-identifier">fill</span>(<span class="ruby-identifier">value_</span>)
@@ -1016,7 +982,7 @@ coordinates do not exist.</p>
 
           
           <div class="method-source-code" id="get-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 223</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 230</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get</span>(*<span class="ruby-identifier">args_</span>)
   <span class="ruby-identifier">offset_</span> = <span class="ruby-identifier">_offset_for_args</span>(<span class="ruby-identifier">args_</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">offset_</span>
@@ -1038,6 +1004,36 @@ coordinates do not exist.</p>
       </div><!-- get-method -->
 
     
+      <div id="method-i-hash" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">hash</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Standard hash value</p>
+          
+
+          
+          <div class="method-source-code" id="hash-source">
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 133</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
+  <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">hash</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@vals</span>.<span class="ruby-identifier">hash</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@offset</span>.<span class="ruby-identifier">hash</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">hash</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- hash-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- hash-method -->
+
+    
       <div id="method-i-include-3F" class="method-detail ">
         
         <div class="method-heading">
@@ -1056,7 +1052,7 @@ href="Table.html#method-i-get">#get</a>.</p>
 
           
           <div class="method-source-code" id="include-3F-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 236</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 243</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">include?</span>(*<span class="ruby-identifier">args_</span>)
   <span class="ruby-identifier">_offset_for_args</span>(<span class="ruby-identifier">args_</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1145,7 +1141,7 @@ the parent, and those changes will be reflected in the child.</p>
 
           
           <div class="method-source-code" id="load-21-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 277</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 284</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load!</span>(<span class="ruby-identifier">vals_</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">TableLockedError</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
   <span class="ruby-identifier">is_</span> = <span class="ruby-identifier">vals_</span>.<span class="ruby-identifier">size</span>
@@ -1187,7 +1183,7 @@ block.</p>
 
           
           <div class="method-source-code" id="map-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 344</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 351</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">map</span>(&amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
     <span class="ruby-identifier">vec_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">dim</span>, <span class="ruby-value">0</span>)
@@ -1230,7 +1226,7 @@ the parent, and those changes will be reflected in the child.</p>
 
           
           <div class="method-source-code" id="map-21-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 381</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 388</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">map!</span>(&amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">TableLockedError</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
   <span class="ruby-ivar">@vals</span>.<span class="ruby-identifier">map!</span>(&amp;<span class="ruby-identifier">block_</span>)
@@ -1264,7 +1260,7 @@ href="Structure/Position.html">Structure::Position</a>.</p>
 
           
           <div class="method-source-code" id="map_with_position-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 362</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 369</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">map_with_position</span>
   <span class="ruby-identifier">nstructure_</span> = <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">parent</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">unlocked_copy</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@structure</span>
   <span class="ruby-identifier">vec_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">dim</span>, <span class="ruby-value">0</span>)
@@ -1307,7 +1303,7 @@ the parent, and those changes will be reflected in the child.</p>
 
           
           <div class="method-source-code" id="map_with_position-21-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 394</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 401</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">map_with_position!</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">TableLockedError</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
   <span class="ruby-identifier">vec_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">dim</span>, <span class="ruby-value">0</span>)
@@ -1347,7 +1343,7 @@ this table has no parent.</p>
 
           
           <div class="method-source-code" id="parent-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 186</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 193</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parent</span>
   <span class="ruby-ivar">@parent</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1401,7 +1397,7 @@ given initial accumulator value is used.</pre>
 
           
           <div class="method-source-code" id="reduce-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 426</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 433</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reduce</span>(*<span class="ruby-identifier">args_</span>)
   <span class="ruby-identifier">nothing_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Object</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
@@ -1480,7 +1476,7 @@ initial value for the accumulator.</p>
 
           
           <div class="method-source-code" id="reduce_with_position-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 477</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 484</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reduce_with_position</span>(*<span class="ruby-identifier">args_</span>)
   <span class="ruby-identifier">nothing_</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Object</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">args_</span>.<span class="ruby-identifier">size</span>
@@ -1542,7 +1538,7 @@ coordinates do not exist.</p>
 
           
           <div class="method-source-code" id="set-21-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 254</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 261</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">set!</span>(*<span class="ruby-identifier">args_</span>, &amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">TableLockedError</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@parent</span>
   <span class="ruby-identifier">value_</span> = <span class="ruby-identifier">block_</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">args_</span>.<span class="ruby-identifier">pop</span>
@@ -1592,7 +1588,7 @@ this table has values modified, the slice data will reflect those changes.</p>
 
           
           <div class="method-source-code" id="shared_slice-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 556</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 563</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">shared_slice</span>(<span class="ruby-identifier">hash_</span>)
   <span class="ruby-identifier">offset_</span> = <span class="ruby-ivar">@offset</span>
   <span class="ruby-identifier">select_set_</span> = {}
@@ -1637,7 +1633,7 @@ this table has values modified, the slice data will reflect those changes.</p>
 
           
           <div class="method-source-code" id="size-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 137</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 144</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">size</span>
   <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">size</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1672,7 +1668,7 @@ values modified independently of this table.</p>
 
           
           <div class="method-source-code" id="slice-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 584</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 591</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">slice</span>(<span class="ruby-identifier">hash_</span>)
   <span class="ruby-identifier">shared_slice</span>(<span class="ruby-identifier">hash_</span>).<span class="ruby-identifier">dup</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1702,7 +1698,7 @@ values modified independently of this table.</p>
 
           
           <div class="method-source-code" id="to_json-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 599</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 606</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json</span>
   <span class="ruby-identifier">to_json_object</span>.<span class="ruby-identifier">to_json</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1733,7 +1729,7 @@ output a JSON string, you must unparse separately.</p>
 
           
           <div class="method-source-code" id="to_json_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 592</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 599</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json_object</span>
   {<span class="ruby-string">'type'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'ntable'</span>, <span class="ruby-string">'axes'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">to_json_array</span>, <span class="ruby-string">'values'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@parent</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">_compacted_vals</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@vals</span>}
 <span class="ruby-keyword">end</span></pre>
@@ -1764,7 +1760,7 @@ table.</p>
 
           
           <div class="method-source-code" id="to_nested_object-source">
-            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 607</span>
+            <pre><span class="ruby-comment"># File lib/ntable/table.rb, line 614</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_nested_object</span>(<span class="ruby-identifier">opts_</span>={})
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@structure</span>.<span class="ruby-identifier">degenerate?</span>
     <span class="ruby-ivar">@vals</span>[<span class="ruby-ivar">@offset</span>]

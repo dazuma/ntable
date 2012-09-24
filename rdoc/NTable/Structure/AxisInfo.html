@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class NTable::Structure::AxisInfo - NTable 0.1.3 Documentation</title>
+<title>class NTable::Structure::AxisInfo - NTable 0.1.4 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -63,14 +63,32 @@
   
 </nav>
 
-    
+    <!-- Included Modules -->
+<nav id="includes-section" class="section">
+  <h3 class="section-header">Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">::Enumerable</span>
+  
+  
+  </ul>
+</nav>
+
     <!-- Method Quickref -->
 <nav id="method-list-section" class="section">
   <h3 class="section-header">Methods</h3>
 
   <ul class="link-list">
     
-    <li><a href="#method-i-_compute_offset">#_compute_offset</a>
+    <li><a href="#method-i-3D-3D">#==</a>
+    
+    <li><a href="#method-i-5B-5D">#[]</a>
+    
+    <li><a href="#method-i-each">#each</a>
+    
+    <li><a href="#method-i-eql-3F">#eql?</a>
     
     <li><a href="#method-i-index">#index</a>
     
@@ -218,11 +236,11 @@ axis has number 0.</p>
       <h3 class="section-header">Public Instance Methods</h3>
 
     
-      <div id="method-i-_compute_offset" class="method-detail ">
+      <div id="method-i-3D-3D" class="method-detail method-alias">
         
         <div class="method-heading">
-          <span class="method-name">_compute_offset</span><span
-            class="method-args">(v_)</span>
+          <span class="method-name">==</span><span
+            class="method-args">(obj_)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
@@ -233,26 +251,113 @@ axis has number 0.</p>
           
 
           
-          <div class="method-source-code" id="_compute_offset-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 136</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">_compute_offset</span>(<span class="ruby-identifier">v_</span>)
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">v_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">NTable</span><span class="ruby-operator">::</span><span class="ruby-constant">IndexWrapper</span>)
-    <span class="ruby-identifier">index_</span> = <span class="ruby-identifier">v_</span>.<span class="ruby-identifier">to_i</span>
-    <span class="ruby-identifier">index_</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">index_</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">index_</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">size</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">index_</span> = <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">v_</span>)
-    <span class="ruby-identifier">index_</span> = <span class="ruby-identifier">v_</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">index_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">v_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Integer</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">v_</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">v_</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">size</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">index_</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@step</span> * <span class="ruby-identifier">index_</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- _compute_offset-source -->
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="AxisInfo.html#method-i-eql-3F">eql?</a>
+        </div>
+        
+      </div><!-- 3D-3D-method -->
+
+    
+      <div id="method-i-5B-5D" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">[]</span><span
+            class="method-args">(index_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
           
         </div>
 
         
 
         
-      </div><!-- _compute_offset-method -->
+        <div class="aliases">
+          Alias for: <a href="AxisInfo.html#method-i-label">label</a>
+        </div>
+        
+      </div><!-- 5B-5D-method -->
+
+    
+      <div id="method-i-each" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">each</span><span
+            class="method-args">() { |label| ... }</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Iterate over the labels, in order.</p>
+          
+
+          
+          <div class="method-source-code" id="each-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 120</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+    <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i_</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">yield</span> <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">label</span>(<span class="ruby-identifier">i_</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">to_enum</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- each-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- each-method -->
+
+    
+      <div id="method-i-eql-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">eql?</span><span
+            class="method-args">(obj_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Standard equality check</p>
+          
+
+          
+          <div class="method-source-code" id="eql-3F-source">
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 135</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>)
+  <span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">AxisInfo</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">axis_object</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@axis_name</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">obj_</span>.<span class="ruby-identifier">axis_name</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- eql-3F-source -->
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="AxisInfo.html#method-i-3D-3D">==</a>
+        </div>
+        
+
+        
+      </div><!-- eql-3F-method -->
 
     
       <div id="method-i-index" class="method-detail ">
@@ -313,6 +418,10 @@ than or equal to size.)</p>
         </div>
 
         
+        <div class="aliases">
+          Also aliased as: <a href="AxisInfo.html#method-i-5B-5D">[]</a>
+        </div>
+        
 
         
       </div><!-- label-method -->
@@ -334,7 +443,7 @@ than or equal to size.)</p>
 
           
           <div class="method-source-code" id="size-source">
-            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 112</span>
+            <pre><span class="ruby-comment"># File lib/ntable/structure.rb, line 113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">size</span>
   <span class="ruby-ivar">@axis_object</span>.<span class="ruby-identifier">size</span>
 <span class="ruby-keyword">end</span></pre>
