@@ -233,6 +233,36 @@ module NTable
       end
 
 
+      def test_integer_sort
+        obj_ = {'9' => 1, '10' => 2}
+        t1_ = Table.from_nested_object(obj_, [{:sort => :integer}])
+        assert_equal(['9', '10'], t1_.structure.axis(0).to_a)
+      end
+
+
+      def test_custom_sort
+        sorter_ = ->(a_, b_){ b_.to_i <=> a_.to_i }
+        obj_ = {'9' => 1, '10' => 2, '11' => 3}
+        t1_ = Table.from_nested_object(obj_, [{:sort => sorter_}])
+        assert_equal(['11', '10', '9'], t1_.structure.axis(0).to_a)
+      end
+
+
+      def test_custom_object_sort
+        sorter_ = ->(a_, b_){ b_.to_s.to_i <=> a_.to_s.to_i }
+        obj_ = {:'9' => 1, :'10' => 2, :'11' => 3}
+        t1_ = Table.from_nested_object(obj_, [{:sort => sorter_, :objectify => true}])
+        assert_equal([:'11', :'10', :'9'], t1_.structure.axis(0).to_a)
+      end
+
+
+      def test_fixed_struct
+        struct_ = Structure.add(@indexed_axis_2, 'row').add(@labeled_axis_3, 'col')
+        t1_ = Table.from_nested_object(nil, :structure => struct_, :fill => 0)
+        assert_equal(Table.new(struct_, :load => [0, 0, 0, 0, 0, 0]), t1_)
+      end
+
+
     end
 
   end

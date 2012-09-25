@@ -1,3 +1,7 @@
+=== 0.1.6 / 2012-09-24
+
+* It is now possible to specify a fixed structure for NTable.from_nested_object.
+
 === 0.1.5 / 2012-09-24
 
 * INCOMPATIBLE CHANGE: Renamed :postprocess option in NTable.from_nested_object to :postprocess_labels.

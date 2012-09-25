@@ -153,13 +153,24 @@ module NTable
     # [<tt>:stringify_by_default</tt>]
     #   If set to a Proc, this Proc is used as the default stringification
     #   routine for converting labels for a LabeledAxis.
+    # [<tt>:structure</tt>]
+    #   Force the use of the given Structure. Any data that does not fit
+    #   into this structure is ignored. When this option is provided,
+    #   the :name, :sort, :postprocess_labels, and :postprocess_range
+    #   field options are ignored. However, :stringify and :objectify may
+    #   still be provided to specify how hash keys should map to labels.
 
     def from_nested_object(obj_, field_opts_=[], opts_={})
+      if field_opts_.is_a?(::Hash)
+        opts_ = field_opts_
+        field_opts_ = []
+      end
       axis_data_ = []
       _populate_nested_axes(axis_data_, 0, obj_)
       objectify_by_default_ = opts_[:objectify_by_default]
       stringify_by_default_ = opts_[:stringify_by_default]
-      struct_ = Structure.new
+      fixed_struct_ = opts_[:structure]
+      struct_ = Structure.new unless fixed_struct_
       axis_data_.each_with_index do |ai_, i_|
         field_ = field_opts_[i_] || {}
         axis_ = nil
@@ -184,7 +195,7 @@ module NTable
             klass_ = ObjectAxis
           else
             stringify_ = nil unless stringify_.respond_to?(:call)
-              h_ = ::Set.new
+            h_ = ::Set.new
             ai_.keys.each do |k_|
               nv_ = (stringify_ ? stringify_.call(k_) : k_).to_s
               ai_[k_] = nv_
@@ -193,35 +204,39 @@ module NTable
             labels_ = h_.to_a
             klass_ = LabeledAxis
           end
-          if (sort_ = field_[:sort])
-            if sort_.respond_to?(:call)
-              func_ = sort_
-            elsif sort_ == :string
-              func_ = @string_sort
-            elsif sort_ == :integer
-              func_ = @integer_sort
-            elsif sort_ == :numeric
-              func_ = @numeric_sort
-            else
-              func_ = nil
+          if struct_
+            if (sort_ = field_[:sort])
+              if sort_.respond_to?(:call)
+                func_ = sort_
+              elsif sort_ == :string
+                func_ = @string_sort
+              elsif sort_ == :integer
+                func_ = @integer_sort
+              elsif sort_ == :numeric
+                func_ = @numeric_sort
+              else
+                func_ = nil
+              end
+              labels_.sort!(&func_)
             end
-            labels_.sort!(&func_)
+            postprocess_ = field_[:postprocess_labels]
+            labels_ = postprocess_.call(labels_) || labels_ if postprocess_.respond_to?(:call)
+            axis_ = klass_.new(labels_)
           end
-          postprocess_ = field_[:postprocess_labels]
-          labels_ = postprocess_.call(labels_) || labels_ if postprocess_.respond_to?(:call)
-          axis_ = klass_.new(labels_)
         when ::Array
-          range_ = ((ai_[0].to_i)...(ai_[1].to_i))
-          postprocess_ = field_[:postprocess_range]
-          range_ = postprocess_.call(range_) || range_ if postprocess_.respond_to?(:call)
-          ai_[0] = range_.first.to_i
-          ai_[1] = range_.last.to_i
-          ai_[1] += 1 unless range_.exclude_end?
-          axis_ = IndexedAxis.new(ai_[1] - ai_[0], ai_[0])
+          if struct_
+            range_ = ((ai_[0].to_i)...(ai_[1].to_i))
+            postprocess_ = field_[:postprocess_range]
+            range_ = postprocess_.call(range_) || range_ if postprocess_.respond_to?(:call)
+            ai_[0] = range_.first.to_i
+            ai_[1] = range_.last.to_i
+            ai_[1] += 1 unless range_.exclude_end?
+            axis_ = IndexedAxis.new(ai_[1] - ai_[0], ai_[0])
+          end
         end
         struct_.add(axis_, name_) if axis_
       end
-      table_ = Table.new(struct_, :fill => opts_[:fill])
+      table_ = Table.new(fixed_struct_ || struct_, :fill => opts_[:fill])
       _populate_nested_values(table_, [], axis_data_, obj_)
       table_
     end
